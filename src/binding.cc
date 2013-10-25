@@ -1,6 +1,8 @@
 #include <node.h>
 #include <v8.h>
 
+#include "OVR.h"
+
 using namespace v8;
 
 Handle<Value> getPositionData(const Arguments& args) {

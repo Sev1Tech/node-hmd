@@ -62,7 +62,7 @@
             ],
             "link_settings": {
               "libraries": [
-                "ApplicationServices.framework",
+                "CoreGraphics.framework",
                 "IOKit.framework"
               ],
             },
