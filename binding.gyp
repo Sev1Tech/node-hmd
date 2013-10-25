@@ -11,7 +11,7 @@
       "sources" : [
         "src/binding.cc",
 
-        "src/3rdParty/TinyXML/tinyxml2.cpp",
+	"src/3rdParty/TinyXml/tinyxml2.cpp",
 
         "src/LibOVR/Src/OVR_DeviceHandle.cpp",
         "src/LibOVR/Src/OVR_DeviceImpl.cpp",
