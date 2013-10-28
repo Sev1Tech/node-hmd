@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "libovr",
+      "target_name": "ovr",
 
       "include_dirs": [
         "src/LibOVR/Src",
@@ -10,8 +10,11 @@
 
       "sources" : [
         "src/binding.cc",
+        "src/HMDInfoWrap.cc",
+        "src/OvrCoordinator.cc",
+        "src/OvrCoordinatorWrap.cc",
 
-	"src/3rdParty/TinyXml/tinyxml2.cpp",
+      	"src/3rdParty/TinyXml/tinyxml2.cpp",
 
         "src/LibOVR/Src/OVR_DeviceHandle.cpp",
         "src/LibOVR/Src/OVR_DeviceImpl.cpp",
@@ -62,6 +65,7 @@
             ],
             "link_settings": {
               "libraries": [
+                "ApplicationServices.framework",
                 "CoreGraphics.framework",
                 "IOKit.framework"
               ],
