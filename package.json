@@ -1,14 +1,14 @@
 {
-  "name"            : "node-ovr",
-  "description"     : "NodeJS interface for Oculus Rift positional data.",
+  "name"            : "node-hmd",
+  "description"     : "NodeJS interface for HMD positional data.",
   "url"             : "",
-  "keywords"        : ["oculus", "rift", "libovr", "native"],
+  "keywords"        : ["hmd", "oculus", "rift", "libovr", "native"],
   "author"          : "Armin Tamzarian <tamzarian1989@gmail.com>",
   "scripts"         : {
     "test" : "mocha -R spec test/test-*.js"
   },
   "lib"             : ".",
-  "main"            : "./node-ovr.js",
+  "main"            : "./node-hmd.js",
   "repository"      : {
     "type" : "git",
     "url"  : "https://github.com/Geocent/node-ovr"
