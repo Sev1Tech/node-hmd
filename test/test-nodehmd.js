@@ -6,10 +6,10 @@ function floatCompareEquality(a, b) {
 }
 
 describe('node-hmd tests.', function() {
-	var instance = hmd();
+	var instance = hmd.createManager();
 
-	describe('constructor', function() {
-		it('Default constructor sanity test.', function() {
+	describe('#createManager', function() {
+		it('node-hmd createManager test.', function() {
 			assert.ok(instance);
 		});	
 	});
@@ -79,6 +79,26 @@ describe('node-hmd tests.', function() {
 
 		it('Default getDeviceInfo #version test.', function() {
 			assert.equal(deviceInfo.version(), 5);
+		});
+	});
+
+	describe('#getDeviceOrientation', function() {
+		var deviceOrientation = instance.getDeviceOrientation();
+
+		it('getDeviceOrientation sanity test.', function() {
+			assert.ok(deviceOrientation);
+		});
+
+		it('Default getDeviceOrientation #yaw test.', function() {
+			assert.ok(floatCompareEquality(deviceOrientation.yaw(), 0.75));
+		});
+
+		it('Default getDeviceOrientation #pitch test.', function() {
+			assert.ok(floatCompareEquality(deviceOrientation.pitch(), 1.28));
+		});
+
+		it('Default getDeviceOrientation #roll test.', function() {
+			assert.ok(floatCompareEquality(deviceOrientation.roll(), 2.33));
 		});
 	});
 });

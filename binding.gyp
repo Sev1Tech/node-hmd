@@ -14,9 +14,11 @@
 
       "sources" : [
         "src/binding.cc",
+        "src/lib/HMDDeviceFactory.cc",
         "src/lib/HMDDeviceInfo.cc",
         "src/lib/HMDDeviceInfoWrap.cc",
-        "src/lib/HMDDeviceFactory.cc",
+        "src/lib/HMDDeviceOrientation.cc",
+        "src/lib/HMDDeviceOrientationWrap.cc",
         "src/lib/HMDManagerWrap.cc",
 
         "src/support/default/DefaultDevice.cc",

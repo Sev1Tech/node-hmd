@@ -31,3 +31,9 @@ void DefaultDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
 	deviceManufacturer.copy(deviceInfo->manufacturer, MAX_DESCRIPTION_LENGTH);
 	deviceInfo->version = 5;
 }
+
+void DefaultDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {
+	deviceOrientation->yaw = 0.75;
+	deviceOrientation->pitch = 1.28;
+	deviceOrientation->roll = 2.33;
+}

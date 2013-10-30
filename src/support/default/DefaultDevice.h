@@ -18,6 +18,7 @@ class DefaultDevice : public HMDDevice {
 		static const std::string deviceManufacturer;
 	public:
 		void getDeviceInfo(HMDDeviceInfo* deviceInfo);
+		void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
 };
 
 #endif
