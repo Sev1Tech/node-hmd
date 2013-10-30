@@ -17,7 +17,6 @@
         "src/lib/HMDDeviceInfo.cc",
         "src/lib/HMDDeviceInfoWrap.cc",
         "src/lib/HMDDeviceFactory.cc",
-        "src/lib/HMDManager.cc",
         "src/lib/HMDManagerWrap.cc",
 
         "src/support/default/DefaultDevice.cc",
