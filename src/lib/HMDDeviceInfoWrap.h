@@ -17,23 +17,8 @@ class HMDDeviceInfoWrap : public node::ObjectWrap {
   		static Handle<Value> NewInstance(const Arguments& args);
   		HMDDeviceInfo* GetWrapped();
 
-      static void SetEmpty(Local<String> property, Local<Value> value, const AccessorInfo& info);
-      static Handle<Value> GetHResolution(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetVResolution(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetHScreenSize(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetVScreenSize(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetVScreenCenter(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetEyeToScreenDistance(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetLensSeparationDistance(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetInterpuillaryDistance(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetDistortionK(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetDesktopX(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetDesktopY(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetDisplayDeviceName(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetDisplayId(Local<String> property, const AccessorInfo &info);
-  		static Handle<Value> GetProductName(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetManufacturer(Local<String> property, const AccessorInfo &info);
-      static Handle<Value> GetVersion(Local<String> property, const AccessorInfo &info);
+      static Handle<Value> GetDeviceInfoProperty(Local<String> property, const AccessorInfo &info);
+
 	private:
   		HMDDeviceInfoWrap();
   		~HMDDeviceInfoWrap();

@@ -2,7 +2,8 @@
  * Copyright (c) 2013 Geocent - Published under the MIT License.
  * See LICENSE for the full text of the license.
  */
-
+#include <string>
+ 
 #include "HMDDeviceOrientation.h"
 #include "HMDDeviceOrientationWrap.h"
 
@@ -22,9 +23,9 @@ void HMDDeviceOrientationWrap::Initialize(Handle<Object> target) {
 
 	Handle<ObjectTemplate> instance = tpl->InstanceTemplate();
 	instance->SetInternalFieldCount(1);
-	instance->SetAccessor(String::NewSymbol("yaw"), GetYaw, SetEmpty);
-	instance->SetAccessor(String::NewSymbol("pitch"), GetPitch, SetEmpty);
-	instance->SetAccessor(String::NewSymbol("roll"), GetRoll, SetEmpty);
+	instance->SetAccessor(String::NewSymbol("yaw"), GetDeviceOrientationProperty);
+	instance->SetAccessor(String::NewSymbol("pitch"), GetDeviceOrientationProperty);
+	instance->SetAccessor(String::NewSymbol("roll"), GetDeviceOrientationProperty);
 
 	constructor = Persistent<Function>::New(tpl->GetFunction());
 	target->Set(String::NewSymbol("HMDDeviceOrientation"), constructor);
@@ -53,29 +54,24 @@ HMDDeviceOrientation* HMDDeviceOrientationWrap::GetWrapped() {
 	return this->_hmdDeviceOrientation;
 }
 
-void HMDDeviceOrientationWrap::SetEmpty(Local<String> property, Local<Value> value, const AccessorInfo& info) {
-}
-
-Handle<Value> HMDDeviceOrientationWrap::GetYaw(Local<String> property, const AccessorInfo &info) {
+Handle<Value> HMDDeviceOrientationWrap::GetDeviceOrientationProperty(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
 	HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(info.This());
-	HMDDeviceOrientation* hmdDeviceOrientation = w->GetWrapped();
+	HMDDeviceOrientation* hmdDeviceInfo = w->GetWrapped();
 
-	return scope.Close(Number::New(hmdDeviceOrientation->yaw));
-}
+	String::AsciiValue propertyAscii(property);
+	std::string propertyString(*propertyAscii);
 
-Handle<Value> HMDDeviceOrientationWrap::GetPitch(Local<String> property, const AccessorInfo &info) {
-	HandleScope scope;
-	HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(info.This());
-	HMDDeviceOrientation* hmdDeviceOrientation = w->GetWrapped();
-
-	return scope.Close(Number::New(hmdDeviceOrientation->pitch));
-}
-
-Handle<Value> HMDDeviceOrientationWrap::GetRoll(Local<String> property, const AccessorInfo &info) {
-	HandleScope scope;
-	HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(info.This());
-	HMDDeviceOrientation* hmdDeviceOrientation = w->GetWrapped();
-
-	return scope.Close(Number::New(hmdDeviceOrientation->roll));
+  	if(propertyString == "yaw") {
+  		return scope.Close(Number::New(hmdDeviceInfo->yaw));
+  	}
+  	if(propertyString == "pitch") {
+  		return scope.Close(Number::New(hmdDeviceInfo->pitch));
+  	}
+  	if(propertyString == "roll") {
+  		return scope.Close(Number::New(hmdDeviceInfo->roll));
+  	}
+  	else {
+  		return scope.Close(Number::New(0.0));
+  	}
 }
