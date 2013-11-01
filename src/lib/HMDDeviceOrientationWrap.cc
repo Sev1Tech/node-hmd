@@ -19,11 +19,12 @@ HMDDeviceOrientationWrap::~HMDDeviceOrientationWrap() {
 void HMDDeviceOrientationWrap::Initialize(Handle<Object> target) {
 	Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
 	tpl->SetClassName(String::NewSymbol("HMDDeviceOrientation"));
-	tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("yaw"), FunctionTemplate::New(GetYaw)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("pitch"), FunctionTemplate::New(GetPitch)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("roll"), FunctionTemplate::New(GetRoll)->GetFunction());
+	Handle<ObjectTemplate> instance = tpl->InstanceTemplate();
+	instance->SetInternalFieldCount(1);
+	instance->SetAccessor(String::NewSymbol("yaw"), GetYaw, SetEmpty);
+	instance->SetAccessor(String::NewSymbol("pitch"), GetPitch, SetEmpty);
+	instance->SetAccessor(String::NewSymbol("roll"), GetRoll, SetEmpty);
 
 	constructor = Persistent<Function>::New(tpl->GetFunction());
 	target->Set(String::NewSymbol("HMDDeviceOrientation"), constructor);
@@ -52,28 +53,28 @@ HMDDeviceOrientation* HMDDeviceOrientationWrap::GetWrapped() {
 	return this->_hmdDeviceOrientation;
 }
 
-Handle<Value> HMDDeviceOrientationWrap::GetYaw(const Arguments& args) {
-	HandleScope scope;
+void HMDDeviceOrientationWrap::SetEmpty(Local<String> property, Local<Value> value, const AccessorInfo& info) {
+}
 
-	HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(args.This());
+Handle<Value> HMDDeviceOrientationWrap::GetYaw(Local<String> property, const AccessorInfo &info) {
+	HandleScope scope;
+	HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(info.This());
 	HMDDeviceOrientation* hmdDeviceOrientation = w->GetWrapped();
 
 	return scope.Close(Number::New(hmdDeviceOrientation->yaw));
 }
 
-Handle<Value> HMDDeviceOrientationWrap::GetPitch(const Arguments& args) {
+Handle<Value> HMDDeviceOrientationWrap::GetPitch(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(args.This());
+	HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(info.This());
 	HMDDeviceOrientation* hmdDeviceOrientation = w->GetWrapped();
 
 	return scope.Close(Number::New(hmdDeviceOrientation->pitch));
 }
 
-Handle<Value> HMDDeviceOrientationWrap::GetRoll(const Arguments& args) {
+Handle<Value> HMDDeviceOrientationWrap::GetRoll(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(args.This());
+	HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(info.This());
 	HMDDeviceOrientation* hmdDeviceOrientation = w->GetWrapped();
 
 	return scope.Close(Number::New(hmdDeviceOrientation->roll));

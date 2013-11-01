@@ -19,24 +19,25 @@ HMDDeviceInfoWrap::~HMDDeviceInfoWrap() {
 void HMDDeviceInfoWrap::Initialize(Handle<Object> target) {
 	Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
 	tpl->SetClassName(String::NewSymbol("HMDDeviceInfo"));
-	tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("hResolution"), FunctionTemplate::New(GetHResolution)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("vResolution"), FunctionTemplate::New(GetVResolution)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("hScreenSize"), FunctionTemplate::New(GetHScreenSize)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("vScreenSize"), FunctionTemplate::New(GetVScreenSize)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("vScreenCenter"), FunctionTemplate::New(GetVScreenCenter)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("eyetoScreenDistance"), FunctionTemplate::New(GetEyeToScreenDistance)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("lensSeparationDistance"), FunctionTemplate::New(GetLensSeparationDistance)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("interpuillaryDistance"), FunctionTemplate::New(GetInterpuillaryDistance)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("distortionK"), FunctionTemplate::New(GetDistortionK)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("desktopX"), FunctionTemplate::New(GetDesktopX)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("desktopY"), FunctionTemplate::New(GetDesktopY)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("displayDeviceName"), FunctionTemplate::New(GetDisplayDeviceName)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("displayId"), FunctionTemplate::New(GetDisplayId)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("productName"), FunctionTemplate::New(GetProductName)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("manufacturer"), FunctionTemplate::New(GetManufacturer)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("version"), FunctionTemplate::New(GetVersion)->GetFunction());
+	Handle<ObjectTemplate> instance = tpl->InstanceTemplate();
+	instance->SetInternalFieldCount(1);
+	instance->SetAccessor(String::NewSymbol("hResolution"), GetHResolution, SetEmpty);
+	instance->SetAccessor(String::New("vResolution"), GetVResolution, SetEmpty);
+	instance->SetAccessor(String::New("hScreenSize"), GetHScreenSize, SetEmpty);
+	instance->SetAccessor(String::New("vScreenSize"), GetVScreenSize, SetEmpty);
+	instance->SetAccessor(String::New("vScreenCenter"), GetVScreenCenter, SetEmpty);
+	instance->SetAccessor(String::New("eyetoScreenDistance"), GetEyeToScreenDistance, SetEmpty);
+	instance->SetAccessor(String::New("lensSeparationDistance"), GetLensSeparationDistance, SetEmpty);
+	instance->SetAccessor(String::New("interpuillaryDistance"), GetInterpuillaryDistance, SetEmpty);
+	instance->SetAccessor(String::New("distortionK"), GetDistortionK, SetEmpty);
+	instance->SetAccessor(String::New("desktopX"), GetDesktopX, SetEmpty);
+	instance->SetAccessor(String::New("desktopY"), GetDesktopY, SetEmpty);
+	instance->SetAccessor(String::New("displayDeviceName"), GetDisplayDeviceName, SetEmpty);
+	instance->SetAccessor(String::New("displayId"), GetDisplayId, SetEmpty);
+	instance->SetAccessor(String::New("productName"), GetProductName, SetEmpty);
+	instance->SetAccessor(String::New("manufacturer"), GetManufacturer, SetEmpty);
+	instance->SetAccessor(String::New("version"), GetVersion, SetEmpty);
 
 	constructor = Persistent<Function>::New(tpl->GetFunction());
 	target->Set(String::NewSymbol("HMDDeviceInfo"), constructor);
@@ -65,82 +66,76 @@ HMDDeviceInfo* HMDDeviceInfoWrap::GetWrapped() {
 	return this->_hmdDeviceInfo;
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetHResolution(const Arguments& args) {
-	HandleScope scope;
+void HMDDeviceInfoWrap::SetEmpty(Local<String> property, Local<Value> value, const AccessorInfo& info) {
+}
 
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+Handle<Value> HMDDeviceInfoWrap::GetHResolution(Local<String> property, const AccessorInfo &info) {
+	HandleScope scope;
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
 
 	return scope.Close(Integer::New(hmdDeviceInfo->hResolution));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetVResolution(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetVResolution(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
 
 	return scope.Close(Integer::New(hmdDeviceInfo->vResolution));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetHScreenSize(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetHScreenSize(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
 
 	return scope.Close(Number::New(hmdDeviceInfo->hScreenSize));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetVScreenSize(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetVScreenSize(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
 
 	return scope.Close(Number::New(hmdDeviceInfo->vScreenSize));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetVScreenCenter(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetVScreenCenter(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
-
+	
 	return scope.Close(Number::New(hmdDeviceInfo->vScreenCenter));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetEyeToScreenDistance(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetEyeToScreenDistance(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
-
+	
 	return scope.Close(Number::New(hmdDeviceInfo->eyetoScreenDistance));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetLensSeparationDistance(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetLensSeparationDistance(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
-
+	
 	return scope.Close(Number::New(hmdDeviceInfo->lensSeparationDistance));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetInterpuillaryDistance(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetInterpuillaryDistance(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
-
+	
 	return scope.Close(Number::New(hmdDeviceInfo->interpuillaryDistance));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetDistortionK(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetDistortionK(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
 
 	Local<Array> array = Array::New(4);
@@ -153,65 +148,58 @@ Handle<Value> HMDDeviceInfoWrap::GetDistortionK(const Arguments& args) {
 	return scope.Close(array);
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetDesktopX(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetDesktopX(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
-
+	
 	return scope.Close(Integer::New(hmdDeviceInfo->desktopX));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetDesktopY(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetDesktopY(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
-
+	
 	return scope.Close(Integer::New(hmdDeviceInfo->desktopY));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetDisplayDeviceName(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetDisplayDeviceName(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
-
+	
 	return scope.Close(String::New(hmdDeviceInfo->displayDeviceName));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetDisplayId(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetDisplayId(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
-
-	return scope.Close(Number::New(hmdDeviceInfo->displayId));
+	
+	return scope.Close(Integer::New(hmdDeviceInfo->displayId));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetProductName(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetProductName(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
-
+	
 	return scope.Close(String::New(hmdDeviceInfo->productName));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetManufacturer(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetManufacturer(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
-
+	
 	return scope.Close(String::New(hmdDeviceInfo->manufacturer));
 }
 
-Handle<Value> HMDDeviceInfoWrap::GetVersion(const Arguments& args) {
+Handle<Value> HMDDeviceInfoWrap::GetVersion(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
-
-	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+	HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(info.This());
 	HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
-
+	
 	return scope.Close(Integer::New(hmdDeviceInfo->version));
 }

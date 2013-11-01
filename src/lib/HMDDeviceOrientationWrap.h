@@ -18,9 +18,10 @@ class HMDDeviceOrientationWrap : public node::ObjectWrap {
   		static Handle<Value> NewInstance(const Arguments& args);
   		HMDDeviceOrientation* GetWrapped();
 
-  		static Handle<Value> GetYaw(const Arguments& args);
-  		static Handle<Value> GetPitch(const Arguments& args);
-  		static Handle<Value> GetRoll(const Arguments& args);
+      static void SetEmpty(Local<String> property, Local<Value> value, const AccessorInfo& info);
+  		static Handle<Value> GetYaw(Local<String> property, const AccessorInfo &info);
+  		static Handle<Value> GetPitch(Local<String> property, const AccessorInfo &info);
+  		static Handle<Value> GetRoll(Local<String> property, const AccessorInfo &info);
 	private:
   		HMDDeviceOrientationWrap();
   		~HMDDeviceOrientationWrap();
