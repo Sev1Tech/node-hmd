@@ -3,12 +3,12 @@
  * See LICENSE for the full text of the license.
  */
 
-#include <string>
+#include <algorithm>
 
 #include "HMDDeviceInfo.h"
 
 HMDDeviceInfo::HMDDeviceInfo() {
-	memset(this->displayDeviceName, '\0', MAX_DESCRIPTION_LENGTH);
-	memset(this->productName, '\0', MAX_DESCRIPTION_LENGTH);
-	memset(this->manufacturer, '\0', MAX_DESCRIPTION_LENGTH);
+	std::fill(this->displayDeviceName, this->displayDeviceName + MAX_DESCRIPTION_LENGTH, '\0');
+	std::fill(this->productName, this->productName + MAX_DESCRIPTION_LENGTH, '\0');
+	std::fill(this->manufacturer, this->manufacturer + MAX_DESCRIPTION_LENGTH, '\0');
 }
