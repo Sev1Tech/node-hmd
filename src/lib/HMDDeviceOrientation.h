@@ -6,6 +6,10 @@
 #ifndef HMDDEVICEORIENTATION_H
 #define HMDDEVICEORIENTATION_H
 
+/*! \class HMDDeviceOrientation
+ * 
+ * Basic property class containg orientation state about the device.
+ */
 class HMDDeviceOrientation {
 	public:
 		float yaw;

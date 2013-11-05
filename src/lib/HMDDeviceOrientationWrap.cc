@@ -32,22 +32,18 @@ void HMDDeviceOrientationWrap::Initialize(Handle<Object> target) {
 }
 
 Handle<Value> HMDDeviceOrientationWrap::New(const Arguments& args) {
-  HandleScope scope;
-
-  HMDDeviceOrientationWrap* w = new HMDDeviceOrientationWrap();
-  w->Wrap(args.This());
-
-  return args.This();
-}
-
-Handle<Value> HMDDeviceOrientationWrap::NewInstance(const Arguments& args) {
 	HandleScope scope;
 
-	const unsigned argc = 1;
-	Handle<Value> argv[argc] = { args[0] };
-	Local<Object> instance = constructor->NewInstance(argc, argv);
-
-	return scope.Close(instance);
+	if (args.IsConstructCall()) {
+		HMDDeviceOrientationWrap* w = new HMDDeviceOrientationWrap();
+		w->Wrap(args.This());
+		return args.This();
+	}
+	else {
+		const int argc = 1;
+		Local<Value> argv[argc] = { args[0] };
+		return scope.Close(constructor->NewInstance(argc, argv));
+	}
 }
 
 HMDDeviceOrientation* HMDDeviceOrientationWrap::GetWrapped() {

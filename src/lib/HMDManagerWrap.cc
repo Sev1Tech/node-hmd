@@ -14,15 +14,6 @@
 
 using namespace v8;
 
-struct AsyncDeviceRequest {
-	uv_work_t workRequest;
-	Persistent<Function> callback;
-	const Arguments* context;
-
-	HMDDevice* hmdDevice;
-	void* requestData;
-};
-
 Persistent<Function> HMDManagerWrap::constructor;
 
 HMDManagerWrap::HMDManagerWrap(const Arguments& args) {
@@ -52,20 +43,16 @@ void HMDManagerWrap::Initialize(Handle<Object> target) {
 Handle<Value> HMDManagerWrap::New(const Arguments& args) {
 	HandleScope scope;
 
-	HMDManagerWrap* w = new HMDManagerWrap(args);
-	w->Wrap(args.This());
-
-	return args.This();
-}
-
-Handle<Value> HMDManagerWrap::NewInstance(const Arguments& args) {
-	HandleScope scope;
-
-	const unsigned argc = 1;
-	Handle<Value> argv[argc] = { args[0] };
-	Local<Object> instance = constructor->NewInstance(argc, argv);
-
-	return scope.Close(instance);
+	if (args.IsConstructCall()) {
+		HMDManagerWrap* w = new HMDManagerWrap(args);
+		w->Wrap(args.This());
+	    return args.This();
+	}
+	else {
+		const int argc = 1;
+		Local<Value> argv[argc] = { args[0] };
+		return scope.Close(constructor->NewInstance(argc, argv));
+	}
 }
 
 HMDDevice* HMDManagerWrap::GetDevice() {
@@ -95,7 +82,7 @@ void HMDManagerWrap::GetDeviceInfoRequestAsync(uv_work_t *request) {
 
 void HMDManagerWrap::GetDeviceInfoRequestAfterAsync(uv_work_t *request) {
 	AsyncDeviceRequest *asyncRequest = reinterpret_cast<AsyncDeviceRequest *>(request->data);
-	Handle<Value> hmdDeviceInfo = HMDDeviceInfoWrap::NewInstance(*(asyncRequest->context));
+	Handle<Value> hmdDeviceInfo = HMDDeviceInfoWrap::New(*(asyncRequest->context));
 	*ObjectWrap::Unwrap<HMDDeviceInfoWrap>(hmdDeviceInfo->ToObject())->GetWrapped() = *(HMDDeviceInfo *)(asyncRequest->requestData);
 
 	Handle<Value> argv[2] = { Null(), hmdDeviceInfo };
@@ -116,7 +103,7 @@ Handle<Value> HMDManagerWrap::GetDeviceInfoSync(const Arguments& args) {
 	HandleScope scope;
 
 	HMDManagerWrap* hmdManager = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
-	Handle<Value> hmdDeviceInfo = HMDDeviceInfoWrap::NewInstance(args);
+	Handle<Value> hmdDeviceInfo = HMDDeviceInfoWrap::New(args);
 
 	hmdManager->GetDevice()->getDeviceInfo(ObjectWrap::Unwrap<HMDDeviceInfoWrap>(hmdDeviceInfo->ToObject())->GetWrapped());
 
@@ -146,7 +133,7 @@ void HMDManagerWrap::GetDeviceOrientationRequestAsync(uv_work_t *request) {
 
 void HMDManagerWrap::GetDeviceOrientationRequestAfterAsync(uv_work_t *request) {
 	AsyncDeviceRequest *asyncRequest = reinterpret_cast<AsyncDeviceRequest *>(request->data);
-	Handle<Value> hmdDeviceOrientation = HMDDeviceOrientationWrap::NewInstance(*(asyncRequest->context));
+	Handle<Value> hmdDeviceOrientation = HMDDeviceOrientationWrap::New(*(asyncRequest->context));
 	*ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(hmdDeviceOrientation->ToObject())->GetWrapped() = *(HMDDeviceOrientation *)(asyncRequest->requestData);
 
 	Handle<Value> argv[2] = { Null(), hmdDeviceOrientation };
@@ -167,7 +154,7 @@ Handle<Value> HMDManagerWrap::GetDeviceOrientationSync(const Arguments& args) {
 	HandleScope scope;
 
 	HMDManagerWrap* hmdManager = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
-	Handle<Value> hmdDeviceOrientation = HMDDeviceOrientationWrap::NewInstance(args);
+	Handle<Value> hmdDeviceOrientation = HMDDeviceOrientationWrap::New(args);
 
 	hmdManager->GetDevice()->getDeviceOrientation(ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(hmdDeviceOrientation->ToObject())->GetWrapped());
 

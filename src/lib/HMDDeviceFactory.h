@@ -9,6 +9,10 @@
 #include "HMDDevice.h"
 #include "HMDDeviceType.h"
 
+/*! \class HMDDeviceFactory
+ * 
+ * Static factory class for generating supported HMDDevices which are defined in the HMDDeviceType enumeration.
+ */
 class HMDDeviceFactory {
 	public:
 		static HMDDevice* getInstance(HMDDeviceType deviceType);

@@ -14,7 +14,7 @@ using namespace v8;
 
 Handle<Value> CreateManager(const Arguments& args) {
 	HandleScope scope;
-	return scope.Close(HMDManagerWrap::NewInstance(args));
+	return scope.Close(HMDManagerWrap::New(args));
 }
 
 void RegisterModule(Handle<Object> exports, Handle<Object> module) {

@@ -8,6 +8,10 @@
 
 #define MAX_DESCRIPTION_LENGTH 32
 
+/*! \class HMDDeviceInfo
+ * 
+ * Basic property class containg information about the device.
+ */
 class HMDDeviceInfo {
 	public:
 		unsigned int hResolution;

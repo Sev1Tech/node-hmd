@@ -12,21 +12,23 @@
  
 using namespace v8;
 
+/*! \class HMDDeviceOrientationWrap
+ * 
+ * Node wrapped object class for HMDDeviceOrientation.
+ */
 class HMDDeviceOrientationWrap : public node::ObjectWrap {
+  private:
+    HMDDeviceOrientation* _hmdDeviceOrientation;
+    
+    HMDDeviceOrientationWrap();
+    ~HMDDeviceOrientationWrap();
+    static v8::Persistent<v8::Function> constructor;
+    static Handle<Value> GetDeviceOrientationProperty(Local<String> property, const AccessorInfo &info);
+
 	public:
-  		static void Initialize(v8::Handle<v8::Object> target);
-  		static Handle<Value> NewInstance(const Arguments& args);
-  		HMDDeviceOrientation* GetWrapped();
-
-  		static Handle<Value> GetDeviceOrientationProperty(Local<String> property, const AccessorInfo &info);
-      
-	private:
-  		HMDDeviceOrientationWrap();
-  		~HMDDeviceOrientationWrap();
-		static v8::Persistent<v8::Function> constructor;
-		static v8::Handle<v8::Value> New(const v8::Arguments& args);
-
-		HMDDeviceOrientation* _hmdDeviceOrientation;
+  	static void Initialize(v8::Handle<v8::Object> target);
+    static v8::Handle<v8::Value> New(const v8::Arguments& args);
+		HMDDeviceOrientation* GetWrapped();
 };
 
 #endif

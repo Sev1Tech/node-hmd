@@ -48,20 +48,16 @@ void HMDDeviceInfoWrap::Initialize(Handle<Object> target) {
 Handle<Value> HMDDeviceInfoWrap::New(const Arguments& args) {
   HandleScope scope;
 
-  HMDDeviceInfoWrap* w = new HMDDeviceInfoWrap();
-  w->Wrap(args.This());
-
-  return args.This();
-}
-
-Handle<Value> HMDDeviceInfoWrap::NewInstance(const Arguments& args) {
-	HandleScope scope;
-
-	const unsigned argc = 1;
-	Handle<Value> argv[argc] = { args[0] };
-	Local<Object> instance = constructor->NewInstance(argc, argv);
-
-	return scope.Close(instance);
+  if (args.IsConstructCall()) {
+    HMDDeviceInfoWrap* w = new HMDDeviceInfoWrap();
+    w->Wrap(args.This());
+    return args.This();
+  }
+  else {
+    const int argc = 1;
+    Local<Value> argv[argc] = { args[0] };
+    return scope.Close(constructor->NewInstance(argc, argv));
+  }
 }
 
 HMDDeviceInfo* HMDDeviceInfoWrap::GetWrapped() {

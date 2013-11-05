@@ -9,6 +9,10 @@
 #include "HMDDeviceInfo.h"
 #include "HMDDeviceOrientation.h"
 
+/*! \class HMDDevice
+ * 
+ * Base HMD device from which all supported devices extend. 
+ */
 class HMDDevice {
 	public:
 		virtual ~HMDDevice();

@@ -12,19 +12,31 @@
 
 using namespace v8;
 
+/*! \struct AsyncDeviceRequest
+ * 
+ * Struct designed to handle state and data associated with asynchronous device communication requests.
+ */
+typedef struct AsyncDeviceRequest_ {
+	uv_work_t workRequest;
+	Persistent<Function> callback;
+	const Arguments* context;
+
+	HMDDevice* hmdDevice;
+	void* requestData;
+} AsyncDeviceRequest;
+
+/*! \class HMDManagerWrap
+ * 
+ * Node wrapped object class which acts as the main interface for the node-hmd module.
+ */
 class HMDManagerWrap : public node::ObjectWrap {
 	private:
 		HMDDevice* _hmdDevice;
 
-  		// Class Methods
 		HMDManagerWrap(const Arguments& args);
   		~HMDManagerWrap();
-
-		// Required V8 Methods
 		static Persistent<Function> constructor;
-		static Handle<Value> New(const Arguments& args);
 
-		// Wrapped Property Methods
   		static Handle<Value> GetDeviceInfoAsync(const Arguments& args);
 		static void GetDeviceInfoRequestAsync(uv_work_t *r);
 		static void GetDeviceInfoRequestAfterAsync(uv_work_t *r);
@@ -37,7 +49,7 @@ class HMDManagerWrap : public node::ObjectWrap {
 
 	public:
   		static void Initialize(Handle<Object> target);
-  		static Handle<Value> NewInstance(const Arguments& args);
+		static Handle<Value> New(const Arguments& args);
 		HMDDevice* GetDevice();
 };
 
