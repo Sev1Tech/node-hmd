@@ -85,7 +85,7 @@ Handle<Value> HMDDeviceInfoWrap::GetDeviceInfoProperty(Local<String> property, c
   	else if(propertyString == "hScreenSize") {
   		return scope.Close(Number::New(hmdDeviceInfo->hScreenSize));
   	}
-  	else if(propertyString == "vResolution") {
+  	else if(propertyString == "vScreenSize") {
   		return scope.Close(Number::New(hmdDeviceInfo->vScreenSize));
   	}
   	else if(propertyString == "vScreenCenter") {

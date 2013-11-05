@@ -25,8 +25,15 @@ class HMDManagerWrap : public node::ObjectWrap {
 		static Handle<Value> New(const Arguments& args);
 
 		// Wrapped Property Methods
-  		static Handle<Value> GetDeviceInfo(const Arguments& args);
-  		static Handle<Value> GetDeviceOrientation(const Arguments& args);
+  		static Handle<Value> GetDeviceInfoAsync(const Arguments& args);
+		static void GetDeviceInfoRequestAsync(uv_work_t *r);
+		static void GetDeviceInfoRequestAfterAsync(uv_work_t *r);
+  		static Handle<Value> GetDeviceInfoSync(const Arguments& args);
+
+  		static Handle<Value> GetDeviceOrientationAsync(const Arguments& args);
+		static void GetDeviceOrientationRequestAsync(uv_work_t *r);
+		static void GetDeviceOrientationRequestAfterAsync(uv_work_t *r);
+  		static Handle<Value> GetDeviceOrientationSync(const Arguments& args);
 
 	public:
   		static void Initialize(Handle<Object> target);

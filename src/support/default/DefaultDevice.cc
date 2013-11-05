@@ -15,6 +15,8 @@ const std::string DefaultDevice::deviceManufacturer = "Geocent LLC";
 void DefaultDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
 	deviceInfo->hResolution = 800;
 	deviceInfo->vResolution = 600;
+	deviceInfo->hScreenSize = 0.8;
+	deviceInfo->vScreenSize = 0.64;
 	deviceInfo->vScreenCenter = 300;
 	deviceInfo->eyetoScreenDistance = 0.01;
 	deviceInfo->lensSeparationDistance = 0.02;

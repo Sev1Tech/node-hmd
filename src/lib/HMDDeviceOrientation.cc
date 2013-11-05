@@ -12,3 +12,11 @@ HMDDeviceOrientation::HMDDeviceOrientation() {
 HMDDeviceOrientation::~HMDDeviceOrientation() {
 
 }
+
+HMDDeviceOrientation& HMDDeviceOrientation::operator= (const HMDDeviceOrientation &deviceOrientation) {
+	this->yaw = deviceOrientation.yaw;
+	this->pitch = deviceOrientation.pitch;
+	this->roll = deviceOrientation.roll;
+	
+	return *this;	
+}

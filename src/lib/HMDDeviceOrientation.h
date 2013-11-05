@@ -14,6 +14,9 @@ class HMDDeviceOrientation {
 
 		HMDDeviceOrientation();
 		~HMDDeviceOrientation();
+		
+		HMDDeviceOrientation& operator= (const HMDDeviceOrientation &deviceOrientation);
+
 };
 
 #endif

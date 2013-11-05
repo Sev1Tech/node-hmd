@@ -15,9 +15,40 @@ describe('node-hmd tests.', function() {
 	});
 
 	describe('#getDeviceInfo', function() {
-		var deviceInfo = instance.getDeviceInfo();
+		it('getDeviceInfo sanity test.', function(done) {
+			instance.getDeviceInfo(function(err, deviceInfo) {
+				assert.ok(deviceInfo);
 
-		it('getDeviceInfo sanity test.', function() {
+				assert.equal(deviceInfo.hResolution, 800);
+				assert.equal(deviceInfo.vResolution, 600);
+				assert.ok(floatCompareEquality(deviceInfo.hScreenSize, 0.8));
+				assert.ok(floatCompareEquality(deviceInfo.vScreenSize, 0.64));
+				assert.equal(deviceInfo.vScreenCenter, 300);
+				assert.ok(floatCompareEquality(deviceInfo.eyetoScreenDistance, 0.01));
+				assert.ok(floatCompareEquality(deviceInfo.lensSeparationDistance, 0.02));
+				assert.ok(floatCompareEquality(deviceInfo.interpuillaryDistance, 0.025));
+				var distortionK = deviceInfo.distortionK;
+				assert.ok(floatCompareEquality(distortionK[0], 1.1));
+				assert.ok(floatCompareEquality(distortionK[1], 2.2));
+				assert.ok(floatCompareEquality(distortionK[2], 3.3));
+				assert.ok(floatCompareEquality(distortionK[3], 4.4));
+				assert.equal(deviceInfo.desktopX, 1920);
+				assert.equal(deviceInfo.desktopY, 1080);
+				assert.equal(deviceInfo.displayDeviceName, "node-hmd mock device");
+				assert.equal(deviceInfo.displayId, 1234567890);
+				assert.equal(deviceInfo.productName, "Default Device");
+				assert.equal(deviceInfo.manufacturer, "Geocent LLC");
+				assert.equal(deviceInfo.version, 5);
+
+				done();
+			});
+		});
+	});
+
+	describe('#getDeviceInfoSync', function() {
+		var deviceInfo = instance.getDeviceInfoSync();
+
+		it('getDeviceInfoSync sanity test.', function() {
 			assert.ok(deviceInfo);
 		});
 
@@ -27,6 +58,12 @@ describe('node-hmd tests.', function() {
 
 		it('Default getDeviceInfo #vResolution test.', function() {
 			assert.equal(deviceInfo.vResolution, 600);
+		});
+		it('Default getDeviceInfo #hScreenSize test.', function() {
+			assert.ok(floatCompareEquality(deviceInfo.hScreenSize, 0.8));
+		});
+		it('Default getDeviceInfo #vScreenSize test.', function() {
+			assert.ok(floatCompareEquality(deviceInfo.vScreenSize, 0.64));
 		});
 
 		it('Default getDeviceInfo #vScreenCenter test.', function() {
@@ -83,7 +120,21 @@ describe('node-hmd tests.', function() {
 	});
 
 	describe('#getDeviceOrientation', function() {
-		var deviceOrientation = instance.getDeviceOrientation();
+		it('getDeviceOrientation sanity test.', function(done) {
+			instance.getDeviceOrientation(function(err, deviceOrientation) {
+				assert.ok(deviceOrientation);
+				
+				assert.ok(floatCompareEquality(deviceOrientation.yaw, 0.75));
+				assert.ok(floatCompareEquality(deviceOrientation.pitch, 1.28));
+				assert.ok(floatCompareEquality(deviceOrientation.roll, 2.33));
+
+				done();
+			});
+		});
+	});
+
+	describe('#getDeviceOrientationSync', function() {
+		var deviceOrientation = instance.getDeviceOrientationSync();
 
 		it('getDeviceOrientation sanity test.', function() {
 			assert.ok(deviceOrientation);

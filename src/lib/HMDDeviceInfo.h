@@ -29,6 +29,8 @@ class HMDDeviceInfo {
 
 		HMDDeviceInfo();
 		~HMDDeviceInfo();
+
+		HMDDeviceInfo& operator= (const HMDDeviceInfo &deviceInfo);
 };
 
 #endif
