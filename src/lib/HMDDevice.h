@@ -6,6 +6,8 @@
 #ifndef HMDDEVICE_H
 #define HMDDEVICE_H
 
+#include <string>
+ 
 #include "HMDDeviceInfo.h"
 #include "HMDDeviceOrientation.h"
 
@@ -15,6 +17,8 @@
  */
 class HMDDevice {
 	public:
+		static const std::string classToken;
+
 		virtual ~HMDDevice();
 		virtual void getDeviceInfo(HMDDeviceInfo* deviceInfo);
 		virtual void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);

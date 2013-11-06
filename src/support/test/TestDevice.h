@@ -3,15 +3,15 @@
  * See LICENSE for the full text of the license.
  */
 
-#ifndef DEFAULTDEVICE_H
-#define DEFAULTDEVICE_H
+#ifndef TESTDEVICE_H
+#define TESTDEVICE_H
 
 #include <iostream>
 #include <string>
 
 #include "HMDDevice.h"
 
-class DefaultDevice : public HMDDevice {
+class TestDevice : public HMDDevice {
 	private:
 		static const std::string displayDeviceName;
 		static const std::string deviceName;

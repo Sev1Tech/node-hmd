@@ -6,7 +6,20 @@ function floatCompareEquality(a, b) {
 }
 
 describe('node-hmd tests.', function() {
-	var instance = hmd.createManager();
+	it('#getSupported', function() {
+		console.log(hmd.getSupported());
+	});	
+});
+
+describe('node-hmd manager tests.', function() {
+	var instance = hmd.createManager("test");
+
+	describe('#createManager', function() {
+		it('node-hmd createManager failure test.', function() {
+			assert.strictEqual(typeof(hmd.createManager()), "undefined");
+			assert.strictEqual(typeof(hmd.createManager("doesnotexist")), "undefined");
+		});	
+	});
 
 	describe('#createManager', function() {
 		it('node-hmd createManager test.', function() {
@@ -34,9 +47,9 @@ describe('node-hmd tests.', function() {
 				assert.ok(floatCompareEquality(distortionK[3], 4.4));
 				assert.equal(deviceInfo.desktopX, 1920);
 				assert.equal(deviceInfo.desktopY, 1080);
-				assert.equal(deviceInfo.displayDeviceName, "node-hmd mock device");
+				assert.equal(deviceInfo.displayDeviceName, "node-hmd test device");
 				assert.equal(deviceInfo.displayId, 1234567890);
-				assert.equal(deviceInfo.productName, "Default Device");
+				assert.equal(deviceInfo.productName, "Test Device");
 				assert.equal(deviceInfo.manufacturer, "Geocent LLC");
 				assert.equal(deviceInfo.version, 5);
 
@@ -99,7 +112,7 @@ describe('node-hmd tests.', function() {
 		});
 
 		it('Default getDeviceInfo #displayDeviceName test.', function() {
-			assert.equal(deviceInfo.displayDeviceName, "node-hmd mock device");
+			assert.equal(deviceInfo.displayDeviceName, "node-hmd test device");
 		});
 
 		it('Default getDeviceInfo #displayId test.', function() {
@@ -107,7 +120,7 @@ describe('node-hmd tests.', function() {
 		});
 
 		it('Default getDeviceInfo #productName test.', function() {
-			assert.equal(deviceInfo.productName, "Default Device");
+			assert.equal(deviceInfo.productName, "Test Device");
 		});
 
 		it('Default getDeviceInfo #manufacturer test.', function() {

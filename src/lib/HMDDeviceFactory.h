@@ -6,8 +6,10 @@
 #ifndef HMDDEVICEFACTORY_H
 #define HMDDEVICEFACTORY_H
 
+#include <list>
+#include <string>
+
 #include "HMDDevice.h"
-#include "HMDDeviceType.h"
 
 /*! \class HMDDeviceFactory
  * 
@@ -15,7 +17,8 @@
  */
 class HMDDeviceFactory {
 	public:
-		static HMDDevice* getInstance(HMDDeviceType deviceType);
+		static std::list<std::string> getSupportedDevices();
+		static HMDDevice* getInstance(const char* token);
 };
 
 #endif

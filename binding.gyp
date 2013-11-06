@@ -7,6 +7,7 @@
         "src/lib",
         
         "src/support/default",
+        "src/support/test",
 
         "src/support/ovr/LibOVR/Src",
         "src/support/ovr/LibOVR/Include"
@@ -22,6 +23,7 @@
         "src/lib/HMDManagerWrap.cc",
 
         "src/support/default/DefaultDevice.cc",
+        "src/support/test/TestDevice.cc",
 
       	"src/support/ovr/3rdParty/TinyXml/tinyxml2.cpp",
         "src/support/ovr/LibOVR/Src/OVR_DeviceHandle.cpp",

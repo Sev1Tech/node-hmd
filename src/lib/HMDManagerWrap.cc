@@ -9,15 +9,14 @@
 #include "HMDDeviceInfo.h"
 #include "HMDDeviceInfoWrap.h"
 #include "HMDDeviceOrientationWrap.h"
-#include "HMDDeviceType.h"
 #include "HMDManagerWrap.h"
 
 using namespace v8;
 
 Persistent<Function> HMDManagerWrap::constructor;
 
-HMDManagerWrap::HMDManagerWrap(const Arguments& args) {
-	this->_hmdDevice = HMDDeviceFactory::getInstance(DEVICETYPE_DEFAULT); //TODO: Feed the factory.
+HMDManagerWrap::HMDManagerWrap(const char* classToken) {
+	this->_hmdDevice = HMDDeviceFactory::getInstance(classToken);
 }
 
 HMDManagerWrap::~HMDManagerWrap() {
@@ -44,7 +43,13 @@ Handle<Value> HMDManagerWrap::New(const Arguments& args) {
 	HandleScope scope;
 
 	if (args.IsConstructCall()) {
-		HMDManagerWrap* w = new HMDManagerWrap(args);
+		v8::String::AsciiValue token(args[0]);
+		HMDManagerWrap* w = new HMDManagerWrap(*token);
+
+		if(w->GetDevice() == NULL) {
+			ThrowException(Exception::TypeError(String::New("Invalid device creation token.")));
+		}
+
 		w->Wrap(args.This());
 	    return args.This();
 	}

@@ -3,19 +3,31 @@
  * See LICENSE for the full text of the license.
  */
 
+#include <list>
+#include <string>
+
 #include "HMDDevice.h"
 #include "HMDDeviceFactory.h"
-#include "HMDDeviceType.h"
 
 #include "DefaultDevice.h"
+#include "TestDevice.h"
 
-HMDDevice* HMDDeviceFactory::getInstance(HMDDeviceType deviceType) {
-	switch(deviceType) {
-		case DEVICETYPE_OCULUS_RIFT:
-			return 0;
-			break;
-		default:
-			return new DefaultDevice();
-			break;
+std::list<std::string> HMDDeviceFactory::getSupportedDevices() {
+	std::list<std::string> devices;
+
+	devices.push_back(DefaultDevice::classToken);
+
+	return devices;
+}
+
+HMDDevice* HMDDeviceFactory::getInstance(const char* token) {
+	if(DefaultDevice::classToken.compare(token) == 0) {
+		return new DefaultDevice();
+	}
+	if(TestDevice::classToken.compare(token) == 0) {
+		return new TestDevice();
+	}
+	else {
+		return NULL;
 	}
 }

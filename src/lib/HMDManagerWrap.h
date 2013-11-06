@@ -33,7 +33,7 @@ class HMDManagerWrap : public node::ObjectWrap {
 	private:
 		HMDDevice* _hmdDevice;
 
-		HMDManagerWrap(const Arguments& args);
+		HMDManagerWrap(const char* classToken);
   		~HMDManagerWrap();
 		static Persistent<Function> constructor;
 
