@@ -1,5 +1,4 @@
 # node-hmd
-==========
 
 This module serves to act as a common interface for communicating with a variety of head mounted displays (HMDs). While most applications should expect to access the HMD data as often as possible in a consistent manner both synchronous and asynchronous interfaces are provided in order to conform with Node.js community standards. It is the responsiblity of the end user to properly access the HMD positional data in the manner most appropriate for the application.
 
