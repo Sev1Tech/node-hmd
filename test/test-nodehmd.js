@@ -7,7 +7,8 @@ function floatCompareEquality(a, b) {
 
 describe('node-hmd tests.', function() {
 	it('#getSupported', function() {
-		console.log(hmd.getSupported());
+		var supportedDevices = hmd.getSupportedDevices();
+		assert.ok(supportedDevices.length > 0);
 	});	
 });
 

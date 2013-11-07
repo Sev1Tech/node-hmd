@@ -29,7 +29,7 @@ Handle<Value> CreateManager(const Arguments& args) {
 	}
 }
 
-Handle<Value> GetSupported(const Arguments& args) {
+Handle<Value> GetSupportedDevices(const Arguments& args) {
 	HandleScope scope;
 	std::list<std::string> supported = HMDDeviceFactory::getSupportedDevices();
 
@@ -49,7 +49,7 @@ void RegisterModule(Handle<Object> exports, Handle<Object> module) {
 	HMDManagerWrap::Initialize(exports);
 
 	exports->Set(String::NewSymbol("createManager"), FunctionTemplate::New(CreateManager)->GetFunction());
-	exports->Set(String::NewSymbol("getSupported"), FunctionTemplate::New(GetSupported)->GetFunction());
+	exports->Set(String::NewSymbol("getSupportedDevices"), FunctionTemplate::New(GetSupportedDevices)->GetFunction());
 }
 
 NODE_MODULE(hmd, RegisterModule);
