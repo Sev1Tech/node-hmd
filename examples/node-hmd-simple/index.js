@@ -1,8 +1,11 @@
 var hmd = require("../.."),
-	express = require("express");
+	express = require("express"),
+	http = require('http');
+
+var manager = hmd.createManager("default");
 
 var app = express();
-var manager = hmd.createManager("default");
+app.set('port', process.env.PORT || 3000);
 
 app.get("/supported", function(req, res) {
 	res.json(hmd.getSupportedDevices());
@@ -20,4 +23,6 @@ app.get("/orientation", function(req, res) {
 	});
 });
 
-app.listen(3000);
+http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});
