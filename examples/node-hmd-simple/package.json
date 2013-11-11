@@ -1,0 +1,9 @@
+{
+  "name"            : "node-hmd-simple",
+  "description"     : "NodeJS interface for HMD positional data.",
+  "main"            : "./node-hmd.js",
+  "version"         : "1.0.0",
+  "dependencies" : {
+    "express" : "*"
+  }
+}

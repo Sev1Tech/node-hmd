@@ -16,14 +16,14 @@ using namespace v8;
  * 
  * Struct designed to handle state and data associated with asynchronous device communication requests.
  */
-typedef struct AsyncDeviceRequest_ {
+struct AsyncDeviceRequest {
 	uv_work_t workRequest;
 	Persistent<Function> callback;
 	const Arguments* context;
 
 	HMDDevice* hmdDevice;
 	void* requestData;
-} AsyncDeviceRequest;
+};
 
 /*! \class HMDManagerWrap
  * 
