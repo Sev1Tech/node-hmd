@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Example node-hmd transport via Socket.IO</title>
+
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		function appendToParent (parent, text) {
+			var td = document.createElement("td");
+			td.appendChild(document.createTextNode(text));
+			parent.appendChild(td);
+		}
+
+		var socket = io.connect("http://localhost:3000");
+		socket.on("orientation", function (data) {
+			var tr = document.createElement("tr");
+			appendToParent(tr, new Date().getTime());
+			appendToParent(tr, data.pitch);
+			appendToParent(tr, data.roll);
+			appendToParent(tr, data.yaw);
+
+			document.getElementById("data").appendChild(tr);
+		});
+	</script>
+
+	<style type="text/css">
+		* { font-family: "Courier New"; }
+		td { text-align: center; }
+		#attrib {
+			padding: 3px;
+			float: right; border: 1px solid #bfbfbf;
+			background-color: white;
+			box-shadow: 2px 2px 3px #aaaaaa;
+		}
+		#attrib, #attrib * { font-family: "Arial"; font-size: 10pt; }
+}
+	</style>
+</head>
+<body>
+	<div id="attrib">
+		Built with <a href ="http://nodejs.org//">Node.js</a> and <a href ="http://socket.io/">Socket.IO</a>
+	</div>
+
+	<table>
+		<thead>
+			<th>Timestamp</th>
+			<th>Pitch</th>
+			<th>Roll</th>
+			<th>Yaw</th>
+		</thead>
+		<tbody id="data">
+		</tbody>
+	</table>
+</body>
+</html>

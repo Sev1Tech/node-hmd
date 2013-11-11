@@ -1,8 +1,9 @@
 {
-  "name"            : "node-hmd-simple",
+  "name"            : "node-hmd-socketio",
   "description"     : "NodeJS interface for HMD positional data.",
   "version"         : "1.0.0",
   "dependencies" : {
-    "express" : "*"
+    "express" : "*",
+    "socket.io" : "*"
   }
 }
