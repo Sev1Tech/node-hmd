@@ -10,12 +10,14 @@
 #include "HMDDeviceFactory.h"
 
 #include "DefaultDevice.h"
+#include "OculusRiftDevice.h"
 #include "TestDevice.h"
 
 std::list<std::string> HMDDeviceFactory::getSupportedDevices() {
 	std::list<std::string> devices;
 
 	devices.push_back(DefaultDevice::classToken);
+	devices.push_back(OculusRiftDevice::classToken);
 
 	return devices;
 }
@@ -24,7 +26,10 @@ HMDDevice* HMDDeviceFactory::getInstance(const char* token) {
 	if(DefaultDevice::classToken.compare(token) == 0) {
 		return new DefaultDevice();
 	}
-	if(TestDevice::classToken.compare(token) == 0) {
+	else if(OculusRiftDevice::classToken.compare(token) == 0) {
+		return new OculusRiftDevice();
+	}
+	else if(TestDevice::classToken.compare(token) == 0) {
 		return new TestDevice();
 	}
 	else {

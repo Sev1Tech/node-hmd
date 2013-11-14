@@ -7,6 +7,7 @@
         "src/lib",
         
         "src/support/default",
+        "src/support/ovr",
         "src/support/test",
 
         "src/support/ovr/LibOVR/Src",
@@ -23,6 +24,7 @@
         "src/lib/HMDManagerWrap.cc",
 
         "src/support/default/DefaultDevice.cc",
+        "src/support/ovr/OculusRiftDevice.cc",
         "src/support/test/TestDevice.cc",
 
       	"src/support/ovr/3rdParty/TinyXml/tinyxml2.cpp",
