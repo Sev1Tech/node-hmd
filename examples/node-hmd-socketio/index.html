@@ -19,8 +19,19 @@
 			appendToParent(tr, data.roll);
 			appendToParent(tr, data.yaw);
 
-			document.getElementById("data").appendChild(tr);
+			var parent = document.getElementById("data");
+
+			parent.insertBefore(tr, parent.firstChild);
+
+			if(parent.children.length > 100) {
+				parent.removeChild(parent.lastChild);
+			}
 		});
+
+		function adjustDelay(control) {
+			document.getElementById("delayLabel").firstChild.nodeValue = control.value +" ms";
+			socket.emit('adjust', control.value);
+		}
 	</script>
 
 	<style type="text/css">
@@ -33,12 +44,19 @@
 			box-shadow: 2px 2px 3px #aaaaaa;
 		}
 		#attrib, #attrib * { font-family: "Arial"; font-size: 10pt; }
-}
+
 	</style>
 </head>
 <body>
+
 	<div id="attrib">
-		Built with <a href ="http://nodejs.org//">Node.js</a> and <a href ="http://socket.io/">Socket.IO</a>
+		Built with <a href ="http://nodejs.org/">Node.js</a> and <a href ="http://socket.io/">Socket.IO</a>
+	</div>
+
+	<div style="padding-bottom: 1em;">
+		<label for="delay">Polling Delay</label>
+		<input id="delay" name="delay" type="range" min="20" max="1000" step="20" value="500" onChange="adjustDelay(this);"/>
+		<span id="delayLabel">500 ms</span>
 	</div>
 
 	<table>
