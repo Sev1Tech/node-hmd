@@ -19,6 +19,7 @@ OculusRiftDevice::OculusRiftDevice() {
 	this->pHMD = *pManager->EnumerateDevices<OVR::HMDDevice>().CreateDevice();
 
 	if (this->pHMD) {
+	   pHMD->GetDeviceInfo(&this->DeviceInfo);
 	   pSensor = *pHMD->GetSensor();
 	}
 	else {
@@ -41,28 +42,27 @@ OculusRiftDevice::~OculusRiftDevice() {
 }
 
 void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
-	OVR::HMDInfo DeviceInfo;
-	this->pHMD->GetDeviceInfo(&DeviceInfo);
+	std::cout << this->DeviceInfo.HResolution << std::endl;
 
-	deviceInfo->hResolution = DeviceInfo.HResolution;
-	deviceInfo->vResolution = DeviceInfo.VResolution;
-	deviceInfo->hScreenSize = DeviceInfo.HScreenSize;
-	deviceInfo->vScreenSize = DeviceInfo.VScreenSize;
-	deviceInfo->vScreenCenter = DeviceInfo.VScreenCenter;
-	deviceInfo->eyetoScreenDistance = DeviceInfo.EyeToScreenDistance;;
-	deviceInfo->lensSeparationDistance = DeviceInfo.LensSeparationDistance;
-	deviceInfo->interpuillaryDistance = DeviceInfo.InterpupillaryDistance;
-	deviceInfo->distortionK[0] = DeviceInfo.DistortionK[0];
-	deviceInfo->distortionK[1] = DeviceInfo.DistortionK[1];
-	deviceInfo->distortionK[2] = DeviceInfo.DistortionK[2];
-	deviceInfo->distortionK[3] = DeviceInfo.DistortionK[3];
-	deviceInfo->desktopX = DeviceInfo.DesktopX;
-	deviceInfo->desktopY = DeviceInfo.DesktopY;
+	deviceInfo->hResolution = this->DeviceInfo.HResolution;
+	deviceInfo->vResolution = this->DeviceInfo.VResolution;
+	deviceInfo->hScreenSize = this->DeviceInfo.HScreenSize;
+	deviceInfo->vScreenSize = this->DeviceInfo.VScreenSize;
+	deviceInfo->vScreenCenter = this->DeviceInfo.VScreenCenter;
+	deviceInfo->eyetoScreenDistance = this->DeviceInfo.EyeToScreenDistance;;
+	deviceInfo->lensSeparationDistance = this->DeviceInfo.LensSeparationDistance;
+	deviceInfo->interpuillaryDistance = this->DeviceInfo.InterpupillaryDistance;
+	deviceInfo->distortionK[0] = this->DeviceInfo.DistortionK[0];
+	deviceInfo->distortionK[1] = this->DeviceInfo.DistortionK[1];
+	deviceInfo->distortionK[2] = this->DeviceInfo.DistortionK[2];
+	deviceInfo->distortionK[3] = this->DeviceInfo.DistortionK[3];
+	deviceInfo->desktopX = this->DeviceInfo.DesktopX;
+	deviceInfo->desktopY = this->DeviceInfo.DesktopY;
 	strcpy(deviceInfo->displayDeviceName, "Oculus Rift");
-	deviceInfo->displayId = DeviceInfo.DisplayId;
-	strcpy(deviceInfo->productName, DeviceInfo.ProductName);
-	strcpy(deviceInfo->manufacturer, DeviceInfo.Manufacturer);
-	deviceInfo->version = DeviceInfo.Version;
+	deviceInfo->displayId = this->DeviceInfo.DisplayId;
+	strcpy(deviceInfo->productName, this->DeviceInfo.ProductName);
+	strcpy(deviceInfo->manufacturer, this->DeviceInfo.Manufacturer);
+	deviceInfo->version = this->DeviceInfo.Version;
 }
 
 void OculusRiftDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {

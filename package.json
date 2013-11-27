@@ -1,9 +1,9 @@
 {
   "name"            : "node-hmd",
   "description"     : "NodeJS interface for HMD positional data.",
-  "url"             : "",
+  "url"             : "https://github.com/Geocent/node-hmd",
   "keywords"        : ["hmd", "oculus", "rift", "libovr", "native"],
-  "author"          : "Armin Tamzarian <tamzarian1989@gmail.com>",
+  "author"          : "GeoJosh <joshua.penton@geocent.com>",
   "scripts"         : {
     "test" : "mocha -R spec test/test-*.js"
   },

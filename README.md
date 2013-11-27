@@ -96,7 +96,7 @@ hmd.createManager("unsupported"); // -> undefined
 
 ### hmd.HMDManager.getDeviceInfo(`callback`)
 
-Returns relevant information about the HMD associated with the HMDManager at creation time.
+Returns relevant information about the HMD associated with the HMDManager at creation time. Note that the video signal for the HMD likely needs to be active for this function to properly execute.
 
 * `callback` - (Function(error, deviceInfo)) Callback to execute once the device information has been retrieved from the HMD.
 
