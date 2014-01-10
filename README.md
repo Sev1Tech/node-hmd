@@ -8,7 +8,7 @@ The current list of supported HMDs are as follows:
 * Unresponsive default device
 * Unresponsive testing mock device
 
-[![Build Status](https://travis-ci.org/GeoJosh/node-hmd.png?branch=master)](https://travis-ci.org/GeoJosh/node-hmd)
+[![Build Status](https://travis-ci.org/Geocent/node-hmd.png?branch=master)](https://travis-ci.org/Geocent/node-hmd)
 
 ## Getting Started
 
