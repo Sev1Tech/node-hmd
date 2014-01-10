@@ -142,6 +142,11 @@ manager.getDeviceOrientationSync(); // -> [object HMDDeviceOrientation]
 
 ## Release notes
 
+### 0.1.1
+
+* Updated project description
+* Integrated project with Travis CI build support
+
 ### 0.1.0
 
 * Initial Release
