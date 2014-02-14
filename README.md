@@ -8,8 +8,6 @@ The current list of supported HMDs are as follows:
 * Unresponsive default device
 * Unresponsive testing mock device
 
-[![Build Status](https://travis-ci.org/Geocent/node-hmd.png?branch=master)](https://travis-ci.org/Geocent/node-hmd)
-
 ## Getting Started
 
 ### Prerequisites
@@ -143,6 +141,10 @@ manager.getDeviceOrientationSync(); // -> [object HMDDeviceOrientation]
 ```
 
 ## Release notes
+
+### 0.1.2
+* Updated Oculus SDK to version 0.2.5c
+* Removed Travis CI build support
 
 ### 0.1.1
 
