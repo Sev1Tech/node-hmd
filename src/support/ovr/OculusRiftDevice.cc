@@ -11,67 +11,45 @@
 const std::string OculusRiftDevice::classToken = "oculusrift";
 
 OculusRiftDevice::OculusRiftDevice() {
-	OVR::System::Init();
+	ovr_Initialize();
 
-	this->pFusionResult = new OVR::SensorFusion();
-	this->pManager = *OVR::DeviceManager::Create();
-
-	this->pHMD = *pManager->EnumerateDevices<OVR::HMDDevice>().CreateDevice();
-
-	if (this->pHMD) {
-	   pHMD->GetDeviceInfo(&this->DeviceInfo);
-	   pSensor = *pHMD->GetSensor();
-	}
-	else {
-	   pSensor = *pManager->EnumerateDevices<OVR::SensorDevice>().CreateDevice();
-	}
-
-	if (pSensor) {
-	   pFusionResult->AttachToSensor(pSensor);
-	}
+	this->hmd = ovrHmd_Create(0);
+	ovrHmd_ConfigureTracking(this->hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0);
 }
 
 OculusRiftDevice::~OculusRiftDevice() {
-	this->pSensor.Clear();
-    this->pHMD.Clear();
-	this->pManager.Clear();
-
-	delete this->pFusionResult;
-
-	OVR::System::Destroy();
+	ovrHmd_Destroy(this->hmd);
+	ovr_Shutdown();
 }
 
 void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
-	std::cout << this->DeviceInfo.HResolution << std::endl;
-
-	deviceInfo->hResolution = this->DeviceInfo.HResolution;
-	deviceInfo->vResolution = this->DeviceInfo.VResolution;
-	deviceInfo->hScreenSize = this->DeviceInfo.HScreenSize;
-	deviceInfo->vScreenSize = this->DeviceInfo.VScreenSize;
-	deviceInfo->vScreenCenter = this->DeviceInfo.VScreenCenter;
-	deviceInfo->eyetoScreenDistance = this->DeviceInfo.EyeToScreenDistance;;
-	deviceInfo->lensSeparationDistance = this->DeviceInfo.LensSeparationDistance;
-	deviceInfo->interpuillaryDistance = this->DeviceInfo.InterpupillaryDistance;
-	deviceInfo->distortionK[0] = this->DeviceInfo.DistortionK[0];
-	deviceInfo->distortionK[1] = this->DeviceInfo.DistortionK[1];
-	deviceInfo->distortionK[2] = this->DeviceInfo.DistortionK[2];
-	deviceInfo->distortionK[3] = this->DeviceInfo.DistortionK[3];
-	deviceInfo->desktopX = this->DeviceInfo.DesktopX;
-	deviceInfo->desktopY = this->DeviceInfo.DesktopY;
-	strcpy(deviceInfo->displayDeviceName, "Oculus Rift");
-	deviceInfo->displayId = this->DeviceInfo.DisplayId;
-	strcpy(deviceInfo->productName, this->DeviceInfo.ProductName);
-	strcpy(deviceInfo->manufacturer, this->DeviceInfo.Manufacturer);
-	deviceInfo->version = this->DeviceInfo.Version;
+	deviceInfo->hResolution = this->hmd->Resolution.w;
+	deviceInfo->vResolution = this->hmd->Resolution.h;
+	// deviceInfo->hScreenSize = this->DeviceInfo.HScreenSize;
+	// deviceInfo->vScreenSize = this->DeviceInfo.VScreenSize;
+	// deviceInfo->vScreenCenter = this->DeviceInfo.VScreenCenter;
+	// deviceInfo->eyetoScreenDistance = this->DeviceInfo.EyeToScreenDistance;;
+	// deviceInfo->lensSeparationDistance = this->DeviceInfo.LensSeparationDistance;
+	// deviceInfo->interpuillaryDistance = this->DeviceInfo.InterpupillaryDistance;
+	// deviceInfo->distortionK[0] = this->DeviceInfo.DistortionK[0];
+	// deviceInfo->distortionK[1] = this->DeviceInfo.DistortionK[1];
+	// deviceInfo->distortionK[2] = this->DeviceInfo.DistortionK[2];
+	// deviceInfo->distortionK[3] = this->DeviceInfo.DistortionK[3];
+	// deviceInfo->desktopX = this->DeviceInfo.DesktopX;
+	// deviceInfo->desktopY = this->DeviceInfo.DesktopY;
+	strcpy(deviceInfo->displayDeviceName, this->hmd->DisplayDeviceName);
+	deviceInfo->displayId = this->hmd->DisplayId;
+	strcpy(deviceInfo->productName, this->hmd->ProductName);
+	strcpy(deviceInfo->manufacturer, this->hmd->Manufacturer);
+	// deviceInfo->version = this->DeviceInfo.Version;
 }
 
 void OculusRiftDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {
-	OVR::Quatf quaternion = pFusionResult->GetOrientation();
+	ovrTrackingState trackingState  = ovrHmd_GetTrackingState(hmd, ovr_GetTimeInSeconds());
 
-	float yaw, pitch, roll;
-	quaternion.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(&yaw, &pitch, &roll);
+	if (trackingState.StatusFlags & ovrStatus_OrientationTracked) {
+		OVR::Posef pose = trackingState.HeadPose.ThePose;
+		pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(&deviceOrientation->yaw, &deviceOrientation->pitch, &deviceOrientation->roll);
+	}
 
-	deviceOrientation->yaw = yaw;
-	deviceOrientation->pitch = pitch;
-	deviceOrientation->roll = roll;
 }

@@ -14,11 +14,8 @@
 
 class OculusRiftDevice : public HMDDevice {
 	private:
-		OVR::Ptr<OVR::DeviceManager> pManager;
-		OVR::Ptr<OVR::HMDDevice> pHMD;
-		OVR::Ptr<OVR::SensorDevice> pSensor;
-		OVR::SensorFusion* pFusionResult;
-		OVR::HMDInfo DeviceInfo;
+		ovrHmd hmd;
+		// ovrFrameTiming frameTiming;
 	public:
 		static const std::string classToken;
 
