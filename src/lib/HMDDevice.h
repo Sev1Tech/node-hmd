@@ -20,7 +20,7 @@ class HMDDevice {
 		static const std::string classToken;
 
 		virtual ~HMDDevice();
-		virtual void getDeviceInfo(HMDDeviceInfo* deviceInfo);
+		// virtual void getDeviceInfo(HMDDeviceInfo* deviceInfo);
 		virtual void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
 };
 

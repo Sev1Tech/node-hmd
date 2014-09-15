@@ -9,6 +9,7 @@
 
       "include_dirs": [
         "src/lib",
+        "src/3rdparty/nan",
         
         "src/support/default",
         "src/support/ovr",

@@ -7,6 +7,7 @@
 #define HMDDEVICEORIENTATIONWRAP_H
 
 #include <node.h>
+#include <nan.h>
 
 #include "HMDDeviceOrientation.h"
  
@@ -22,12 +23,12 @@ class HMDDeviceOrientationWrap : public node::ObjectWrap {
     
     HMDDeviceOrientationWrap();
     ~HMDDeviceOrientationWrap();
-    static v8::Persistent<v8::Function> constructor;
-    static Handle<Value> GetDeviceOrientationProperty(Local<String> property, const AccessorInfo &info);
+    static Persistent<Function> constructor;
+    static NAN_GETTER(GetDeviceOrientationProperty);
 
 	public:
-  	static void Initialize(v8::Handle<v8::Object> target);
-    static v8::Handle<v8::Value> New(const v8::Arguments& args);
+  	static void Initialize(Handle<v8::Object> target);
+    static NAN_METHOD(New);
 		HMDDeviceOrientation* GetWrapped();
 };
 

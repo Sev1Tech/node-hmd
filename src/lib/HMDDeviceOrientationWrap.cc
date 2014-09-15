@@ -3,7 +3,10 @@
  * See LICENSE for the full text of the license.
  */
 #include <string>
- 
+
+#include <node.h>
+#include <nan.h>
+
 #include "HMDDeviceOrientation.h"
 #include "HMDDeviceOrientationWrap.h"
 
@@ -18,31 +21,31 @@ HMDDeviceOrientationWrap::~HMDDeviceOrientationWrap() {
 }
 
 void HMDDeviceOrientationWrap::Initialize(Handle<Object> target) {
-	Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
-	tpl->SetClassName(String::NewSymbol("HMDDeviceOrientation"));
+	Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
+	tpl->SetClassName(NanNew<String>("HMDDeviceOrientation"));
 
 	Handle<ObjectTemplate> instance = tpl->InstanceTemplate();
 	instance->SetInternalFieldCount(1);
-	instance->SetAccessor(String::NewSymbol("yaw"), GetDeviceOrientationProperty);
-	instance->SetAccessor(String::NewSymbol("pitch"), GetDeviceOrientationProperty);
-	instance->SetAccessor(String::NewSymbol("roll"), GetDeviceOrientationProperty);
+	instance->SetAccessor(NanNew<String>("yaw"), GetDeviceOrientationProperty);
+	instance->SetAccessor(NanNew<String>("pitch"), GetDeviceOrientationProperty);
+	instance->SetAccessor(NanNew<String>("roll"), GetDeviceOrientationProperty);
 
-	constructor = Persistent<Function>::New(tpl->GetFunction());
-	target->Set(String::NewSymbol("HMDDeviceOrientation"), constructor);
+	NanAssignPersistent<Function>(constructor, tpl->GetFunction());
+	target->Set(NanNew<String>("HMDDeviceOrientation"), constructor);
 }
 
-Handle<Value> HMDDeviceOrientationWrap::New(const Arguments& args) {
-	HandleScope scope;
+NAN_METHOD(HMDDeviceOrientationWrap::New) {
+	NanScope();
 
 	if (args.IsConstructCall()) {
 		HMDDeviceOrientationWrap* w = new HMDDeviceOrientationWrap();
 		w->Wrap(args.This());
-		return args.This();
+		NanReturnValue(args.This());
 	}
 	else {
 		const int argc = 1;
 		Local<Value> argv[argc] = { args[0] };
-		return scope.Close(constructor->NewInstance(argc, argv));
+		NanReturnValue(constructor->NewInstance(argc, argv));
 	}
 }
 
@@ -50,24 +53,24 @@ HMDDeviceOrientation* HMDDeviceOrientationWrap::GetWrapped() {
 	return this->_hmdDeviceOrientation;
 }
 
-Handle<Value> HMDDeviceOrientationWrap::GetDeviceOrientationProperty(Local<String> property, const AccessorInfo &info) {
-	HandleScope scope;
-	HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(info.This());
+NAN_GETTER(HMDDeviceOrientationWrap::GetDeviceOrientationProperty) {
+	NanScope();
+
+	HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(args.This());
 	HMDDeviceOrientation* hmdDeviceInfo = w->GetWrapped();
 
-	String::AsciiValue propertyAscii(property);
-	std::string propertyString(*propertyAscii);
+	std::string propertyString(*NanAsciiString(property));
 
   	if(propertyString == "yaw") {
-  		return scope.Close(Number::New(hmdDeviceInfo->yaw));
+  		NanReturnValue(NanNew<Number>(hmdDeviceInfo->yaw));
   	}
-  	if(propertyString == "pitch") {
-  		return scope.Close(Number::New(hmdDeviceInfo->pitch));
+  	else if(propertyString == "pitch") {
+  		NanReturnValue(NanNew<Number>(hmdDeviceInfo->pitch));
   	}
-  	if(propertyString == "roll") {
-  		return scope.Close(Number::New(hmdDeviceInfo->roll));
+  	else if(propertyString == "roll") {
+  		NanReturnValue(NanNew<Number>(hmdDeviceInfo->roll));
   	}
   	else {
-  		return scope.Close(Number::New(0.0));
+  		NanReturnValue(NanNew<Number>(0.0));
   	}
 }

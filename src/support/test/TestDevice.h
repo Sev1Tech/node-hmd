@@ -19,7 +19,7 @@ class TestDevice : public HMDDevice {
 		
 	public:
 		static const std::string classToken;
-		void getDeviceInfo(HMDDeviceInfo* deviceInfo);
+		// void getDeviceInfo(HMDDeviceInfo* deviceInfo);
 		void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
 };
 

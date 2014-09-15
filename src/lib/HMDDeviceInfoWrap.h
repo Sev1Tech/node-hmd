@@ -7,8 +7,10 @@
 #define HMDDEVICEINFOWRAP_H
 
 #include <node.h>
+#include <nan.h>
 
 #include "HMDDevice.h"
+
 using namespace v8;
 
 /*! \class HMDDeviceInfoWrap
@@ -16,18 +18,18 @@ using namespace v8;
  * Node wrapped object class for HMDDeviceInfo.
  */
 class HMDDeviceInfoWrap : public node::ObjectWrap {
-  private:
-    HMDDeviceInfo* _hmdDeviceInfo;
+    private:
+        HMDDeviceInfo* _hmdDeviceInfo;
 
-    HMDDeviceInfoWrap();
-    ~HMDDeviceInfoWrap();
-    static v8::Persistent<v8::Function> constructor;
-    static Handle<Value> GetDeviceInfoProperty(Local<String> property, const AccessorInfo &info);
+        HMDDeviceInfoWrap();
+        ~HMDDeviceInfoWrap();
+        static Persistent<Function> constructor;
+        static NAN_GETTER(GetDeviceInfoProperty);
 
-	public:
-    static void Initialize(v8::Handle<v8::Object> target);
-    static v8::Handle<v8::Value> New(const v8::Arguments& args);
-    HMDDeviceInfo* GetWrapped();
+    public:
+        static void Initialize(Handle<Object> target);
+        static NAN_METHOD(New);
+        HMDDeviceInfo* GetWrapped();
 };
 
 #endif

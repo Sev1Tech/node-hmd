@@ -9,6 +9,8 @@
 #include <node.h>
 #include <v8.h>
 
+#include <nan.h>
+
 #include "HMDDeviceFactory.h"
 #include "HMDDeviceInfoWrap.h"
 #include "HMDDeviceOrientationWrap.h"
@@ -16,31 +18,31 @@
 
 using namespace v8;
 
-Handle<Value> CreateManager(const Arguments& args) {
-	HandleScope scope;
+NAN_METHOD(CreateManager) {
+	NanScope();
 
 	TryCatch trycatch;
 	Handle<Value> hmdManager = HMDManagerWrap::New(args);
 	if(hmdManager.IsEmpty()) {
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	else{
-		return scope.Close(hmdManager);
+		NanReturnValue(hmdManager);
 	}
 }
 
-Handle<Value> GetSupportedDevices(const Arguments& args) {
-	HandleScope scope;
+NAN_METHOD(GetSupportedDevices) {
+	NanScope();
 	std::list<std::string> supported = HMDDeviceFactory::getSupportedDevices();
 
-	Local<Array> array = Array::New(supported.size());
+	Local<Array> array = NanNew<Array>(supported.size());
 	int i = 0;
 
 	for (std::list<std::string>::iterator it = supported.begin(); it != supported.end(); it++) {
-		array->Set(i++, String::New((*it).c_str()));
+		array->Set(i++, NanNew(*it));
 	}
 
-	return scope.Close(array);
+	NanReturnValue(array);
 }
 
 void RegisterModule(Handle<Object> exports, Handle<Object> module) {
@@ -48,8 +50,8 @@ void RegisterModule(Handle<Object> exports, Handle<Object> module) {
 	HMDDeviceOrientationWrap::Initialize(exports);
 	HMDManagerWrap::Initialize(exports);
 
-	exports->Set(String::NewSymbol("createManager"), FunctionTemplate::New(CreateManager)->GetFunction());
-	exports->Set(String::NewSymbol("getSupportedDevices"), FunctionTemplate::New(GetSupportedDevices)->GetFunction());
+	exports->Set(NanNew<String>("createManager"), NanNew<FunctionTemplate>(CreateManager)->GetFunction());
+	exports->Set(NanNew<String>("getSupportedDevices"), NanNew<FunctionTemplate>(GetSupportedDevices)->GetFunction());
 }
 
 NODE_MODULE(hmd, RegisterModule);
