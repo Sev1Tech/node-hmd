@@ -3,33 +3,31 @@
  * See LICENSE for the full text of the license.
  */
 
-#ifndef HMDDEVICEORIENTATIONWRAP_H
-#define HMDDEVICEORIENTATIONWRAP_H
+#ifndef SRC_LIB_HMDDEVICEORIENTATIONWRAP_H_
+#define SRC_LIB_HMDDEVICEORIENTATIONWRAP_H_
 
 #include <node.h>
 #include <nan.h>
 
 #include "HMDDeviceOrientation.h"
- 
-using namespace v8;
 
 /*! \class HMDDeviceOrientationWrap
  * 
  * Node wrapped object class for HMDDeviceOrientation.
  */
 class HMDDeviceOrientationWrap : public node::ObjectWrap {
-  private:
+ private:
     HMDDeviceOrientation* _hmdDeviceOrientation;
-    
+
     HMDDeviceOrientationWrap();
     ~HMDDeviceOrientationWrap();
-    static Persistent<Function> constructor;
+    static v8::Persistent<v8::Function> constructor;
     static NAN_GETTER(GetDeviceOrientationProperty);
 
-	public:
-  	static void Initialize(Handle<v8::Object> target);
+ public:
+    static void Initialize(v8::Handle<v8::Object> target);
     static NAN_METHOD(New);
-		HMDDeviceOrientation* GetWrapped();
+    HMDDeviceOrientation* GetWrapped();
 };
 
-#endif
+#endif  // SRC_LIB_HMDDEVICEORIENTATIONWRAP_H_

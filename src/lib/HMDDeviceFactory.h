@@ -3,8 +3,8 @@
  * See LICENSE for the full text of the license.
  */
 
-#ifndef HMDDEVICEFACTORY_H
-#define HMDDEVICEFACTORY_H
+#ifndef SRC_LIB_HMDDEVICEFACTORY_H_
+#define SRC_LIB_HMDDEVICEFACTORY_H_
 
 #include <list>
 #include <string>
@@ -16,9 +16,9 @@
  * Static factory class for generating supported HMDDevices which are defined in the HMDDeviceType enumeration.
  */
 class HMDDeviceFactory {
-	public:
-		static std::list<std::string> getSupportedDevices();
-		static HMDDevice* getInstance(const char* token);
+ public:
+    static std::list<std::string> getSupportedDevices();
+    static HMDDevice* getInstance(const char* token);
 };
 
-#endif
+#endif  // SRC_LIB_HMDDEVICEFACTORY_H_

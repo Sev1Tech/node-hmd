@@ -3,26 +3,25 @@
  * See LICENSE for the full text of the license.
  */
 
-#ifndef OCULUSRIFTDEVICE_H
-#define OCULUSRIFTDEVICE_H
+#ifndef SRC_SUPPORT_OVR_OCULUSRIFTDEVICE_H_
+#define SRC_SUPPORT_OVR_OCULUSRIFTDEVICE_H_
 
-#include <iostream>
 #include <string>
 
 #include "HMDDevice.h"
 #include "OVR.h"
 
 class OculusRiftDevice : public HMDDevice {
-	private:
-		ovrHmd hmd;
-		// ovrFrameTiming frameTiming;
-	public:
-		static const std::string classToken;
+ private:
+    ovrHmd hmd;
+    // ovrFrameTiming frameTiming;
+ public:
+    static const std::string classToken;
 
-		OculusRiftDevice();
-		~OculusRiftDevice();
-		// void getDeviceInfo(HMDDeviceInfo* deviceInfo);
-		void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
+    OculusRiftDevice();
+    ~OculusRiftDevice();
+    // void getDeviceInfo(HMDDeviceInfo* deviceInfo);
+    void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
 };
 
-#endif
+#endif  // SRC_SUPPORT_OVR_OCULUSRIFTDEVICE_H_

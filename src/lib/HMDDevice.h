@@ -3,11 +3,11 @@
  * See LICENSE for the full text of the license.
  */
 
-#ifndef HMDDEVICE_H
-#define HMDDEVICE_H
+#ifndef SRC_LIB_HMDDEVICE_H_
+#define SRC_LIB_HMDDEVICE_H_
 
 #include <string>
- 
+
 #include "HMDDeviceInfo.h"
 #include "HMDDeviceOrientation.h"
 
@@ -16,12 +16,12 @@
  * Base HMD device from which all supported devices extend. 
  */
 class HMDDevice {
-	public:
-		static const std::string classToken;
+ public:
+    static const std::string classToken;
 
-		virtual ~HMDDevice();
-		// virtual void getDeviceInfo(HMDDeviceInfo* deviceInfo);
-		virtual void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
+    virtual ~HMDDevice();
+    // virtual void getDeviceInfo(HMDDeviceInfo* deviceInfo);
+    virtual void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
 };
 
-#endif
+#endif  // SRC_LIB_HMDDEVICE_H_

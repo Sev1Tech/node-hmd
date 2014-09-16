@@ -3,24 +3,23 @@
  * See LICENSE for the full text of the license.
  */
 
-#ifndef HMDDEVICEORIENTATION_H
-#define HMDDEVICEORIENTATION_H
+#ifndef SRC_LIB_HMDDEVICEORIENTATION_H_
+#define SRC_LIB_HMDDEVICEORIENTATION_H_
 
 /*! \class HMDDeviceOrientation
  * 
  * Basic property class containg orientation state about the device.
  */
 class HMDDeviceOrientation {
-	public:
-		float yaw;
-		float pitch;
-		float roll;
+ public:
+    float yaw;
+    float pitch;
+    float roll;
 
-		HMDDeviceOrientation();
-		~HMDDeviceOrientation();
-		
-		HMDDeviceOrientation& operator= (const HMDDeviceOrientation &deviceOrientation);
+    HMDDeviceOrientation();
+    ~HMDDeviceOrientation();
 
+    HMDDeviceOrientation& operator= (const HMDDeviceOrientation &deviceOrientation);
 };
 
-#endif
+#endif  // SRC_LIB_HMDDEVICEORIENTATION_H_
