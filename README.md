@@ -143,7 +143,8 @@ manager.getDeviceOrientationSync(); // -> [object HMDDeviceOrientation]
 ## Release notes
 
 ### 0.2.0
-* Updated Oculus SDK to version 0.2.5c
+* Updated Oculus SDK to version 0.4.2 Beta
+* Implemented [NAN](https://github.com/rvagg/nan) signatures for better Node.js version support.
 * cpplint source code compliance.
 
 ### 0.1.2
@@ -163,7 +164,7 @@ manager.getDeviceOrientationSync(); // -> [object HMDDeviceOrientation]
 
 (The MIT License)
 
-Copyright (c) 2013 Geocent
+Copyright (c) 2013-2014 Geocent
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
