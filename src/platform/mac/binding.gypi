@@ -69,12 +69,19 @@
           "LibOVR/Src/Util/Util_LatencyTest2Reader.cpp",
           "LibOVR/Src/Util/Util_Render_Stereo.cpp"
         ],
+
         "link_settings": {
           "libraries": [
             "ApplicationServices.framework",
             "CoreGraphics.framework",
             "IOKit.framework"
           ],
+        },
+
+        "xcode_settings": {
+          "GCC_ENABLE_CPP_RTTI": "YES",
+          "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
+          "OTHER_CPLUSPLUSFLAGS" : [ "-stdlib=libc++", "-mmacosx-version-min=10.7" ]
         }
     }]
   ]

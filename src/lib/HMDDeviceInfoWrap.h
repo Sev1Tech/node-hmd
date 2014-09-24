@@ -7,7 +7,7 @@
 #define SRC_LIB_HMDDEVICEINFOWRAP_H_
 
 #include <node.h>
-#include <nan.h>
+#include <nan/nan.h>
 
 #include "HMDDevice.h"
 

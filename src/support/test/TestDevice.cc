@@ -13,27 +13,25 @@ const std::string TestDevice::deviceManufacturer = "Geocent LLC";
 
 const std::string TestDevice::classToken = "test";
 
-// void TestDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
-//  deviceInfo->hResolution = 800;
-//  deviceInfo->vResolution = 600;
-//  deviceInfo->hScreenSize = 0.8;
-//  deviceInfo->vScreenSize = 0.64;
-//  deviceInfo->vScreenCenter = 300;
-//  deviceInfo->eyetoScreenDistance = 0.01;
-//  deviceInfo->lensSeparationDistance = 0.02;
-//  deviceInfo->interpuillaryDistance = 0.025;
-//  deviceInfo->distortionK[0] = 1.1;
-//  deviceInfo->distortionK[1] = 2.2;
-//  deviceInfo->distortionK[2] = 3.3;
-//  deviceInfo->distortionK[3] = 4.4;
-//  deviceInfo->desktopX = 1920;
-//  deviceInfo->desktopY = 1080;
-//  displayDeviceName.copy(deviceInfo->displayDeviceName, MAX_DESCRIPTION_LENGTH);
-//  deviceInfo->displayId = 1234567890;
-//  deviceName.copy(deviceInfo->productName, MAX_DESCRIPTION_LENGTH);
-//  deviceManufacturer.copy(deviceInfo->manufacturer, MAX_DESCRIPTION_LENGTH);
-//  deviceInfo->version = 5;
-// }
+void TestDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
+    deviceInfo->insertElement("hResolution", 800);
+    deviceInfo->insertElement("vResolution", 600);
+    deviceInfo->insertElement("hScreenSize", 0.8);
+    deviceInfo->insertElement("vScreenSize", 0.64);
+    deviceInfo->insertElement("vScreenCenter", 300);
+    deviceInfo->insertElement("eyetoScreenDistance", 0.01);
+    deviceInfo->insertElement("lensSeparationDistance", 0.02);
+    deviceInfo->insertElement("interpuillaryDistance", 0.025);
+    float distortionK[] = {1.1, 2.2, 3.3, 4.4};
+    deviceInfo->insertElement("distortionK", distortionK, 4);
+    deviceInfo->insertElement("desktopX", 1920);
+    deviceInfo->insertElement("desktopY", 1080);
+    deviceInfo->insertElement("displayDeviceName", displayDeviceName);
+    deviceInfo->insertElement("displayId", 1234567890);
+    deviceInfo->insertElement("productName", deviceName);
+    deviceInfo->insertElement("manufacturer", deviceManufacturer);
+    deviceInfo->insertElement("version", 5);
+}
 
 void TestDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {
     deviceOrientation->yaw = 0.75;

@@ -35,9 +35,9 @@ void HMDManagerWrap::Initialize(Handle<Object> target) {
     tpl->SetClassName(NanNew("HMDManager"));
     tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
-    // tpl->PrototypeTemplate()->Set(String::NewSymbol("getDeviceInfo"), FunctionTemplate::New(GetDeviceInfoAsync)->GetFunction());
-    // tpl->PrototypeTemplate()->Set(String::NewSymbol("getDeviceInfoSync"), FunctionTemplate::New(GetDeviceInfoSync)->GetFunction());
-    // tpl->PrototypeTemplate()->Set(NanNew("getDeviceOrientation"), NanNew<FunctionTemplate>(GetDeviceOrientationAsync)->GetFunction());
+    tpl->PrototypeTemplate()->Set(NanNew("getDeviceInfo"), FunctionTemplate::New(GetDeviceInfoAsync)->GetFunction());
+    tpl->PrototypeTemplate()->Set(NanNew("getDeviceInfoSync"), NanNew<FunctionTemplate>(GetDeviceInfoSync)->GetFunction());
+    tpl->PrototypeTemplate()->Set(NanNew("getDeviceOrientation"), NanNew<FunctionTemplate>(GetDeviceOrientationAsync)->GetFunction());
     tpl->PrototypeTemplate()->Set(NanNew("getDeviceOrientationSync"), NanNew<FunctionTemplate>(GetDeviceOrientationSync)->GetFunction());
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
@@ -67,97 +67,38 @@ HMDDevice* HMDManagerWrap::GetDevice() {
     return this->_hmdDevice;
 }
 
-// Handle<Value> HMDManagerWrap::GetDeviceInfoAsync(const Arguments& args) {
-//  HMDManagerWrap* hmdManager = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
+NAN_METHOD(HMDManagerWrap::GetDeviceInfoAsync) {
+  NanScope();
 
-//  AsyncDeviceRequest *asyncRequest = new AsyncDeviceRequest;
-//  asyncRequest->workRequest.data = reinterpret_cast<void *>(asyncRequest);
-//  asyncRequest->callback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
-//  asyncRequest->context = new Arguments(args);
+  HMDManagerWrap* hmdManagerWrap = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
+  NanCallback *callback = new NanCallback(args[0].As<Function>());
 
-//  asyncRequest->hmdDevice = hmdManager->GetDevice();
-//  asyncRequest->requestData = reinterpret_cast<void *>(new HMDDeviceInfo);
+  NanAsyncQueueWorker(new GetDeviceInfoWorker(callback, hmdManagerWrap->GetDevice(), args));
+  NanReturnUndefined();
+}
 
-//  uv_queue_work(uv_default_loop(), &asyncRequest->workRequest, GetDeviceInfoRequestAsync, (uv_after_work_cb)GetDeviceInfoRequestAfterAsync);
+NAN_METHOD(HMDManagerWrap::GetDeviceInfoSync) {
+    NanScope();
 
-//  return Undefined();
-// }
+    Handle<Value> hmdDeviceInfoHandle = HMDDeviceInfoWrap::New(args);
 
-// void HMDManagerWrap::GetDeviceInfoRequestAsync(uv_work_t *request) {
-//  AsyncDeviceRequest *asyncRequest = reinterpret_cast<AsyncDeviceRequest *>(request->data);
-//  asyncRequest->hmdDevice->getDeviceInfo(reinterpret_cast<HMDDeviceInfo *>(asyncRequest->requestData));
-// }
+    HMDManagerWrap* hmdManagerWrap = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
+    HMDDeviceInfoWrap* hmdDeviceInfoWrap = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(hmdDeviceInfoHandle->ToObject());
 
-// void HMDManagerWrap::GetDeviceInfoRequestAfterAsync(uv_work_t *request) {
-//  AsyncDeviceRequest *asyncRequest = reinterpret_cast<AsyncDeviceRequest *>(request->data);
-//  Handle<Value> hmdDeviceInfo = HMDDeviceInfoWrap::New(*(asyncRequest->context));
-//  *ObjectWrap::Unwrap<HMDDeviceInfoWrap>(hmdDeviceInfo->ToObject())->GetWrapped() = *reinterpret_cast<HMDDeviceInfo *>(asyncRequest->requestData);
+    hmdManagerWrap->GetDevice()->getDeviceInfo(hmdDeviceInfoWrap->GetWrapped());
 
-//  Handle<Value> argv[2] = { Null(), hmdDeviceInfo };
+    NanReturnValue(hmdDeviceInfoHandle);
+}
 
-//  TryCatch tryCatch;
+NAN_METHOD(HMDManagerWrap::GetDeviceOrientationAsync) {
+  NanScope();
 
-//  asyncRequest->callback->Call(Context::GetCurrent()->Global(), 2, argv);
-//  asyncRequest->callback.Dispose();
-//  delete asyncRequest->context;
-//  delete reinterpret_cast<HMDDeviceInfo *>(asyncRequest->requestData);
-//  delete asyncRequest;
+  HMDManagerWrap* hmdManagerWrap = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
+  NanCallback *callback = new NanCallback(args[0].As<Function>());
 
-//  if (tryCatch.HasCaught()) {
-//      node::FatalException(tryCatch);
-//  }
-// }
-
-// Handle<Value> HMDManagerWrap::GetDeviceInfoSync(const Arguments& args) {
-//  HandleScope scope;
-
-//  HMDManagerWrap* hmdManager = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
-//  Handle<Value> hmdDeviceInfo = HMDDeviceInfoWrap::New(args);
-
-//  hmdManager->GetDevice()->getDeviceInfo(ObjectWrap::Unwrap<HMDDeviceInfoWrap>(hmdDeviceInfo->ToObject())->GetWrapped());
-
-//  return scope.Close(hmdDeviceInfo);
-// }
-
-// Handle<Value> HMDManagerWrap::GetDeviceOrientationAsync(const Arguments& args) {
-//  HMDManagerWrap* hmdManager = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
-
-//  AsyncDeviceRequest *asyncRequest = new AsyncDeviceRequest;
-//  asyncRequest->workRequest.data = reinterpret_cast<void *>(asyncRequest);
-//  asyncRequest->callback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
-//  asyncRequest->context = new Arguments(args);
-
-//  asyncRequest->hmdDevice = hmdManager->GetDevice();
-//  asyncRequest->requestData = reinterpret_cast<void *>(new HMDDeviceOrientation);
-
-//  uv_queue_work(uv_default_loop(), &asyncRequest->workRequest, GetDeviceOrientationRequestAsync, (uv_after_work_cb)GetDeviceOrientationRequestAfterAsync);
-
-//  return Undefined();
-// }
-
-// void HMDManagerWrap::GetDeviceOrientationRequestAsync(uv_work_t *request) {
-//  AsyncDeviceRequest *asyncRequest = reinterpret_cast<AsyncDeviceRequest *>(request->data);
-//  asyncRequest->hmdDevice->getDeviceOrientation(reinterpret_cast<HMDDeviceOrientation *>(asyncRequest->requestData));
-// }
-
-// void HMDManagerWrap::GetDeviceOrientationRequestAfterAsync(uv_work_t *request) {
-//  AsyncDeviceRequest *asyncRequest = reinterpret_cast<AsyncDeviceRequest *>(request->data);
-//  Handle<Value> hmdDeviceOrientation = HMDDeviceOrientationWrap::New(*(asyncRequest->context));
-//  *ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(hmdDeviceOrientation->ToObject())->GetWrapped() = *reinterpret_cast<HMDDeviceOrientation *>(asyncRequest->requestData);
-
-//  Handle<Value> argv[2] = { Null(), hmdDeviceOrientation };
-
-//  TryCatch tryCatch;
-
-//  asyncRequest->callback->Call(Context::GetCurrent()->Global(), 2, argv);
-//  asyncRequest->callback.Dispose();
-//  delete asyncRequest->context;
-//  delete reinterpret_cast<HMDDeviceOrientation *>(asyncRequest->requestData);
-
-//  if (tryCatch.HasCaught()) {
-//      node::FatalException(tryCatch);
-//  }
-// }
+  NanAsyncQueueWorker(new GetDeviceOrientationWorker(callback, hmdManagerWrap->GetDevice(), args));
+  NanReturnUndefined();
+}
 
 NAN_METHOD(HMDManagerWrap::GetDeviceOrientationSync) {
     NanScope();
@@ -168,4 +109,37 @@ NAN_METHOD(HMDManagerWrap::GetDeviceOrientationSync) {
     hmdManager->GetDevice()->getDeviceOrientation(ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(hmdDeviceOrientation->ToObject())->GetWrapped());
 
     NanReturnValue(hmdDeviceOrientation);
+}
+
+
+void GetDeviceInfoWorker::Execute() {
+    this->hmdDevice->getDeviceInfo(&this->hmdDeviceInfo);
+}
+
+void GetDeviceInfoWorker::HandleOKCallback() {
+    NanScope();
+
+    Handle<Value> hmdDeviceInfoHandle = HMDDeviceInfoWrap::New(this->args);
+    HMDDeviceInfoWrap* hmdDeviceInfo = node::ObjectWrap::Unwrap<HMDDeviceInfoWrap>(hmdDeviceInfoHandle->ToObject());
+    *hmdDeviceInfo->GetWrapped() = this->hmdDeviceInfo;
+
+    Handle<Value> argv[] = { NanNull(), hmdDeviceInfoHandle };
+
+    callback->Call(2, argv);
+}
+
+void GetDeviceOrientationWorker::Execute() {
+    this->hmdDevice->getDeviceOrientation(&this->hmdDeviceOrientation);
+}
+
+void GetDeviceOrientationWorker::HandleOKCallback() {
+    NanScope();
+
+    Handle<Value> hmdDeviceOrientationHandle = HMDDeviceOrientationWrap::New(this->args);
+    HMDDeviceOrientationWrap* hmdDeviceOrientation = node::ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(hmdDeviceOrientationHandle->ToObject());
+    *hmdDeviceOrientation->GetWrapped() = this->hmdDeviceOrientation;
+
+    Handle<Value> argv[] = { NanNull(), hmdDeviceOrientationHandle };
+
+    callback->Call(2, argv);
 }

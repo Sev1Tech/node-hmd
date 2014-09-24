@@ -20,7 +20,7 @@ class OculusRiftDevice : public HMDDevice {
 
     OculusRiftDevice();
     ~OculusRiftDevice();
-    // void getDeviceInfo(HMDDeviceInfo* deviceInfo);
+    void getDeviceInfo(HMDDeviceInfo* deviceInfo);
     void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
 };
 

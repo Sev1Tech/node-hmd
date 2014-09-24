@@ -7,7 +7,7 @@
 #define SRC_LIB_HMDDEVICEORIENTATIONWRAP_H_
 
 #include <node.h>
-#include <nan.h>
+#include <nan/nan.h>
 
 #include "HMDDeviceOrientation.h"
 

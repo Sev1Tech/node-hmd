@@ -142,6 +142,10 @@ manager.getDeviceOrientationSync(); // -> [object HMDDeviceOrientation]
 
 ## Release notes
 
+### 0.2.0
+* Updated Oculus SDK to version 0.2.5c
+* cpplint source code compliance.
+
 ### 0.1.2
 * Updated Oculus SDK to version 0.2.5c
 * Removed Travis CI build support

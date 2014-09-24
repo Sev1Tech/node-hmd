@@ -9,7 +9,7 @@
 
       "include_dirs": [
         "src/lib",
-        "src/3rdparty/nan",
+        "src/3rdparty",
         
         "src/support/default",
         "src/support/ovr",
@@ -18,6 +18,7 @@
 
       "sources" : [
         "src/binding.cc",
+        "src/lib/HMDDevice.cc",
         "src/lib/HMDDeviceFactory.cc",
         "src/lib/HMDDeviceInfo.cc",
         "src/lib/HMDDeviceInfoWrap.cc",
@@ -28,6 +29,16 @@
         "src/support/default/DefaultDevice.cc",
         "src/support/ovr/OculusRiftDevice.cc",
         "src/support/test/TestDevice.cc"
+      ],
+
+      "cflags!" : [
+        "-fno-rtti",
+        "-fno-exceptions"
+      ],
+
+      "cflags_cc!" : [
+        "-fno-rtti",
+        "-fno-exceptions"
       ]
     }
   ]

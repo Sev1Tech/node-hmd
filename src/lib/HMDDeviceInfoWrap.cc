@@ -3,7 +3,9 @@
  * See LICENSE for the full text of the license.
  */
 
+#include <boost/any.hpp>
 #include <string>
+#include <vector>
 
 #include "HMDDeviceInfo.h"
 #include "HMDDeviceInfoWrap.h"
@@ -35,22 +37,7 @@ void HMDDeviceInfoWrap::Initialize(Handle<Object> target) {
 
     Handle<ObjectTemplate> instance = tpl->InstanceTemplate();
     instance->SetInternalFieldCount(1);
-    instance->SetAccessor(NanNew("hResolution"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("vResolution"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("hScreenSize"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("vScreenSize"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("vScreenCenter"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("eyetoScreenDistance"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("lensSeparationDistance"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("interpuillaryDistance"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("distortionK"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("desktopX"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("desktopY"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("displayDeviceName"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("displayId"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("productName"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("manufacturer"), GetDeviceInfoProperty);
-    instance->SetAccessor(NanNew("version"), GetDeviceInfoProperty);
+    instance->SetNamedPropertyHandler(GetDeviceInfoProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
     target->Set(NanNew("HMDDeviceInfo"), constructor);
@@ -79,49 +66,51 @@ NAN_GETTER(HMDDeviceInfoWrap::GetDeviceInfoProperty) {
 
     HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
     HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
+    try {
+        boost::any element = hmdDeviceInfo->getElement(*NanAsciiString(property));
 
-    std::string propertyString(*NanAsciiString(property));
-
-    if (propertyString == "hResolution") {
-        NanReturnValue(NanNew(hmdDeviceInfo->hResolution));
-    } else if (propertyString == "vResolution") {
-        NanReturnValue(NanNew(hmdDeviceInfo->vResolution));
-    } else if (propertyString == "hScreenSize") {
-        NanReturnValue(NanNew(hmdDeviceInfo->hScreenSize));
-    } else if (propertyString == "vScreenSize") {
-        NanReturnValue(NanNew(hmdDeviceInfo->vScreenSize));
-    } else if (propertyString == "vScreenCenter") {
-        NanReturnValue(NanNew(hmdDeviceInfo->vScreenCenter));
-    } else if (propertyString == "eyetoScreenDistance") {
-        NanReturnValue(NanNew(hmdDeviceInfo->eyetoScreenDistance));
-    } else if (propertyString == "lensSeparationDistance") {
-        NanReturnValue(NanNew(hmdDeviceInfo->lensSeparationDistance));
-    } else if (propertyString == "interpuillaryDistance") {
-        NanReturnValue(NanNew(hmdDeviceInfo->interpuillaryDistance));
-    } else if (propertyString == "distortionK") {
-        Local<Array> array = NanNew<Array>(4);
-
-        array->Set(0, NanNew(hmdDeviceInfo->distortionK[0]));
-        array->Set(1, NanNew(hmdDeviceInfo->distortionK[1]));
-        array->Set(2, NanNew(hmdDeviceInfo->distortionK[2]));
-        array->Set(3, NanNew(hmdDeviceInfo->distortionK[3]));
-
-        NanReturnValue(array);
-    } else if (propertyString == "desktopX") {
-        NanReturnValue(NanNew(hmdDeviceInfo->desktopX));
-    } else if (propertyString == "desktopY") {
-        NanReturnValue(NanNew(hmdDeviceInfo->desktopY));
-    } else if (propertyString == "displayDeviceName") {
-        NanReturnValue(NanNew(hmdDeviceInfo->displayDeviceName));
-    } else if (propertyString == "displayId") {
-        NanReturnValue(NanNew<Integer>(hmdDeviceInfo->displayId));
-    } else if (propertyString == "productName") {
-        NanReturnValue(NanNew(hmdDeviceInfo->productName));
-    } else if (propertyString == "manufacturer") {
-        NanReturnValue(NanNew(hmdDeviceInfo->manufacturer));
-    } else if (propertyString == "version") {
-        NanReturnValue(NanNew(hmdDeviceInfo->version));
-    } else {
-        NanReturnValue(NanNew(""));
+        if (element.type() == typeid(static_cast<int>(0))) {
+            NanReturnValue(NanNew(boost::any_cast<int>(element)));
+        } else if (element.type() == typeid(static_cast<float>(0.0f))) {
+            NanReturnValue(NanNew(boost::any_cast<float>(element)));
+        } else if (element.type() == typeid(static_cast<double>(0.0))) {
+            NanReturnValue(NanNew(boost::any_cast<double>(element)));
+        } else if (element.type() == typeid(std::string)) {
+            std::string value = boost::any_cast<std::string>(element);
+            NanReturnValue(NanNew(value));
+        } else if (element.type() == typeid(std::vector<int>)) {
+            std::vector<int> value = boost::any_cast<std::vector<int> >(element);
+            Local<Array> arr = NanNew<Array>(value.size());
+            for (std::vector<int>::size_type i = 0; i < value.size(); i++) {
+                arr->Set(i, NanNew(value[i]));
+            }
+            NanReturnValue(NanNew(arr));
+        } else if (element.type() == typeid(std::vector<float>)) {
+            std::vector<float> value = boost::any_cast<std::vector<float> >(element);
+            Local<Array> arr = NanNew<Array>(value.size());
+            for (std::vector<float>::size_type i = 0; i < value.size(); i++) {
+                arr->Set(i, NanNew(value[i]));
+            }
+            NanReturnValue(NanNew(arr));
+        } else if (element.type() == typeid(std::vector<double>)) {
+            std::vector<double> value = boost::any_cast<std::vector<double> >(element);
+            Local<Array> arr = NanNew<Array>(value.size());
+            for (std::vector<double>::size_type i = 0; i < value.size(); i++) {
+                arr->Set(i, NanNew(value[i]));
+            }
+            NanReturnValue(NanNew(arr));
+        } else if (element.type() == typeid(std::vector<std::string>)) {
+            std::vector<std::string> value = boost::any_cast<std::vector<std::string> >(element);
+            Local<Array> arr = NanNew<Array>(value.size());
+            for (std::vector<std::string>::size_type i = 0; i < value.size(); i++) {
+                arr->Set(i, NanNew(value[i]));
+            }
+            NanReturnValue(NanNew(arr));
+        } else {
+            NanReturnValue(NanUndefined());
+        }
+    }
+    catch (ElementNotFoundError &ex) {
+        NanReturnValue(NanUndefined());
     }
 }

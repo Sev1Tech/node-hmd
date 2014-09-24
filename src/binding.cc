@@ -3,7 +3,7 @@
  * See LICENSE for the full text of the license.
  */
 
-#include <nan.h>
+#include <nan/nan.h>
 #include <node.h>
 #include <v8.h>
 
