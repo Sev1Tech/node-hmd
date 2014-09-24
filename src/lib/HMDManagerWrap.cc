@@ -7,6 +7,7 @@
 #include "HMDDeviceInfo.h"
 #include "HMDDeviceInfoWrap.h"
 #include "HMDDeviceOrientationWrap.h"
+#include "HMDDeviceQuatWrap.h"
 #include "HMDManagerWrap.h"
 
 using ::v8::Function;
@@ -39,6 +40,8 @@ void HMDManagerWrap::Initialize(Handle<Object> target) {
     tpl->PrototypeTemplate()->Set(NanNew("getDeviceInfoSync"), NanNew<FunctionTemplate>(GetDeviceInfoSync)->GetFunction());
     tpl->PrototypeTemplate()->Set(NanNew("getDeviceOrientation"), NanNew<FunctionTemplate>(GetDeviceOrientationAsync)->GetFunction());
     tpl->PrototypeTemplate()->Set(NanNew("getDeviceOrientationSync"), NanNew<FunctionTemplate>(GetDeviceOrientationSync)->GetFunction());
+    tpl->PrototypeTemplate()->Set(NanNew("getDeviceQuat"), NanNew<FunctionTemplate>(GetDeviceQuatAsync)->GetFunction());
+    tpl->PrototypeTemplate()->Set(NanNew("getDeviceQuatSync"), NanNew<FunctionTemplate>(GetDeviceQuatSync)->GetFunction());
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
     target->Set(NanNew("HMDManager"), constructor);
@@ -111,6 +114,26 @@ NAN_METHOD(HMDManagerWrap::GetDeviceOrientationSync) {
     NanReturnValue(hmdDeviceOrientation);
 }
 
+NAN_METHOD(HMDManagerWrap::GetDeviceQuatAsync) {
+  NanScope();
+
+  HMDManagerWrap* hmdManagerWrap = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
+  NanCallback *callback = new NanCallback(args[0].As<Function>());
+
+  NanAsyncQueueWorker(new GetDeviceQuatWorker(callback, hmdManagerWrap->GetDevice(), args));
+  NanReturnUndefined();
+}
+
+NAN_METHOD(HMDManagerWrap::GetDeviceQuatSync) {
+    NanScope();
+
+    HMDManagerWrap* hmdManager = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
+
+    Handle<Value> hmdDeviceQuat = HMDDeviceQuatWrap::New(args);
+    hmdManager->GetDevice()->getDeviceQuat(ObjectWrap::Unwrap<HMDDeviceQuatWrap>(hmdDeviceQuat->ToObject())->GetWrapped());
+
+    NanReturnValue(hmdDeviceQuat);
+}
 
 void GetDeviceInfoWorker::Execute() {
     this->hmdDevice->getDeviceInfo(&this->hmdDeviceInfo);
@@ -140,6 +163,22 @@ void GetDeviceOrientationWorker::HandleOKCallback() {
     *hmdDeviceOrientation->GetWrapped() = this->hmdDeviceOrientation;
 
     Handle<Value> argv[] = { NanNull(), hmdDeviceOrientationHandle };
+
+    callback->Call(2, argv);
+}
+
+void GetDeviceQuatWorker::Execute() {
+    this->hmdDevice->getDeviceQuat(&this->hmdDeviceQuat);
+}
+
+void GetDeviceQuatWorker::HandleOKCallback() {
+    NanScope();
+
+    Handle<Value> hmdDeviceQuatHandle = HMDDeviceQuatWrap::New(this->args);
+    HMDDeviceQuatWrap* hmdDeviceQuat = node::ObjectWrap::Unwrap<HMDDeviceQuatWrap>(hmdDeviceQuatHandle->ToObject());
+    *hmdDeviceQuat->GetWrapped() = this->hmdDeviceQuat;
+
+    Handle<Value> argv[] = { NanNull(), hmdDeviceQuatHandle };
 
     callback->Call(2, argv);
 }

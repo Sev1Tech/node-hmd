@@ -34,7 +34,9 @@ void TestDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
 }
 
 void TestDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {
-    deviceOrientation->yaw = 0.75;
-    deviceOrientation->pitch = 1.28;
-    deviceOrientation->roll = 2.33;
+    deviceOrientation->setOrientation(0.75, 1.28, 2.33);
+}
+
+void TestDevice::getDeviceQuat(HMDDeviceQuat* deviceQuat) {
+    deviceQuat->setQuat(0.11, 0.22, 0.33, 0.44);
 }

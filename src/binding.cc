@@ -13,6 +13,7 @@
 #include "HMDDeviceFactory.h"
 #include "HMDDeviceInfoWrap.h"
 #include "HMDDeviceOrientationWrap.h"
+#include "HMDDeviceQuatWrap.h"
 #include "HMDManagerWrap.h"
 
 using ::v8::Array;
@@ -53,6 +54,7 @@ NAN_METHOD(GetSupportedDevices) {
 void RegisterModule(Handle<Object> exports, Handle<Object> module) {
     HMDDeviceInfoWrap::Initialize(exports);
     HMDDeviceOrientationWrap::Initialize(exports);
+    HMDDeviceQuatWrap::Initialize(exports);
     HMDManagerWrap::Initialize(exports);
 
     exports->Set(NanNew<String>("createManager"), NanNew<FunctionTemplate>(CreateManager)->GetFunction());

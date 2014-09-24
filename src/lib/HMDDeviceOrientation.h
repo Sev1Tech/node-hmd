@@ -12,14 +12,21 @@
  */
 class HMDDeviceOrientation {
  public:
-    float yaw;
-    float pitch;
-    float roll;
-
     HMDDeviceOrientation();
     ~HMDDeviceOrientation();
 
+    void setOrientation(float yaw, float pitch, float roll);
+
+    float getYaw() const;
+    float getPitch() const;
+    float getRoll() const;
+
     HMDDeviceOrientation& operator= (const HMDDeviceOrientation &deviceOrientation);
+
+ private:
+    float yaw;
+    float pitch;
+    float roll;
 };
 
 #endif  // SRC_LIB_HMDDEVICEORIENTATION_H_

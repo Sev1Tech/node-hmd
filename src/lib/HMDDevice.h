@@ -10,6 +10,7 @@
 
 #include "HMDDeviceInfo.h"
 #include "HMDDeviceOrientation.h"
+#include "HMDDeviceQuat.h"
 
 /*! \class HMDDevice
  * 
@@ -22,6 +23,7 @@ class HMDDevice {
     virtual ~HMDDevice();
     virtual void getDeviceInfo(HMDDeviceInfo* deviceInfo) = 0;
     virtual void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) = 0;
+    virtual void getDeviceQuat(HMDDeviceQuat* deviceQuat) = 0;
 };
 
 #endif  // SRC_LIB_HMDDEVICE_H_

@@ -67,12 +67,12 @@ NAN_GETTER(HMDDeviceOrientationWrap::GetDeviceOrientationProperty) {
     std::string propertyString(*NanAsciiString(property));
 
     if (propertyString == "yaw") {
-        NanReturnValue(NanNew(hmdDeviceInfo->yaw));
+        NanReturnValue(NanNew(hmdDeviceInfo->getYaw()));
     } else if (propertyString == "pitch") {
-        NanReturnValue(NanNew(hmdDeviceInfo->pitch));
+        NanReturnValue(NanNew(hmdDeviceInfo->getPitch()));
     } else if (propertyString == "roll") {
-        NanReturnValue(NanNew(hmdDeviceInfo->roll));
+        NanReturnValue(NanNew(hmdDeviceInfo->getRoll()));
     } else {
-        NanReturnValue(NanNew(0.0));
+        NanReturnValue(NanUndefined());
     }
 }

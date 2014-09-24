@@ -20,6 +20,7 @@ class TestDevice : public HMDDevice {
     static const std::string classToken;
     void getDeviceInfo(HMDDeviceInfo* deviceInfo);
     void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
+    void getDeviceQuat(HMDDeviceQuat* deviceQuat);
 };
 
 #endif  // SRC_SUPPORT_TEST_TESTDEVICE_H_

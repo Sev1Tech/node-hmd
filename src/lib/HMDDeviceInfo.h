@@ -22,10 +22,15 @@
 class HMDDeviceInfo {
  private:
     std::map<std::string, boost::any > deviceInformation;
+
  public:
     HMDDeviceInfo();
     ~HMDDeviceInfo();
 
+    std::map<std::string, boost::any > getDeviceInfo() const;
+    boost::any getElement(std::string name);
+
+    void insertElement(std::string name, boost::any element);
     void insertElement(std::string name, int element);
     void insertElement(std::string name, unsigned int element);
     void insertElement(std::string name, float element);
@@ -38,7 +43,7 @@ class HMDDeviceInfo {
     void insertElement(std::string name, double* element, int size);
     void insertElement(std::string name, std::string* element, int size);
 
-    boost::any getElement(std::string name);
+    HMDDeviceInfo& operator= (const HMDDeviceInfo &deviceInfo);
 };
 
 class ElementNotFoundError : public std::runtime_error {

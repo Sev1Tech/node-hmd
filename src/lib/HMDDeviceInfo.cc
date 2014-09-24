@@ -17,6 +17,22 @@ HMDDeviceInfo::HMDDeviceInfo() {
 HMDDeviceInfo::~HMDDeviceInfo() {
 }
 
+std::map<std::string, boost::any > HMDDeviceInfo::getDeviceInfo() const {
+    return this->deviceInformation;
+}
+
+boost::any HMDDeviceInfo::getElement(std::string name) {
+    if (this->deviceInformation.find(name) != this->deviceInformation.end()) {
+        return this->deviceInformation[name];
+    } else {
+        throw ElementNotFoundError();
+    }
+}
+
+void HMDDeviceInfo::insertElement(std::string name, boost::any element) {
+    this->deviceInformation[name] = element;
+}
+
 void HMDDeviceInfo::insertElement(std::string name, int element) {
     this->deviceInformation[name] = element;
 }
@@ -77,10 +93,11 @@ void HMDDeviceInfo::insertElement(std::string name, std::string* elements, int s
     this->deviceInformation[name] = vector;
 }
 
-boost::any HMDDeviceInfo::getElement(std::string name) {
-    if (this->deviceInformation.find(name) != this->deviceInformation.end()) {
-        return this->deviceInformation[name];
-    } else {
-        throw ElementNotFoundError();
+HMDDeviceInfo& HMDDeviceInfo::operator= (const HMDDeviceInfo &deviceInfo) {
+    std::map<std::string, boost::any > deviceInformation = deviceInfo.getDeviceInfo();
+    for(std::map<std::string, boost::any>::iterator iter = deviceInformation.begin(); iter != deviceInformation.end(); ++iter) {
+        this->insertElement(iter->first, iter->second);
     }
+
+    return *this;
 }

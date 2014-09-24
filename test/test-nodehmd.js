@@ -123,5 +123,44 @@ describe('node-hmd manager tests.', function() {
 			assert.ok(floatCompareEquality(deviceOrientation.roll, 2.33));
 		});
 	});
+
+	describe('#getDeviceQuat', function() {
+		it('getDeviceQuat sanity test.', function(done) {
+			instance.getDeviceQuat(function(err, deviceQuat) {
+				assert.ok(deviceQuat);
+				
+				assert.ok(floatCompareEquality(deviceQuat.w, 0.11));
+				assert.ok(floatCompareEquality(deviceQuat.x, 0.22));
+				assert.ok(floatCompareEquality(deviceQuat.y, 0.33));
+				assert.ok(floatCompareEquality(deviceQuat.z, 0.44));
+
+				done();
+			});
+		});
+	});
+
+	describe('#getDeviceQuatSync', function() {
+		var deviceQuat = instance.getDeviceQuatSync();
+
+		it('getDeviceQuat sanity test.', function() {
+			assert.ok(deviceQuat);
+		});
+
+		it('Default getDeviceQuat #w test.', function() {
+			assert.ok(floatCompareEquality(deviceQuat.w, 0.11));
+		});
+
+		it('Default getDeviceQuat #x test.', function() {
+			assert.ok(floatCompareEquality(deviceQuat.x, 0.22));
+		});
+
+		it('Default getDeviceQuat #y test.', function() {
+			assert.ok(floatCompareEquality(deviceQuat.y, 0.33));
+		});
+
+		it('Default getDeviceQuat #z test.', function() {
+			assert.ok(floatCompareEquality(deviceQuat.z, 0.44));
+		});
+	});
 });
 

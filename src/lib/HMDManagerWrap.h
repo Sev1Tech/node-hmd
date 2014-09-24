@@ -27,6 +27,8 @@ class HMDManagerWrap : public node::ObjectWrap {
     static NAN_METHOD(GetDeviceInfoSync);
     static NAN_METHOD(GetDeviceOrientationAsync);
     static NAN_METHOD(GetDeviceOrientationSync);
+    static NAN_METHOD(GetDeviceQuatAsync);
+    static NAN_METHOD(GetDeviceQuatSync);
 
  public:
     static void Initialize(v8::Handle<v8::Object> target);
@@ -67,6 +69,25 @@ class GetDeviceOrientationWorker : public NanAsyncWorker {
     GetDeviceOrientationWorker(NanCallback *callback, HMDDevice* hmdDevice, v8::Arguments args)
         : NanAsyncWorker(callback), hmdDevice(hmdDevice), args(args) {}
     ~GetDeviceOrientationWorker() {}
+
+    void Execute();
+    void HandleOKCallback();
+};
+
+/*! \class GetDeviceOrientationWorker
+ * 
+ * NanAsyncWorker class for performing asynchronous device quaternion work.
+ */
+class GetDeviceQuatWorker : public NanAsyncWorker {
+ private:
+    HMDDevice* hmdDevice;
+    HMDDeviceQuat hmdDeviceQuat;
+    v8::Arguments args;
+
+ public:
+    GetDeviceQuatWorker(NanCallback *callback, HMDDevice* hmdDevice, v8::Arguments args)
+        : NanAsyncWorker(callback), hmdDevice(hmdDevice), args(args) {}
+    ~GetDeviceQuatWorker() {}
 
     void Execute();
     void HandleOKCallback();
