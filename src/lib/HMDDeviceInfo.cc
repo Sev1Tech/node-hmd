@@ -95,7 +95,7 @@ void HMDDeviceInfo::insertElement(std::string name, std::string* elements, int s
 
 HMDDeviceInfo& HMDDeviceInfo::operator= (const HMDDeviceInfo &deviceInfo) {
     std::map<std::string, boost::any > deviceInformation = deviceInfo.getDeviceInfo();
-    for(std::map<std::string, boost::any>::iterator iter = deviceInformation.begin(); iter != deviceInformation.end(); ++iter) {
+    for (std::map<std::string, boost::any>::iterator iter = deviceInformation.begin(); iter != deviceInformation.end(); ++iter) {
         this->insertElement(iter->first, iter->second);
     }
 

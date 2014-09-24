@@ -35,7 +35,7 @@ float HMDDeviceQuat::getZ() const {
 }
 
 HMDDeviceQuat& HMDDeviceQuat::operator= (const HMDDeviceQuat &deviceQuat) {
-	this->setQuat(deviceQuat.getW(), deviceQuat.getX(), deviceQuat.getY(), deviceQuat.getZ());
+    this->setQuat(deviceQuat.getW(), deviceQuat.getX(), deviceQuat.getY(), deviceQuat.getZ());
 
-	return *this;
+    return *this;
 }

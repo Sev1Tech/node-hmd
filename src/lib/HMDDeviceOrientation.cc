@@ -30,7 +30,7 @@ float HMDDeviceOrientation::getRoll() const {
 }
 
 HMDDeviceOrientation& HMDDeviceOrientation::operator= (const HMDDeviceOrientation &deviceOrientation) {
-	this->setOrientation(deviceOrientation.getYaw(), deviceOrientation.getPitch(), deviceOrientation.getRoll());
+    this->setOrientation(deviceOrientation.getYaw(), deviceOrientation.getPitch(), deviceOrientation.getRoll());
 
-	return *this;
+    return *this;
 }
