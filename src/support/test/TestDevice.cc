@@ -7,6 +7,7 @@
 
 #include "TestDevice.h"
 
+#include "InfoTypeArray.h"
 #include "InfoTypeNumber.h"
 #include "InfoTypeString.h"
 
@@ -25,10 +26,7 @@ void TestDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("eyetoScreenDistance", new InfoTypeNumber(0.01));
     deviceInfo->insertElement("lensSeparationDistance", new InfoTypeNumber(0.02));
     deviceInfo->insertElement("interpuillaryDistance", new InfoTypeNumber(0.025));
-
-    // float distortionK[] = {1.1, 2.2, 3.3, 4.4};
-    // deviceInfo->insertElement("distortionK", distortionK, 4);
-
+    deviceInfo->insertElement("distortionK", new InfoTypeArray<double>(4, 1.1, 2.2, 3.3, 4.4));
     deviceInfo->insertElement("desktopX", new InfoTypeNumber(1920));
     deviceInfo->insertElement("desktopY", new InfoTypeNumber(1080));
     deviceInfo->insertElement("displayDeviceName", new InfoTypeString(displayDeviceName));

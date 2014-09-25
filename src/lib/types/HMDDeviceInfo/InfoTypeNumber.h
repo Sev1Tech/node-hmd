@@ -9,8 +9,6 @@
 #include <boost/any.hpp>
 #include <node.h>
 
-#include <string>
-
 #include "HMDDeviceInfoElement.h"
 
 /*! \class InfoTypeNumber
