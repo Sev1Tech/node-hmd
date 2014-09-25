@@ -3,8 +3,8 @@
  * See LICENSE for the full text of the license.
  */
 
-#ifndef SRC_LIB_HMDDEVICEQUATWRAP_H_
-#define SRC_LIB_HMDDEVICEQUATWRAP_H_
+#ifndef SRC_LIB_TYPES_HMDDEVICEQUAT_HMDDEVICEQUATWRAP_H_
+#define SRC_LIB_TYPES_HMDDEVICEQUAT_HMDDEVICEQUATWRAP_H_
 
 #include <node.h>
 #include <nan/nan.h>
@@ -30,4 +30,4 @@ class HMDDeviceQuatWrap : public node::ObjectWrap {
     HMDDeviceQuat* GetWrapped();
 };
 
-#endif  // SRC_LIB_HMDDEVICEQUATWRAP_H_
+#endif  // SRC_LIB_TYPES_HMDDEVICEQUAT_HMDDEVICEQUATWRAP_H_

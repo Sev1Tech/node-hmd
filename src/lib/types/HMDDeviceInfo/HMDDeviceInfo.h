@@ -3,8 +3,8 @@
  * See LICENSE for the full text of the license.
  */
 
-#ifndef SRC_LIB_HMDDEVICEINFO_H_
-#define SRC_LIB_HMDDEVICEINFO_H_
+#ifndef SRC_LIB_TYPES_HMDDEVICEINFO_HMDDEVICEINFO_H_
+#define SRC_LIB_TYPES_HMDDEVICEINFO_HMDDEVICEINFO_H_
 
 #define MAX_DESCRIPTION_LENGTH 32
 
@@ -15,34 +15,23 @@
 #include <stdexcept>
 #include <string>
 
+#include "HMDDeviceInfoElement.h"
+
 /*! \class HMDDeviceInfo
  * 
  * Basic property class containg information about the device.
  */
 class HMDDeviceInfo {
  private:
-    std::map<std::string, boost::any > _deviceInformation;
+    std::map<std::string, HMDDeviceInfoElement*> _deviceInformation;
 
  public:
     HMDDeviceInfo();
     ~HMDDeviceInfo();
 
-    std::map<std::string, boost::any > getDeviceInfo() const;
-    boost::any getElement(std::string name);
-
-    void insertElement(std::string name, boost::any element);
-    void insertElement(std::string name, int element);
-    void insertElement(std::string name, unsigned int element);
-    void insertElement(std::string name, float element);
-    void insertElement(std::string name, double element);
-    void insertElement(std::string name, std::string element);
-
-    void insertElement(std::string name, int* element, int size);
-    void insertElement(std::string name, unsigned int* element, int size);
-    void insertElement(std::string name, float* element, int size);
-    void insertElement(std::string name, double* element, int size);
-    void insertElement(std::string name, std::string* element, int size);
-
+    std::map<std::string, HMDDeviceInfoElement*> getDeviceInfo() const;
+    HMDDeviceInfoElement* getElement(std::string name);
+    void insertElement(std::string name, HMDDeviceInfoElement* element);
     HMDDeviceInfo& operator= (const HMDDeviceInfo &deviceInfo);
 };
 
@@ -51,4 +40,4 @@ class ElementNotFoundError : public std::runtime_error {
     ElementNotFoundError(): runtime_error("Device information element not found.") {}
 };
 
-#endif  // SRC_LIB_HMDDEVICEINFO_H_
+#endif  // SRC_LIB_TYPES_HMDDEVICEINFO_HMDDEVICEINFO_H_

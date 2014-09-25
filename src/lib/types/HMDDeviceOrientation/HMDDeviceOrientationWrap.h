@@ -3,8 +3,8 @@
  * See LICENSE for the full text of the license.
  */
 
-#ifndef SRC_LIB_HMDDEVICEORIENTATIONWRAP_H_
-#define SRC_LIB_HMDDEVICEORIENTATIONWRAP_H_
+#ifndef SRC_LIB_TYPES_HMDDEVICEORIENTATION_HMDDEVICEORIENTATIONWRAP_H_
+#define SRC_LIB_TYPES_HMDDEVICEORIENTATION_HMDDEVICEORIENTATIONWRAP_H_
 
 #include <node.h>
 #include <nan/nan.h>
@@ -30,4 +30,4 @@ class HMDDeviceOrientationWrap : public node::ObjectWrap {
     HMDDeviceOrientation* GetWrapped();
 };
 
-#endif  // SRC_LIB_HMDDEVICEORIENTATIONWRAP_H_
+#endif  // SRC_LIB_TYPES_HMDDEVICEORIENTATION_HMDDEVICEORIENTATIONWRAP_H_

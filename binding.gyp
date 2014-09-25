@@ -21,11 +21,13 @@
 
       "sources" : [
         "src/binding.cc",
-        "src/lib/HMDDevice.cc",
         "src/lib/HMDDeviceFactory.cc",
         "src/lib/HMDManagerWrap.cc",
         "src/lib/types/HMDDeviceInfo/HMDDeviceInfo.cc",
         "src/lib/types/HMDDeviceInfo/HMDDeviceInfoWrap.cc",
+        "src/lib/types/HMDDeviceInfo/InfoTypeBoolean.cc",
+        "src/lib/types/HMDDeviceInfo/InfoTypeString.cc",
+        "src/lib/types/HMDDeviceInfo/InfoTypeNumber.cc",
         "src/lib/types/HMDDeviceOrientation/HMDDeviceOrientation.cc",
         "src/lib/types/HMDDeviceOrientation/HMDDeviceOrientationWrap.cc",
         "src/lib/types/HMDDeviceQuat/HMDDeviceQuat.cc",

@@ -3,11 +3,11 @@
  * See LICENSE for the full text of the license.
  */
 
-#ifndef SRC_LIB_HMDDEVICEINFOWRAP_H_
-#define SRC_LIB_HMDDEVICEINFOWRAP_H_
+#ifndef SRC_LIB_TYPES_HMDDEVICEINFO_HMDDEVICEINFOWRAP_H_
+#define SRC_LIB_TYPES_HMDDEVICEINFO_HMDDEVICEINFOWRAP_H_
 
-#include <node.h>
 #include <nan/nan.h>
+#include <node.h>
 
 #include "HMDDevice.h"
 
@@ -30,4 +30,4 @@ class HMDDeviceInfoWrap : public node::ObjectWrap {
     HMDDeviceInfo* GetWrapped();
 };
 
-#endif  // SRC_LIB_HMDDEVICEINFOWRAP_H_
+#endif  // SRC_LIB_TYPES_HMDDEVICEINFO_HMDDEVICEINFOWRAP_H_
