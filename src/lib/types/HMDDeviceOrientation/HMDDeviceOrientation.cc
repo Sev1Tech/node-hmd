@@ -12,21 +12,21 @@ HMDDeviceOrientation::~HMDDeviceOrientation() {
 }
 
 void HMDDeviceOrientation::setOrientation(float yaw, float pitch, float roll) {
-    this->yaw = yaw;
-    this->pitch = pitch;
-    this->roll = roll;
+    this->_yaw = yaw;
+    this->_pitch = pitch;
+    this->_roll = roll;
 }
 
 float HMDDeviceOrientation::getYaw() const {
-    return this->yaw;
+    return this->_yaw;
 }
 
 float HMDDeviceOrientation::getPitch() const {
-    return this->pitch;
+    return this->_pitch;
 }
 
 float HMDDeviceOrientation::getRoll() const {
-    return this->roll;
+    return this->_roll;
 }
 
 HMDDeviceOrientation& HMDDeviceOrientation::operator= (const HMDDeviceOrientation &deviceOrientation) {

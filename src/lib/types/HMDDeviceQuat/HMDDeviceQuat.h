@@ -25,10 +25,10 @@ class HMDDeviceQuat {
     HMDDeviceQuat& operator= (const HMDDeviceQuat &deviceQuat);
 
  private:
-    float w;
-    float x;
-    float y;
-    float z;
+    float _w;
+    float _x;
+    float _y;
+    float _z;
 };
 
 #endif  // SRC_LIB_HMDDEVICEQUAT_H_

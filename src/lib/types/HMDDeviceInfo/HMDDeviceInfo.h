@@ -21,7 +21,7 @@
  */
 class HMDDeviceInfo {
  private:
-    std::map<std::string, boost::any > deviceInformation;
+    std::map<std::string, boost::any > _deviceInformation;
 
  public:
     HMDDeviceInfo();

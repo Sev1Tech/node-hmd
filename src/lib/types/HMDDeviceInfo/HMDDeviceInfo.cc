@@ -11,46 +11,46 @@
 
 
 HMDDeviceInfo::HMDDeviceInfo() {
-    this->deviceInformation = std::map<std::string, boost::any >();
+    this->_deviceInformation = std::map<std::string, boost::any >();
 }
 
 HMDDeviceInfo::~HMDDeviceInfo() {
 }
 
 std::map<std::string, boost::any > HMDDeviceInfo::getDeviceInfo() const {
-    return this->deviceInformation;
+    return this->_deviceInformation;
 }
 
 boost::any HMDDeviceInfo::getElement(std::string name) {
-    if (this->deviceInformation.find(name) != this->deviceInformation.end()) {
-        return this->deviceInformation[name];
+    if (this->_deviceInformation.find(name) != this->_deviceInformation.end()) {
+        return this->_deviceInformation[name];
     } else {
         throw ElementNotFoundError();
     }
 }
 
 void HMDDeviceInfo::insertElement(std::string name, boost::any element) {
-    this->deviceInformation[name] = element;
+    this->_deviceInformation[name] = element;
 }
 
 void HMDDeviceInfo::insertElement(std::string name, int element) {
-    this->deviceInformation[name] = element;
+    this->_deviceInformation[name] = element;
 }
 
 void HMDDeviceInfo::insertElement(std::string name, unsigned int element) {
-    this->deviceInformation[name] = element;
+    this->_deviceInformation[name] = element;
 }
 
 void HMDDeviceInfo::insertElement(std::string name, float element) {
-    this->deviceInformation[name] = element;
+    this->_deviceInformation[name] = element;
 }
 
 void HMDDeviceInfo::insertElement(std::string name, double element) {
-    this->deviceInformation[name] = element;
+    this->_deviceInformation[name] = element;
 }
 
 void HMDDeviceInfo::insertElement(std::string name, std::string element) {
-    this->deviceInformation[name] = element;
+    this->_deviceInformation[name] = element;
 }
 
 void HMDDeviceInfo::insertElement(std::string name, int* elements, int size) {
@@ -58,7 +58,7 @@ void HMDDeviceInfo::insertElement(std::string name, int* elements, int size) {
     for (int i = 0; i < size; i++) {
         vector.push_back(elements[i]);
     }
-    this->deviceInformation[name] = vector;
+    this->_deviceInformation[name] = vector;
 }
 
 void HMDDeviceInfo::insertElement(std::string name, unsigned int* elements, int size) {
@@ -66,7 +66,7 @@ void HMDDeviceInfo::insertElement(std::string name, unsigned int* elements, int 
     for (int i = 0; i < size; i++) {
         vector.push_back(elements[i]);
     }
-    this->deviceInformation[name] = vector;
+    this->_deviceInformation[name] = vector;
 }
 
 void HMDDeviceInfo::insertElement(std::string name, float* elements, int size) {
@@ -74,7 +74,7 @@ void HMDDeviceInfo::insertElement(std::string name, float* elements, int size) {
     for (int i = 0; i < size; i++) {
         vector.push_back(elements[i]);
     }
-    this->deviceInformation[name] = vector;
+    this->_deviceInformation[name] = vector;
 }
 
 void HMDDeviceInfo::insertElement(std::string name, double* elements, int size) {
@@ -82,7 +82,7 @@ void HMDDeviceInfo::insertElement(std::string name, double* elements, int size) 
     for (int i = 0; i < size; i++) {
         vector.push_back(elements[i]);
     }
-    this->deviceInformation[name] = vector;
+    this->_deviceInformation[name] = vector;
 }
 
 void HMDDeviceInfo::insertElement(std::string name, std::string* elements, int size) {
@@ -90,7 +90,7 @@ void HMDDeviceInfo::insertElement(std::string name, std::string* elements, int s
     for (int i = 0; i < size; i++) {
         vector.push_back(elements[i]);
     }
-    this->deviceInformation[name] = vector;
+    this->_deviceInformation[name] = vector;
 }
 
 HMDDeviceInfo& HMDDeviceInfo::operator= (const HMDDeviceInfo &deviceInfo) {

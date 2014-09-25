@@ -13,7 +13,7 @@
 
 class OculusRiftDevice : public HMDDevice {
  private:
-    ovrHmd hmd;
+    ovrHmd _hmd;
  public:
     static const std::string classToken;
 

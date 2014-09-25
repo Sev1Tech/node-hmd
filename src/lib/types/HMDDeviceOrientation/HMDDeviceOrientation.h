@@ -24,9 +24,9 @@ class HMDDeviceOrientation {
     HMDDeviceOrientation& operator= (const HMDDeviceOrientation &deviceOrientation);
 
  private:
-    float yaw;
-    float pitch;
-    float roll;
+    float _yaw;
+    float _pitch;
+    float _roll;
 };
 
 #endif  // SRC_LIB_HMDDEVICEORIENTATION_H_

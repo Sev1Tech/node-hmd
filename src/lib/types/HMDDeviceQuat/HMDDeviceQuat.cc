@@ -12,26 +12,26 @@ HMDDeviceQuat::~HMDDeviceQuat() {
 }
 
 void HMDDeviceQuat::setQuat(float w, float x, float y, float z) {
-    this->w = w;
-    this->x = x;
-    this->y = y;
-    this->z = z;
+    this->_w = w;
+    this->_x = x;
+    this->_y = y;
+    this->_z = z;
 }
 
 float HMDDeviceQuat::getW() const {
-    return this->w;
+    return this->_w;
 }
 
 float HMDDeviceQuat::getX() const {
-    return this->x;
+    return this->_x;
 }
 
 float HMDDeviceQuat::getY() const {
-    return this->y;
+    return this->_y;
 }
 
 float HMDDeviceQuat::getZ() const {
-    return this->z;
+    return this->_z;
 }
 
 HMDDeviceQuat& HMDDeviceQuat::operator= (const HMDDeviceQuat &deviceQuat) {
