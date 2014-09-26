@@ -17,7 +17,7 @@ OculusRiftDevice::OculusRiftDevice() {
     ovr_Initialize();
 
     this->_hmd = ovrHmd_Create(0);
-    ovrHmd_ConfigureTracking(this->_hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0);
+    ovrHmd_ConfigureTracking(this->_hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, ovrTrackingCap_Orientation);
 }
 
 OculusRiftDevice::~OculusRiftDevice() {
@@ -55,18 +55,27 @@ void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("DisplayId", new InfoTypeUInt(this->_hmd->DisplayId));
 }
 
-void OculusRiftDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {
+void OculusRiftDevice::updateDevice() {
     ovrTrackingState trackingState = ovrHmd_GetTrackingState(this->_hmd, ovr_GetTimeInSeconds());
 
-    float yaw, pitch, roll;
-
-    if (trackingState.StatusFlags & ovrStatus_OrientationTracked) {
+    if (trackingState.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
         OVR::Posef pose = trackingState.HeadPose.ThePose;
-        pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(&yaw, &pitch, &roll);
-        deviceOrientation->setOrientation(yaw, pitch, roll);
+        pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(this->_deviceOrientation.getYawReference(), this->_deviceOrientation.getPitchReference(), this->_deviceOrientation.getRollReference());
     }
 }
 
+void OculusRiftDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {
+    this->updateDevice();
+    deviceOrientation->setOrientation((HMDDeviceOrientation)this->_deviceOrientation);
+}
+
+void OculusRiftDevice::getDevicePosition(HMDDevicePosition* devicePosition) {
+    this->updateDevice();
+    devicePosition->setPosition((HMDDevicePosition)this->_devicePosition);
+}
+
 void OculusRiftDevice::getDeviceQuat(HMDDeviceQuat* deviceQuat) {
+    this->updateDevice();
+
     // TODO(GeoJosh): Implement Me
 }

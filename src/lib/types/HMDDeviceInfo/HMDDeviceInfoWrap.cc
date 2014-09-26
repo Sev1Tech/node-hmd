@@ -22,8 +22,7 @@ using ::v8::Value;
 
 Persistent<Function> HMDDeviceInfoWrap::constructor;
 
-HMDDeviceInfoWrap::HMDDeviceInfoWrap() {
-    this->_hmdDeviceInfo = new HMDDeviceInfo;
+HMDDeviceInfoWrap::HMDDeviceInfoWrap() : _hmdDeviceInfo(new HMDDeviceInfo) {
 }
 
 HMDDeviceInfoWrap::~HMDDeviceInfoWrap() {

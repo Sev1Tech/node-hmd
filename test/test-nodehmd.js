@@ -125,6 +125,40 @@ describe('node-hmd manager tests.', function() {
 		});
 	});
 
+	describe('#getDevicePosition', function() {
+		it('getDevicePosition sanity test.', function(done) {
+			instance.getDevicePosition(function(err, devicePosition) {
+				assert.ok(devicePosition);
+				
+				assert.ok(floatCompareEquality(devicePosition.x, 1.2));
+				assert.ok(floatCompareEquality(devicePosition.y, 3.4));
+				assert.ok(floatCompareEquality(devicePosition.z, 5.6));
+
+				done();
+			});
+		});
+	});
+
+	describe('#getDevicePositionSync', function() {
+		var devicePosition = instance.getDevicePositionSync();
+
+		it('getDevicePosition sanity test.', function() {
+			assert.ok(devicePosition);
+		});
+
+		it('Default devicePosition #x test.', function() {
+			assert.ok(floatCompareEquality(devicePosition.x, 1.2));
+		});
+
+		it('Default devicePosition #y test.', function() {
+			assert.ok(floatCompareEquality(devicePosition.y, 3.4));
+		});
+
+		it('Default devicePosition #z test.', function() {
+			assert.ok(floatCompareEquality(devicePosition.z, 5.6));
+		});
+	});
+
 	describe('#getDeviceQuat', function() {
 		it('getDeviceQuat sanity test.', function(done) {
 			instance.getDeviceQuat(function(err, deviceQuat) {
@@ -142,7 +176,6 @@ describe('node-hmd manager tests.', function() {
 
 	describe('#getDeviceQuatSync', function() {
 		var deviceQuat = instance.getDeviceQuatSync();
-
 		it('getDeviceQuat sanity test.', function() {
 			assert.ok(deviceQuat);
 		});

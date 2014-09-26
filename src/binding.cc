@@ -13,6 +13,7 @@
 #include "HMDDeviceFactory.h"
 #include "HMDDeviceInfoWrap.h"
 #include "HMDDeviceOrientationWrap.h"
+#include "HMDDevicePositionWrap.h"
 #include "HMDDeviceQuatWrap.h"
 #include "HMDManagerWrap.h"
 
@@ -29,12 +30,12 @@ NAN_METHOD(CreateManager) {
     NanScope();
 
     TryCatch trycatch;
-    Handle<Value> hmdManager = HMDManagerWrap::New(args);
-    if (hmdManager.IsEmpty()) {
-        NanReturnUndefined();
-    } else {
-        NanReturnValue(hmdManager);
-    }
+    // Handle<Value> hmdManager = HMDManagerWrap::New(args);
+    // if (hmdManager.IsEmpty()) {
+    //     NanReturnUndefined();
+    // } else {
+        NanReturnValue(HMDManagerWrap::New(args));
+    // }
 }
 
 NAN_METHOD(GetSupportedDevices) {
@@ -54,6 +55,7 @@ NAN_METHOD(GetSupportedDevices) {
 void RegisterModule(Handle<Object> exports, Handle<Object> module) {
     HMDDeviceInfoWrap::Initialize(exports);
     HMDDeviceOrientationWrap::Initialize(exports);
+    HMDDevicePositionWrap::Initialize(exports);
     HMDDeviceQuatWrap::Initialize(exports);
     HMDManagerWrap::Initialize(exports);
 

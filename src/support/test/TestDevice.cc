@@ -20,12 +20,12 @@ const std::string TestDevice::classToken = "test";
 void TestDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("hResolution", new InfoTypeUInt(800));
     deviceInfo->insertElement("vResolution", new InfoTypeUInt(600));
-    deviceInfo->insertElement("hScreenSize", new InfoTypeFloat(0.8));
-    deviceInfo->insertElement("vScreenSize", new InfoTypeFloat(0.64));
+    deviceInfo->insertElement("hScreenSize", new InfoTypeFloat(0.8f));
+    deviceInfo->insertElement("vScreenSize", new InfoTypeFloat(0.64f));
     deviceInfo->insertElement("vScreenCenter", new InfoTypeFloat(300));
-    deviceInfo->insertElement("eyetoScreenDistance", new InfoTypeFloat(0.01));
-    deviceInfo->insertElement("lensSeparationDistance", new InfoTypeFloat(0.02));
-    deviceInfo->insertElement("interpuillaryDistance", new InfoTypeFloat(0.025));
+    deviceInfo->insertElement("eyetoScreenDistance", new InfoTypeFloat(0.01f));
+    deviceInfo->insertElement("lensSeparationDistance", new InfoTypeFloat(0.02f));
+    deviceInfo->insertElement("interpuillaryDistance", new InfoTypeFloat(0.025f));
     deviceInfo->insertElement("distortionK", new InfoTypeArray<double>(4, 1.1, 2.2, 3.3, 4.4));
     deviceInfo->insertElement("desktopX", new InfoTypeInt(1920));
     deviceInfo->insertElement("desktopY", new InfoTypeInt(1080));
@@ -39,9 +39,13 @@ void TestDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
 }
 
 void TestDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {
-    deviceOrientation->setOrientation(0.75, 1.28, 2.33);
+    deviceOrientation->setOrientation(0.75f, 1.28f, 2.33f);
+}
+
+void TestDevice::getDevicePosition(HMDDevicePosition* devicePosition) {
+    devicePosition->setPosition(1.2f, 3.4f, 5.6f);
 }
 
 void TestDevice::getDeviceQuat(HMDDeviceQuat* deviceQuat) {
-    deviceQuat->setQuat(0.11, 0.22, 0.33, 0.44);
+    deviceQuat->setQuat(0.11f, 0.22f, 0.33f, 0.44f);
 }

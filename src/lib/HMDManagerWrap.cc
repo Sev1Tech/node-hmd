@@ -7,6 +7,7 @@
 #include "HMDDeviceInfo.h"
 #include "HMDDeviceInfoWrap.h"
 #include "HMDDeviceOrientationWrap.h"
+#include "HMDDevicePositionWrap.h"
 #include "HMDDeviceQuatWrap.h"
 #include "HMDManagerWrap.h"
 
@@ -21,8 +22,7 @@ using ::v8::Value;
 
 Persistent<Function> HMDManagerWrap::constructor;
 
-HMDManagerWrap::HMDManagerWrap(const char* classToken) {
-    this->_hmdDevice = HMDDeviceFactory::getInstance(classToken);
+HMDManagerWrap::HMDManagerWrap(const char* classToken) : _hmdDevice(HMDDeviceFactory::getInstance(classToken)) {
 }
 
 HMDManagerWrap::~HMDManagerWrap() {
@@ -40,6 +40,8 @@ void HMDManagerWrap::Initialize(Handle<Object> target) {
     tpl->PrototypeTemplate()->Set(NanNew("getDeviceInfoSync"), NanNew<FunctionTemplate>(GetDeviceInfoSync)->GetFunction());
     tpl->PrototypeTemplate()->Set(NanNew("getDeviceOrientation"), NanNew<FunctionTemplate>(GetDeviceOrientationAsync)->GetFunction());
     tpl->PrototypeTemplate()->Set(NanNew("getDeviceOrientationSync"), NanNew<FunctionTemplate>(GetDeviceOrientationSync)->GetFunction());
+    tpl->PrototypeTemplate()->Set(NanNew("getDevicePosition"), NanNew<FunctionTemplate>(GetDevicePositionAsync)->GetFunction());
+    tpl->PrototypeTemplate()->Set(NanNew("getDevicePositionSync"), NanNew<FunctionTemplate>(GetDevicePositionSync)->GetFunction());
     tpl->PrototypeTemplate()->Set(NanNew("getDeviceQuat"), NanNew<FunctionTemplate>(GetDeviceQuatAsync)->GetFunction());
     tpl->PrototypeTemplate()->Set(NanNew("getDeviceQuatSync"), NanNew<FunctionTemplate>(GetDeviceQuatSync)->GetFunction());
 
@@ -114,6 +116,27 @@ NAN_METHOD(HMDManagerWrap::GetDeviceOrientationSync) {
     NanReturnValue(hmdDeviceOrientation);
 }
 
+NAN_METHOD(HMDManagerWrap::GetDevicePositionAsync) {
+  NanScope();
+
+  HMDManagerWrap* hmdManagerWrap = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
+  NanCallback *callback = new NanCallback(args[0].As<Function>());
+
+  NanAsyncQueueWorker(new GetDevicePositionWorker(callback, hmdManagerWrap->GetDevice(), args));
+  NanReturnUndefined();
+}
+
+NAN_METHOD(HMDManagerWrap::GetDevicePositionSync) {
+    NanScope();
+
+    HMDManagerWrap* hmdManager = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
+
+    Handle<Value> hmdDevicePosition = HMDDevicePositionWrap::New(args);
+    hmdManager->GetDevice()->getDevicePosition(ObjectWrap::Unwrap<HMDDevicePositionWrap>(hmdDevicePosition->ToObject())->GetWrapped());
+
+    NanReturnValue(hmdDevicePosition);
+}
+
 NAN_METHOD(HMDManagerWrap::GetDeviceQuatAsync) {
   NanScope();
 
@@ -163,6 +186,22 @@ void GetDeviceOrientationWorker::HandleOKCallback() {
     *hmdDeviceOrientation->GetWrapped() = this->hmdDeviceOrientation;
 
     Handle<Value> argv[] = { NanNull(), hmdDeviceOrientationHandle };
+
+    callback->Call(2, argv);
+}
+
+void GetDevicePositionWorker::Execute() {
+    this->hmdDevice->getDevicePosition(&this->hmdDevicePosition);
+}
+
+void GetDevicePositionWorker::HandleOKCallback() {
+    NanScope();
+
+    Handle<Value> hmdDevicePositionHandle = HMDDevicePositionWrap::New(this->args);
+    HMDDevicePositionWrap* hmdDevicePosition = node::ObjectWrap::Unwrap<HMDDevicePositionWrap>(hmdDevicePositionHandle->ToObject());
+    *hmdDevicePosition->GetWrapped() = this->hmdDevicePosition;
+
+    Handle<Value> argv[] = { NanNull(), hmdDevicePositionHandle };
 
     callback->Call(2, argv);
 }

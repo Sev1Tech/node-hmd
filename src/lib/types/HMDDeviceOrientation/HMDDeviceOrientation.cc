@@ -5,7 +5,7 @@
 
 #include "HMDDeviceOrientation.h"
 
-HMDDeviceOrientation::HMDDeviceOrientation() {
+HMDDeviceOrientation::HMDDeviceOrientation() : _yaw(0.0f), _pitch(0.0f), _roll(0.0f) {
 }
 
 HMDDeviceOrientation::~HMDDeviceOrientation() {
@@ -15,6 +15,10 @@ void HMDDeviceOrientation::setOrientation(float yaw, float pitch, float roll) {
     this->_yaw = yaw;
     this->_pitch = pitch;
     this->_roll = roll;
+}
+
+void HMDDeviceOrientation::setOrientation(HMDDeviceOrientation deviceOrientation) {
+    this->setOrientation(deviceOrientation.getYaw(), deviceOrientation.getPitch(), deviceOrientation.getRoll());
 }
 
 float HMDDeviceOrientation::getYaw() const {
@@ -30,7 +34,7 @@ float HMDDeviceOrientation::getRoll() const {
 }
 
 HMDDeviceOrientation& HMDDeviceOrientation::operator= (const HMDDeviceOrientation &deviceOrientation) {
-    this->setOrientation(deviceOrientation.getYaw(), deviceOrientation.getPitch(), deviceOrientation.getRoll());
+    this->setOrientation(deviceOrientation);
 
     return *this;
 }

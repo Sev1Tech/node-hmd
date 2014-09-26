@@ -19,20 +19,23 @@
  */
 template<typename T>
 class InfoTypePrimitive : public HMDDeviceInfoElement {
+ private:
+    T _value;
+
  public:
-    explicit InfoTypePrimitive(T value) {
-        this->value = value;
+    explicit InfoTypePrimitive(T value) : _value(value) {
     }
 
     ~InfoTypePrimitive() {
     }
 
     v8::Handle<v8::Value> getValue() {
-        return NanNew(value);
+        return NanNew(this->_value);
     }
 
- private:
-    T value;
+    HMDDeviceInfoElement* clone() {
+    	return new InfoTypePrimitive<T>(this->_value);
+    }
 };
 
 #define InfoTypeBoolean(x) InfoTypePrimitive<bool>(x)

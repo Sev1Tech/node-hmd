@@ -5,7 +5,7 @@
 
 #include "HMDDeviceQuat.h"
 
-HMDDeviceQuat::HMDDeviceQuat() {
+HMDDeviceQuat::HMDDeviceQuat() : _w(0.0f), _x(0.0f), _y(0.0f), _z(0.0f) {
 }
 
 HMDDeviceQuat::~HMDDeviceQuat() {

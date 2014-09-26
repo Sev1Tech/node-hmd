@@ -19,8 +19,7 @@ using ::v8::Value;
 
 Persistent<Function> HMDDeviceQuatWrap::constructor;
 
-HMDDeviceQuatWrap::HMDDeviceQuatWrap() {
-    this->_hmdDeviceQuat = new HMDDeviceQuat;
+HMDDeviceQuatWrap::HMDDeviceQuatWrap() : _hmdDeviceQuat(new HMDDeviceQuat) {
 }
 
 HMDDeviceQuatWrap::~HMDDeviceQuatWrap() {
@@ -64,18 +63,18 @@ NAN_GETTER(HMDDeviceQuatWrap::GetDeviceQuatProperty) {
     NanScope();
 
     HMDDeviceQuatWrap* w = ObjectWrap::Unwrap<HMDDeviceQuatWrap>(args.This());
-    HMDDeviceQuat* hmdDeviceInfo = w->GetWrapped();
+    HMDDeviceQuat* hmdDeviceQuat = w->GetWrapped();
 
     std::string propertyString(*NanAsciiString(property));
 
     if (propertyString == "w") {
-        NanReturnValue(NanNew(hmdDeviceInfo->getW()));
+        NanReturnValue(NanNew(hmdDeviceQuat->getW()));
     } else if (propertyString == "x") {
-        NanReturnValue(NanNew(hmdDeviceInfo->getX()));
+        NanReturnValue(NanNew(hmdDeviceQuat->getX()));
     } else if (propertyString == "y") {
-        NanReturnValue(NanNew(hmdDeviceInfo->getY()));
+        NanReturnValue(NanNew(hmdDeviceQuat->getY()));
     } else if (propertyString == "z") {
-        NanReturnValue(NanNew(hmdDeviceInfo->getZ()));
+        NanReturnValue(NanNew(hmdDeviceQuat->getZ()));
     } else {
         NanReturnValue(NanUndefined());
     }

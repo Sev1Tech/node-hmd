@@ -19,8 +19,7 @@ using ::v8::Value;
 
 Persistent<Function> HMDDeviceOrientationWrap::constructor;
 
-HMDDeviceOrientationWrap::HMDDeviceOrientationWrap() {
-    this->_hmdDeviceOrientation = new HMDDeviceOrientation;
+HMDDeviceOrientationWrap::HMDDeviceOrientationWrap() : _hmdDeviceOrientation(new HMDDeviceOrientation) {
 }
 
 HMDDeviceOrientationWrap::~HMDDeviceOrientationWrap() {
@@ -63,16 +62,16 @@ NAN_GETTER(HMDDeviceOrientationWrap::GetDeviceOrientationProperty) {
     NanScope();
 
     HMDDeviceOrientationWrap* w = ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(args.This());
-    HMDDeviceOrientation* hmdDeviceInfo = w->GetWrapped();
+    HMDDeviceOrientation* hmdDeviceOrientation = w->GetWrapped();
 
     std::string propertyString(*NanAsciiString(property));
 
     if (propertyString == "yaw") {
-        NanReturnValue(NanNew(hmdDeviceInfo->getYaw()));
+        NanReturnValue(NanNew(hmdDeviceOrientation->getYaw()));
     } else if (propertyString == "pitch") {
-        NanReturnValue(NanNew(hmdDeviceInfo->getPitch()));
+        NanReturnValue(NanNew(hmdDeviceOrientation->getPitch()));
     } else if (propertyString == "roll") {
-        NanReturnValue(NanNew(hmdDeviceInfo->getRoll()));
+        NanReturnValue(NanNew(hmdDeviceOrientation->getRoll()));
     } else {
         NanReturnValue(NanUndefined());
     }

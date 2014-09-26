@@ -9,14 +9,15 @@
 
 #include "HMDDeviceInfo.h"
 
-HMDDeviceInfo::HMDDeviceInfo() {
-    this->_deviceInformation = std::map<std::string, HMDDeviceInfoElement*>();
+HMDDeviceInfo::HMDDeviceInfo() : _deviceInformation(std::map<std::string, HMDDeviceInfoElement*>()) {
 }
 
 HMDDeviceInfo::~HMDDeviceInfo() {
     for (std::map<std::string, HMDDeviceInfoElement*>::iterator iter = this->_deviceInformation.begin(); iter != this->_deviceInformation.end(); ++iter) {
         delete iter->second;
     }
+
+    this->_deviceInformation.clear();
 }
 
 std::map<std::string, HMDDeviceInfoElement*> HMDDeviceInfo::getDeviceInfo() const {
@@ -38,7 +39,7 @@ void HMDDeviceInfo::insertElement(std::string name, HMDDeviceInfoElement* elemen
 HMDDeviceInfo& HMDDeviceInfo::operator= (const HMDDeviceInfo &deviceInfo) {
     std::map<std::string, HMDDeviceInfoElement*> deviceInformation = deviceInfo.getDeviceInfo();
     for (std::map<std::string, HMDDeviceInfoElement*>::iterator iter = deviceInformation.begin(); iter != deviceInformation.end(); ++iter) {
-        this->insertElement(iter->first, iter->second);
+        this->insertElement(iter->first, iter->second->clone());
     }
 
     return *this;

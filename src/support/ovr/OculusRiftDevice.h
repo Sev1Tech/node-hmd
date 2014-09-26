@@ -11,9 +11,27 @@
 #include "HMDDevice.h"
 #include "OVR.h"
 
+class OculusDeviceOrientation : public HMDDeviceOrientation {
+ public:
+    float* getYawReference() { return &this->_yaw; }
+    float* getPitchReference() { return &this->_pitch; }
+    float* getRollReference() { return &this->_roll; }
+};
+
+class OculusDevicePosition : public HMDDevicePosition {
+ public:
+    float* getXReference() { return &this->_x; }
+    float* getYReference() { return &this->_y; }
+    float* getZReference() { return &this->_z; }
+};
+
 class OculusRiftDevice : public HMDDevice {
  private:
     ovrHmd _hmd;
+    OculusDeviceOrientation _deviceOrientation;
+    OculusDevicePosition _devicePosition;
+
+    void updateDevice();
  public:
     static const std::string classToken;
 
@@ -21,6 +39,7 @@ class OculusRiftDevice : public HMDDevice {
     ~OculusRiftDevice();
     void getDeviceInfo(HMDDeviceInfo* deviceInfo);
     void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
+    void getDevicePosition(HMDDevicePosition* devicePosition);
     void getDeviceQuat(HMDDeviceQuat* deviceQuat);
 };
 

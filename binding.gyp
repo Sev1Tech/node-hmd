@@ -11,6 +11,7 @@
         "src/lib",
         "src/lib/types/HMDDeviceInfo",
         "src/lib/types/HMDDeviceOrientation",
+        "src/lib/types/HMDDevicePosition",
         "src/lib/types/HMDDeviceQuat",
         "src/3rdparty",
         
@@ -27,6 +28,8 @@
         "src/lib/types/HMDDeviceInfo/HMDDeviceInfoWrap.cc",
         "src/lib/types/HMDDeviceOrientation/HMDDeviceOrientation.cc",
         "src/lib/types/HMDDeviceOrientation/HMDDeviceOrientationWrap.cc",
+        "src/lib/types/HMDDevicePosition/HMDDevicePosition.cc",
+        "src/lib/types/HMDDevicePosition/HMDDevicePositionWrap.cc",
         "src/lib/types/HMDDeviceQuat/HMDDeviceQuat.cc",
         "src/lib/types/HMDDeviceQuat/HMDDeviceQuatWrap.cc",
 

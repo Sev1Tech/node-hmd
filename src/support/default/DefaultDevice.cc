@@ -23,9 +23,13 @@ void DefaultDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
 }
 
 void DefaultDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {
-    deviceOrientation->setOrientation(0.0, 0.0, 0.0);
+    deviceOrientation->setOrientation(0.0f, 0.0f, 0.0f);
+}
+
+void DefaultDevice::getDevicePosition(HMDDevicePosition* devicePosition) {
+    devicePosition->setPosition(0.0f, 0.0f, 0.0f);
 }
 
 void DefaultDevice::getDeviceQuat(HMDDeviceQuat* deviceQuat) {
-    deviceQuat->setQuat(0.0, 0.0, 0.0, 0.0);
+    deviceQuat->setQuat(0.0f, 0.0f, 0.0f, 0.0f);
 }

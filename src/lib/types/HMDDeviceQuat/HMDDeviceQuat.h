@@ -11,6 +11,12 @@
  * Basic property class containg quaternion state about the device.
  */
 class HMDDeviceQuat {
+ private:
+    float _w;
+    float _x;
+    float _y;
+    float _z;
+
  public:
     HMDDeviceQuat();
     ~HMDDeviceQuat();
@@ -23,12 +29,6 @@ class HMDDeviceQuat {
     float getZ() const;
 
     HMDDeviceQuat& operator= (const HMDDeviceQuat &deviceQuat);
-
- private:
-    float _w;
-    float _x;
-    float _y;
-    float _z;
 };
 
 #endif  // SRC_LIB_TYPES_HMDDEVICEQUAT_HMDDEVICEQUAT_H_
