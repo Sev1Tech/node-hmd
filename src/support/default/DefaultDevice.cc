@@ -6,8 +6,8 @@
 #include <string>
 
 #include "DefaultDevice.h"
-#include "InfoTypeNumber.h"
-#include "InfoTypeString.h"
+#include "InfoTypePrimitive.h"
+
 
 const std::string DefaultDevice::displayDeviceName = "node-hmd default device";
 const std::string DefaultDevice::deviceName = "Default Device";
@@ -19,7 +19,7 @@ void DefaultDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("displayDeviceName", new InfoTypeString(displayDeviceName));
     deviceInfo->insertElement("productName", new InfoTypeString(deviceName));
     deviceInfo->insertElement("manufacturer", new InfoTypeString(deviceManufacturer));
-    deviceInfo->insertElement("version", new InfoTypeNumber(1));
+    deviceInfo->insertElement("version", new InfoTypeUInt(1));
 }
 
 void DefaultDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {

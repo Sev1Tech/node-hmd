@@ -7,6 +7,10 @@
 
 #include "OculusRiftDevice.h"
 
+#include "HMDDeviceInfoElement.h"
+#include "InfoTypeArray.h"
+#include "InfoTypePrimitive.h"
+
 const std::string OculusRiftDevice::classToken = "oculusrift";
 
 OculusRiftDevice::OculusRiftDevice() {
@@ -22,20 +26,20 @@ OculusRiftDevice::~OculusRiftDevice() {
 }
 
 void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
-    // deviceInfo->insertElement("ProductName", std::string(this->_hmd->ProductName));
-    // deviceInfo->insertElement("Manufacturer", std::string(this->_hmd->Manufacturer));
-    // deviceInfo->insertElement("VendorId", this->_hmd->VendorId);
-    // deviceInfo->insertElement("ProductId", this->_hmd->ProductId);
-    // deviceInfo->insertElement("SerialNumber", std::string(this->_hmd->SerialNumber));
-    // deviceInfo->insertElement("FirmwareMajor", this->_hmd->FirmwareMajor);
-    // deviceInfo->insertElement("FirmwareMinor", this->_hmd->FirmwareMinor);
-    // deviceInfo->insertElement("CameraFrustumHFovInRadians", this->_hmd->CameraFrustumHFovInRadians);
-    // deviceInfo->insertElement("CameraFrustumVFovInRadians", this->_hmd->CameraFrustumVFovInRadians);
-    // deviceInfo->insertElement("CameraFrustumNearZInMeters", this->_hmd->CameraFrustumNearZInMeters);
-    // deviceInfo->insertElement("CameraFrustumFarZInMeters", this->_hmd->CameraFrustumFarZInMeters);
-    // deviceInfo->insertElement("HmdCaps", this->_hmd->HmdCaps);
-    // deviceInfo->insertElement("TrackingCaps", this->_hmd->TrackingCaps);
-    // deviceInfo->insertElement("DistortionCaps", this->_hmd->DistortionCaps);
+    deviceInfo->insertElement("ProductName", new InfoTypeString(this->_hmd->ProductName));
+    deviceInfo->insertElement("Manufacturer", new InfoTypeString(this->_hmd->Manufacturer));
+    deviceInfo->insertElement("VendorId", new InfoTypeShort(this->_hmd->VendorId));
+    deviceInfo->insertElement("ProductId", new InfoTypeShort(this->_hmd->ProductId));
+    deviceInfo->insertElement("SerialNumber", new InfoTypeString(this->_hmd->SerialNumber));
+    deviceInfo->insertElement("FirmwareMajor", new InfoTypeShort(this->_hmd->FirmwareMajor));
+    deviceInfo->insertElement("FirmwareMinor", new InfoTypeShort(this->_hmd->FirmwareMinor));
+    deviceInfo->insertElement("CameraFrustumHFovInRadians", new InfoTypeFloat(this->_hmd->CameraFrustumHFovInRadians));
+    deviceInfo->insertElement("CameraFrustumVFovInRadians", new InfoTypeFloat(this->_hmd->CameraFrustumVFovInRadians));
+    deviceInfo->insertElement("CameraFrustumNearZInMeters", new InfoTypeFloat(this->_hmd->CameraFrustumNearZInMeters));
+    deviceInfo->insertElement("CameraFrustumFarZInMeters", new InfoTypeFloat(this->_hmd->CameraFrustumFarZInMeters));
+    deviceInfo->insertElement("HmdCaps", new InfoTypeUInt(this->_hmd->HmdCaps));
+    deviceInfo->insertElement("TrackingCaps", new InfoTypeUInt(this->_hmd->TrackingCaps));
+    deviceInfo->insertElement("DistortionCaps", new InfoTypeUInt(this->_hmd->DistortionCaps));
 
     // int Resolution[2] = { this->_hmd->Resolution.w, this->_hmd->Resolution.h };
     // deviceInfo->insertElement("Resolution", Resolution, 2);
@@ -47,8 +51,8 @@ void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     // // TODO(GeoJosh): MaxEyeFov
     // // TODO(GeoJosh): EyeRenderOrder
 
-    // deviceInfo->insertElement("DisplayDeviceName", std::string(this->_hmd->DisplayDeviceName));
-    // deviceInfo->insertElement("DisplayId", this->_hmd->DisplayId);
+    deviceInfo->insertElement("DisplayDeviceName", new InfoTypeString(this->_hmd->DisplayDeviceName));
+    deviceInfo->insertElement("DisplayId", new InfoTypeUInt(this->_hmd->DisplayId));
 }
 
 void OculusRiftDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {

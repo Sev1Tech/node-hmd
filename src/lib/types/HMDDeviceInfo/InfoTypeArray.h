@@ -6,7 +6,6 @@
 #ifndef SRC_LIB_TYPES_HMDDEVICEINFO_INFOTYPEARRAY_H_
 #define SRC_LIB_TYPES_HMDDEVICEINFO_INFOTYPEARRAY_H_
 
-#include <boost/any.hpp>
 #include <nan/nan.h>
 #include <node.h>
 
