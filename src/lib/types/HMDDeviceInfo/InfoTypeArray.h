@@ -21,29 +21,30 @@
 template<typename T>
 class InfoTypeArray : public HMDDeviceInfoElement {
  public:
-	InfoTypeArray(int length, ...) {
-	    va_list arguments;
+    InfoTypeArray(int length, ...) {
+        va_list arguments;
 
-	    va_start(arguments, length);
-	    for (int i = 0; i < length; i++) {
-	        value.push_back(va_arg(arguments, T));
-	    }
+        va_start(arguments, length);
+        for (int i = 0; i < length; i++) {
+            value.push_back(va_arg(arguments, T));
+        }
 
-	    va_end(arguments);
-	}
+        va_end(arguments);
+    }
 
     ~InfoTypeArray() {
     }
 
     v8::Handle<v8::Value> getValue() {
-	    v8::Local<v8::Array> array = NanNew<v8::Array>(this->value.size());
+        v8::Local<v8::Array> array = NanNew<v8::Array>(this->value.size());
 
-	    for (typename std::vector<T>::size_type i = 0; i < this->value.size(); i++) {
-		    array->Set(i, NanNew(this->value[i]));
-		}
+        for (typename std::vector<T>::size_type i = 0; i < this->value.size(); i++) {
+            array->Set(i, NanNew(this->value[i]));
+        }
 
-	    return array;
-	}
+        return array;
+    }
+
  private:
     std::vector<T> value;
 };
@@ -51,32 +52,33 @@ class InfoTypeArray : public HMDDeviceInfoElement {
 template<>
 class InfoTypeArray<HMDDeviceInfoElement *> : public HMDDeviceInfoElement {
  public:
-	InfoTypeArray(int length, ...) {
-	    va_list arguments;
+    InfoTypeArray(int length, ...) {
+        va_list arguments;
 
-	    va_start(arguments, length);
-	    for (int i = 0; i < length; i++) {
-	        value.push_back(va_arg(arguments, HMDDeviceInfoElement *));
-	    }
+        va_start(arguments, length);
+        for (int i = 0; i < length; i++) {
+            value.push_back(va_arg(arguments, HMDDeviceInfoElement *));
+        }
 
-	    va_end(arguments);
-	}
+        va_end(arguments);
+    }
 
     ~InfoTypeArray() {
-	    for (typename std::vector<HMDDeviceInfoElement *>::size_type i = 0; i < this->value.size(); i++) {
-		    delete this->value[i];
-		}
+        for (typename std::vector<HMDDeviceInfoElement *>::size_type i = 0; i < this->value.size(); i++) {
+            delete this->value[i];
+        }
     }
 
     v8::Handle<v8::Value> getValue() {
-	    v8::Local<v8::Array> array = NanNew<v8::Array>(this->value.size());
+        v8::Local<v8::Array> array = NanNew<v8::Array>(this->value.size());
 
-	    for (typename std::vector<HMDDeviceInfoElement *>::size_type i = 0; i < this->value.size(); i++) {
-		    array->Set(i, NanNew(this->value[i]->getValue()));
-		}
+        for (typename std::vector<HMDDeviceInfoElement *>::size_type i = 0; i < this->value.size(); i++) {
+            array->Set(i, NanNew(this->value[i]->getValue()));
+        }
 
-	    return array;
-	}
+        return array;
+    }
+
  private:
     std::vector<HMDDeviceInfoElement *> value;
 };

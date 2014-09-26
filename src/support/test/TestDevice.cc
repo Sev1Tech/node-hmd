@@ -30,7 +30,7 @@ void TestDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("desktopX", new InfoTypeInt(1920));
     deviceInfo->insertElement("desktopY", new InfoTypeInt(1080));
     deviceInfo->insertElement("displayDeviceName", new InfoTypeString(displayDeviceName));
-    deviceInfo->insertElement("displayId", new InfoTypeUInt(1234567890));
+    deviceInfo->insertElement("displayId", new InfoTypeLong(1234567890));
     deviceInfo->insertElement("productName", new InfoTypeString(deviceName));
     deviceInfo->insertElement("manufacturer", new InfoTypeString(deviceManufacturer));
     deviceInfo->insertElement("version", new InfoTypeUInt(5));
