@@ -61,6 +61,8 @@ void OculusRiftDevice::updateDevice() {
     if (trackingState.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
         OVR::Posef pose = trackingState.HeadPose.ThePose;
         pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(this->_deviceOrientation.getYawReference(), this->_deviceOrientation.getPitchReference(), this->_deviceOrientation.getRollReference());
+
+        this->_devicePosition.setPosition(pose.Translation.x, pose.Translation.y, pose.Translation.z);
     }
 }
 

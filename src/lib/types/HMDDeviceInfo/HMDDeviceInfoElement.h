@@ -7,7 +7,7 @@
 #define SRC_LIB_TYPES_HMDDEVICEINFO_HMDDEVICEINFOELEMENT_H_
 
 #include <node.h>
- 
+
 /*! \class HMDDeviceInfoElement
  * 
  * 

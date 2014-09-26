@@ -34,7 +34,7 @@ class InfoTypePrimitive : public HMDDeviceInfoElement {
     }
 
     HMDDeviceInfoElement* clone() {
-    	return new InfoTypePrimitive<T>(this->_value);
+        return new InfoTypePrimitive<T>(this->_value);
     }
 };
 

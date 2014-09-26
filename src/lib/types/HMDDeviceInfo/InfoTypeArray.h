@@ -35,7 +35,7 @@ class InfoTypeArray : public HMDDeviceInfoElement {
         va_end(arguments);
     }
 
-    InfoTypeArray(std::vector<T> values) {
+    explicit InfoTypeArray(std::vector<T> values) {
         for (typename std::vector<T>::size_type i = 0; i < values.size(); i++) {
             this->_value.push_back(values[i]);
         }
@@ -76,7 +76,7 @@ class InfoTypeArray<HMDDeviceInfoElement *> : public HMDDeviceInfoElement {
         va_end(arguments);
     }
 
-    InfoTypeArray(std::vector<HMDDeviceInfoElement *> values) {
+    explicit InfoTypeArray(std::vector<HMDDeviceInfoElement *> values) {
         for (typename std::vector<HMDDeviceInfoElement *>::size_type i = 0; i < values.size(); i++) {
             this->_value.push_back(values[i]->clone());
         }
