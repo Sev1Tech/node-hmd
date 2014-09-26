@@ -7,6 +7,7 @@
 
 #include "TestDevice.h"
 
+#include "HMDDeviceInfoElement.h"
 #include "InfoTypeArray.h"
 #include "InfoTypeNumber.h"
 #include "InfoTypeString.h"
@@ -35,6 +36,8 @@ void TestDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("manufacturer", new InfoTypeString(deviceManufacturer));
     deviceInfo->insertElement("hResolution", new InfoTypeNumber(800));
     deviceInfo->insertElement("version", new InfoTypeNumber(5));
+
+    deviceInfo->insertElement("mixedData", new InfoTypeArray<HMDDeviceInfoElement *>(2, new InfoTypeNumber(42), new InfoTypeString("test token")));
 }
 
 void TestDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {

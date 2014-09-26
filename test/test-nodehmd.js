@@ -41,11 +41,10 @@ describe('node-hmd manager tests.', function() {
 				assert.ok(floatCompareEquality(deviceInfo.eyetoScreenDistance, 0.01));
 				assert.ok(floatCompareEquality(deviceInfo.lensSeparationDistance, 0.02));
 				assert.ok(floatCompareEquality(deviceInfo.interpuillaryDistance, 0.025));
-				// var distortionK = deviceInfo.distortionK;
-				// assert.ok(floatCompareEquality(distortionK[0], 1.1));
-				// assert.ok(floatCompareEquality(distortionK[1], 2.2));
-				// assert.ok(floatCompareEquality(distortionK[2], 3.3));
-				// assert.ok(floatCompareEquality(distortionK[3], 4.4));
+				assert.ok(floatCompareEquality(deviceInfo.distortionK[0], 1.1));
+				assert.ok(floatCompareEquality(deviceInfo.distortionK[1], 2.2));
+				assert.ok(floatCompareEquality(deviceInfo.distortionK[2], 3.3));
+				assert.ok(floatCompareEquality(deviceInfo.distortionK[3], 4.4));
 				assert.equal(deviceInfo.desktopX, 1920);
 				assert.equal(deviceInfo.desktopY, 1080);
 				assert.equal(deviceInfo.displayDeviceName, "node-hmd test device");
@@ -53,7 +52,8 @@ describe('node-hmd manager tests.', function() {
 				assert.equal(deviceInfo.productName, "Test Device");
 				assert.equal(deviceInfo.manufacturer, "Geocent LLC");
 				assert.equal(deviceInfo.version, 5);
-
+				assert.equal(deviceInfo.mixedData[0], 42);
+				assert.equal(deviceInfo.mixedData[1], "test token");
 				done();
 			});
 		});
@@ -75,11 +75,10 @@ describe('node-hmd manager tests.', function() {
 			assert.ok(floatCompareEquality(deviceInfo.eyetoScreenDistance, 0.01));
 			assert.ok(floatCompareEquality(deviceInfo.lensSeparationDistance, 0.02));
 			assert.ok(floatCompareEquality(deviceInfo.interpuillaryDistance, 0.025));
-			var distortionK = deviceInfo.distortionK;
-			assert.ok(floatCompareEquality(distortionK[0], 1.1));
-			assert.ok(floatCompareEquality(distortionK[1], 2.2));
-			assert.ok(floatCompareEquality(distortionK[2], 3.3));
-			assert.ok(floatCompareEquality(distortionK[3], 4.4));
+			assert.ok(floatCompareEquality(deviceInfo.distortionK[0], 1.1));
+			assert.ok(floatCompareEquality(deviceInfo.distortionK[1], 2.2));
+			assert.ok(floatCompareEquality(deviceInfo.distortionK[2], 3.3));
+			assert.ok(floatCompareEquality(deviceInfo.distortionK[3], 4.4));
 			assert.equal(deviceInfo.desktopX, 1920);
 			assert.equal(deviceInfo.desktopY, 1080);
 			assert.equal(deviceInfo.displayDeviceName, "node-hmd test device");
@@ -87,6 +86,8 @@ describe('node-hmd manager tests.', function() {
 			assert.equal(deviceInfo.productName, "Test Device");
 			assert.equal(deviceInfo.manufacturer, "Geocent LLC");
 			assert.equal(deviceInfo.version, 5);
+			assert.equal(deviceInfo.mixedData[0], 42);
+			assert.equal(deviceInfo.mixedData[1], "test token");
 		});
 	});
 
