@@ -35,6 +35,13 @@ class InfoTypeArray : public HMDDeviceInfoElement {
         va_end(arguments);
     }
 
+    InfoTypeArray(T* elements, int length) {
+
+        for (int i = 0; i < length; i++) {
+            this->_value.push_back(elements[i]);
+        }
+    }
+
     explicit InfoTypeArray(std::vector<T> values) {
         for (typename std::vector<T>::size_type i = 0; i < values.size(); i++) {
             this->_value.push_back(values[i]);
@@ -74,6 +81,13 @@ class InfoTypeArray<HMDDeviceInfoElement *> : public HMDDeviceInfoElement {
         }
 
         va_end(arguments);
+    }
+
+    InfoTypeArray(HMDDeviceInfoElement** elements, int length) {
+
+        for (int i = 0; i < length; i++) {
+            this->_value.push_back(elements[i]);
+        }
     }
 
     explicit InfoTypeArray(std::vector<HMDDeviceInfoElement *> values) {

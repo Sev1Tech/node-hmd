@@ -3,8 +3,8 @@
  * See LICENSE for the full text of the license.
  */
 
-#include <list>
 #include <string>
+#include <vector>
 
 #include "HMDDevice.h"
 #include "HMDDeviceFactory.h"
@@ -13,8 +13,8 @@
 #include "OculusRiftDevice.h"
 #include "TestDevice.h"
 
-std::list<std::string> HMDDeviceFactory::getSupportedDevices() {
-    std::list<std::string> devices;
+std::vector<std::string> HMDDeviceFactory::getSupportedDevices() {
+    std::vector<std::string> devices;
 
     devices.push_back(DefaultDevice::classToken);
     devices.push_back(OculusRiftDevice::classToken);

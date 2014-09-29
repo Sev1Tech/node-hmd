@@ -11,6 +11,10 @@
 #include "InfoTypeArray.h"
 #include "InfoTypePrimitive.h"
 
+#include <OvrFovPort.h>
+#include <OvrSizei.h>
+#include <OvrVector2i.h>
+
 const std::string TestDevice::displayDeviceName = "node-hmd test device";
 const std::string TestDevice::deviceName = "Test Device";
 const std::string TestDevice::deviceManufacturer = "Geocent LLC";
@@ -36,6 +40,20 @@ void TestDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("version", new InfoTypeUInt(5));
 
     deviceInfo->insertElement("mixedData", new InfoTypeArray<HMDDeviceInfoElement *>(2, new InfoTypeShort(42), new InfoTypeString("test token")));
+
+
+    // Oculus Rift specific device information types test
+    OvrFovPort* ovrFovPortTest[2];
+    ovrFovPort testOvrFovPort = { 2.1, 4.3, 6.5, 8.7 };
+    ovrFovPortTest[0] = new OvrFovPort(testOvrFovPort);
+    ovrFovPortTest[1] = new OvrFovPort(testOvrFovPort);
+    deviceInfo->insertElement("ovrFovPort", new InfoTypeArray<HMDDeviceInfoElement *>((HMDDeviceInfoElement **)ovrFovPortTest, 2));
+
+    ovrSizei testOvrSizei = { 44, 55 };
+    deviceInfo->insertElement("ovrSizei", new OvrSizei(testOvrSizei));
+
+    ovrVector2i testOvrVector2i = { 787, 989 };
+    deviceInfo->insertElement("ovrVector2i", new OvrVector2i(testOvrVector2i));
 }
 
 void TestDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {

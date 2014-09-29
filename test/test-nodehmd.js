@@ -17,8 +17,8 @@ describe('node-hmd manager tests.', function() {
 
 	describe('#createManager', function() {
 		it('node-hmd createManager failure test.', function() {
-			assert.strictEqual(typeof(hmd.createManager()), "undefined");
-			assert.strictEqual(typeof(hmd.createManager("doesnotexist")), "undefined");
+			assert.throws(function() { hmd.createManager(); });
+			assert.throws(function() { hmd.createManager("doesnotexist"); });
 		});
 	});
 
@@ -32,6 +32,8 @@ describe('node-hmd manager tests.', function() {
 		it('getDeviceInfo sanity test.', function(done) {
 			instance.getDeviceInfo(function(err, deviceInfo) {
 				assert.ok(deviceInfo);
+
+				console.log(deviceInfo);
 
 				assert.equal(deviceInfo.hResolution, 800);
 				assert.equal(deviceInfo.vResolution, 600);
@@ -54,6 +56,23 @@ describe('node-hmd manager tests.', function() {
 				assert.equal(deviceInfo.version, 5);
 				assert.equal(deviceInfo.mixedData[0], 42);
 				assert.equal(deviceInfo.mixedData[1], "test token");
+
+				assert.equal(deviceInfo.ovrFovPort.length, 2);
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].UpTan, 2.1));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].DownTan, 4.3));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].LeftTan, 6.5));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].RightTan, 8.7));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].UpTan, 2.1));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].DownTan, 4.3));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].LeftTan, 6.5));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].RightTan, 8.7));
+
+				assert.equal(deviceInfo.ovrSizei.w, 44);
+				assert.equal(deviceInfo.ovrSizei.h, 55);
+
+				assert.equal(deviceInfo.ovrVector2i.x, 787);
+				assert.equal(deviceInfo.ovrVector2i.y, 989);
+
 				done();
 			});
 		});
@@ -88,6 +107,22 @@ describe('node-hmd manager tests.', function() {
 			assert.equal(deviceInfo.version, 5);
 			assert.equal(deviceInfo.mixedData[0], 42);
 			assert.equal(deviceInfo.mixedData[1], "test token");
+
+			assert.equal(deviceInfo.ovrFovPort.length, 2);
+			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].UpTan, 2.1));
+			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].DownTan, 4.3));
+			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].LeftTan, 6.5));
+			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].RightTan, 8.7));
+			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].UpTan, 2.1));
+			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].DownTan, 4.3));
+			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].LeftTan, 6.5));
+			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].RightTan, 8.7));
+
+			assert.equal(deviceInfo.ovrSizei.w, 44);
+			assert.equal(deviceInfo.ovrSizei.h, 55);
+			
+			assert.equal(deviceInfo.ovrVector2i.x, 787);
+			assert.equal(deviceInfo.ovrVector2i.y, 989);
 		});
 	});
 

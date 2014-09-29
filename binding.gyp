@@ -17,6 +17,9 @@
         
         "src/support/default",
         "src/support/ovr",
+        "src/support/ovr/types/OvrFovPort",
+        "src/support/ovr/types/OvrSizei",
+        "src/support/ovr/types/OvrVector2i",
         "src/support/test",
       ],
 
@@ -34,7 +37,15 @@
         "src/lib/types/HMDDeviceQuat/HMDDeviceQuatWrap.cc",
 
         "src/support/default/DefaultDevice.cc",
+
         "src/support/ovr/OculusRiftDevice.cc",
+        "src/support/ovr/types/OvrFovPort/OvrFovPort.cc",
+        "src/support/ovr/types/OvrFovPort/OvrFovPortWrap.cc",
+        "src/support/ovr/types/OvrSizei/OvrSizei.cc",
+        "src/support/ovr/types/OvrSizei/OvrSizeiWrap.cc",
+        "src/support/ovr/types/OvrVector2i/OvrVector2i.cc",
+        "src/support/ovr/types/OvrVector2i/OvrVector2iWrap.cc",
+
         "src/support/test/TestDevice.cc"
       ],
 

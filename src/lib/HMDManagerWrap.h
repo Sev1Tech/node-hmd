@@ -46,11 +46,10 @@ class GetDeviceInfoWorker : public NanAsyncWorker {
  private:
     HMDDevice* hmdDevice;
     HMDDeviceInfo hmdDeviceInfo;
-    v8::Arguments args;
 
  public:
-    GetDeviceInfoWorker(NanCallback *callback, HMDDevice* hmdDevice, v8::Arguments args)
-        : NanAsyncWorker(callback), hmdDevice(hmdDevice), args(args) {}
+    GetDeviceInfoWorker(NanCallback *callback, HMDDevice* hmdDevice)
+        : NanAsyncWorker(callback), hmdDevice(hmdDevice) {}
     ~GetDeviceInfoWorker() {}
 
     void Execute();
@@ -65,11 +64,10 @@ class GetDeviceOrientationWorker : public NanAsyncWorker {
  private:
     HMDDevice* hmdDevice;
     HMDDeviceOrientation hmdDeviceOrientation;
-    v8::Arguments args;
 
  public:
-    GetDeviceOrientationWorker(NanCallback *callback, HMDDevice* hmdDevice, v8::Arguments args)
-        : NanAsyncWorker(callback), hmdDevice(hmdDevice), args(args) {}
+    GetDeviceOrientationWorker(NanCallback *callback, HMDDevice* hmdDevice)
+        : NanAsyncWorker(callback), hmdDevice(hmdDevice) {}
     ~GetDeviceOrientationWorker() {}
 
     void Execute();
@@ -84,11 +82,10 @@ class GetDevicePositionWorker : public NanAsyncWorker {
  private:
     HMDDevice* hmdDevice;
     HMDDevicePosition hmdDevicePosition;
-    v8::Arguments args;
 
  public:
-    GetDevicePositionWorker(NanCallback *callback, HMDDevice* hmdDevice, v8::Arguments args)
-        : NanAsyncWorker(callback), hmdDevice(hmdDevice), args(args) {}
+    GetDevicePositionWorker(NanCallback *callback, HMDDevice* hmdDevice)
+        : NanAsyncWorker(callback), hmdDevice(hmdDevice) {}
     ~GetDevicePositionWorker() {}
 
     void Execute();
@@ -103,11 +100,10 @@ class GetDeviceQuatWorker : public NanAsyncWorker {
  private:
     HMDDevice* hmdDevice;
     HMDDeviceQuat hmdDeviceQuat;
-    v8::Arguments args;
 
  public:
-    GetDeviceQuatWorker(NanCallback *callback, HMDDevice* hmdDevice, v8::Arguments args)
-        : NanAsyncWorker(callback), hmdDevice(hmdDevice), args(args) {}
+    GetDeviceQuatWorker(NanCallback *callback, HMDDevice* hmdDevice)
+        : NanAsyncWorker(callback), hmdDevice(hmdDevice) {}
     ~GetDeviceQuatWorker() {}
 
     void Execute();

@@ -11,6 +11,10 @@
 #include "InfoTypeArray.h"
 #include "InfoTypePrimitive.h"
 
+#include "OvrFovPort.h"
+#include "OvrSizei.h"
+#include "OvrVector2i.h"
+
 const std::string OculusRiftDevice::classToken = "oculusrift";
 
 OculusRiftDevice::OculusRiftDevice() {
@@ -40,17 +44,21 @@ void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("HmdCaps", new InfoTypeUInt(this->_hmd->HmdCaps));
     deviceInfo->insertElement("TrackingCaps", new InfoTypeUInt(this->_hmd->TrackingCaps));
     deviceInfo->insertElement("DistortionCaps", new InfoTypeUInt(this->_hmd->DistortionCaps));
+    deviceInfo->insertElement("Resolution", new OvrSizei(this->_hmd->Resolution));
+    deviceInfo->insertElement("WindowsPos", new OvrVector2i(this->_hmd->WindowsPos));
 
-    // int Resolution[2] = { this->_hmd->Resolution.w, this->_hmd->Resolution.h };
-    // deviceInfo->insertElement("Resolution", Resolution, 2);
+    OvrFovPort* DefaultEyeFov[ovrEye_Count];
+    OvrFovPort* MaxEyeFov[ovrEye_Count];
+    int EyeRenderOrder[ovrEye_Count];
 
-    // int WindowsPos[2] = { this->_hmd->WindowsPos.x, this->_hmd->WindowsPos.y };
-    // deviceInfo->insertElement("WindowsPos", WindowsPos, 2);
-
-    // // TODO(GeoJosh): DefaultEyeFov
-    // // TODO(GeoJosh): MaxEyeFov
-    // // TODO(GeoJosh): EyeRenderOrder
-
+    for (int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++) {
+        DefaultEyeFov[eyeIndex] = new OvrFovPort(this->_hmd->DefaultEyeFov[eyeIndex]);
+        MaxEyeFov[eyeIndex] = new OvrFovPort(this->_hmd->MaxEyeFov[eyeIndex]);
+        EyeRenderOrder[eyeIndex] = this->_hmd->EyeRenderOrder[eyeIndex];
+    }
+    deviceInfo->insertElement("DefaultEyeFov", new InfoTypeArray<HMDDeviceInfoElement *>((HMDDeviceInfoElement **)DefaultEyeFov, ovrEye_Count));
+    deviceInfo->insertElement("MaxEyeFov", new InfoTypeArray<HMDDeviceInfoElement *>((HMDDeviceInfoElement **)MaxEyeFov, ovrEye_Count));
+    deviceInfo->insertElement("EyeRenderOrder", new InfoTypeArray<int>(EyeRenderOrder, ovrEye_Count));
     deviceInfo->insertElement("DisplayDeviceName", new InfoTypeString(this->_hmd->DisplayDeviceName));
     deviceInfo->insertElement("DisplayId", new InfoTypeUInt(this->_hmd->DisplayId));
 }
@@ -60,6 +68,8 @@ void OculusRiftDevice::updateDevice() {
 
     if (trackingState.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
         OVR::Posef pose = trackingState.HeadPose.ThePose;
+
+        this->_deviceQuat.setQuat(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
         pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(this->_deviceOrientation.getYawReference(), this->_deviceOrientation.getPitchReference(), this->_deviceOrientation.getRollReference());
 
         this->_devicePosition.setPosition(pose.Translation.x, pose.Translation.y, pose.Translation.z);
@@ -78,6 +88,5 @@ void OculusRiftDevice::getDevicePosition(HMDDevicePosition* devicePosition) {
 
 void OculusRiftDevice::getDeviceQuat(HMDDeviceQuat* deviceQuat) {
     this->updateDevice();
-
-    // TODO(GeoJosh): Implement Me
+    deviceQuat->setQuat((HMDDeviceQuat)this->_deviceQuat);
 }

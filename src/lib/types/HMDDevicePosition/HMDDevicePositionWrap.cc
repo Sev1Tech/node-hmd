@@ -48,10 +48,13 @@ NAN_METHOD(HMDDevicePositionWrap::New) {
         w->Wrap(args.This());
         NanReturnValue(args.This());
     } else {
-        const int argc = 1;
-        Local<Value> argv[argc] = { args[0] };
-        NanReturnValue(constructor->NewInstance(argc, argv));
+        NanReturnValue(constructor->NewInstance());
     }
+}
+
+Handle<Value> HMDDevicePositionWrap::NewInstance() {
+    NanScope();
+    NanReturnValue(constructor->NewInstance());
 }
 
 HMDDevicePosition* HMDDevicePositionWrap::GetWrapped() {

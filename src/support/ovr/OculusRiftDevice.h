@@ -18,18 +18,12 @@ class OculusDeviceOrientation : public HMDDeviceOrientation {
     float* getRollReference() { return &this->_roll; }
 };
 
-class OculusDevicePosition : public HMDDevicePosition {
- public:
-    float* getXReference() { return &this->_x; }
-    float* getYReference() { return &this->_y; }
-    float* getZReference() { return &this->_z; }
-};
-
 class OculusRiftDevice : public HMDDevice {
  private:
     ovrHmd _hmd;
     OculusDeviceOrientation _deviceOrientation;
-    OculusDevicePosition _devicePosition;
+    HMDDevicePosition _devicePosition;
+    HMDDeviceQuat _deviceQuat;
 
     void updateDevice();
  public:

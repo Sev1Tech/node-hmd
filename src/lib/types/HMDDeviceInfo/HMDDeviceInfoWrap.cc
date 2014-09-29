@@ -35,7 +35,7 @@ void HMDDeviceInfoWrap::Initialize(Handle<Object> target) {
 
     Handle<ObjectTemplate> instance = tpl->InstanceTemplate();
     instance->SetInternalFieldCount(1);
-    instance->SetNamedPropertyHandler(GetDeviceInfoProperty);
+    instance->SetNamedPropertyHandler(GetDeviceInfoProperty, 0, 0, 0, DeviceInfoPropertyEnumerator);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
     target->Set(NanNew("HMDDeviceInfo"), constructor);
@@ -49,10 +49,13 @@ NAN_METHOD(HMDDeviceInfoWrap::New) {
         w->Wrap(args.This());
         NanReturnValue(args.This());
     } else {
-        const int argc = 1;
-        Local<Value> argv[argc] = { args[0] };
-        NanReturnValue(constructor->NewInstance(argc, argv));
+        NanReturnValue(constructor->NewInstance());
     }
+}
+
+Handle<Value> HMDDeviceInfoWrap::NewInstance() {
+    NanScope();
+    NanReturnValue(constructor->NewInstance());
 }
 
 HMDDeviceInfo* HMDDeviceInfoWrap::GetWrapped() {
@@ -71,4 +74,21 @@ NAN_GETTER(HMDDeviceInfoWrap::GetDeviceInfoProperty) {
     catch (ElementNotFoundError &ex) {
         NanReturnValue(NanUndefined());
     }
+}
+
+NAN_PROPERTY_ENUMERATOR(HMDDeviceInfoWrap::DeviceInfoPropertyEnumerator) {
+    NanScope();
+
+    HMDDeviceInfoWrap* w = ObjectWrap::Unwrap<HMDDeviceInfoWrap>(args.This());
+    HMDDeviceInfo* hmdDeviceInfo = w->GetWrapped();
+
+    const std::map<std::string, HMDDeviceInfoElement*> deviceInfo = hmdDeviceInfo->getDeviceInfo();
+    Local<Array> properties = NanNew<Array>(deviceInfo.size());
+
+    int i = 0;
+    for (std::map<std::string, HMDDeviceInfoElement*>::const_iterator iter = deviceInfo.begin(); iter != deviceInfo.end(); ++iter) {
+        properties->Set(i++, NanNew(iter->first.c_str()));
+    }
+
+    NanReturnValue(properties);
 }

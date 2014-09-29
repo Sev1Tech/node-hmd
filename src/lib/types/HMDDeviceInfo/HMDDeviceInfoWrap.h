@@ -23,10 +23,11 @@ class HMDDeviceInfoWrap : public node::ObjectWrap {
     ~HMDDeviceInfoWrap();
     static v8::Persistent<v8::Function> constructor;
     static NAN_GETTER(GetDeviceInfoProperty);
-
+    static NAN_PROPERTY_ENUMERATOR(DeviceInfoPropertyEnumerator);
  public:
     static void Initialize(v8::Handle<v8::Object> target);
     static NAN_METHOD(New);
+    static v8::Handle<v8::Value> NewInstance();
     HMDDeviceInfo* GetWrapped();
 };
 

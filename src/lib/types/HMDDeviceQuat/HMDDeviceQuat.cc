@@ -18,6 +18,10 @@ void HMDDeviceQuat::setQuat(float w, float x, float y, float z) {
     this->_z = z;
 }
 
+void HMDDeviceQuat::setQuat(HMDDeviceQuat deviceQuat) {
+    this->setQuat(deviceQuat.getW(), deviceQuat.getX(), deviceQuat.getY(), deviceQuat.getZ());
+
+}
 float HMDDeviceQuat::getW() const {
     return this->_w;
 }
@@ -35,7 +39,7 @@ float HMDDeviceQuat::getZ() const {
 }
 
 HMDDeviceQuat& HMDDeviceQuat::operator= (const HMDDeviceQuat &deviceQuat) {
-    this->setQuat(deviceQuat.getW(), deviceQuat.getX(), deviceQuat.getY(), deviceQuat.getZ());
-
+    this->setQuat(deviceQuat);
+    
     return *this;
 }

@@ -27,6 +27,7 @@ class HMDDevicePositionWrap : public node::ObjectWrap {
  public:
     static void Initialize(v8::Handle<v8::Object> target);
     static NAN_METHOD(New);
+    static v8::Handle<v8::Value> NewInstance();
     HMDDevicePosition* GetWrapped();
 };
 

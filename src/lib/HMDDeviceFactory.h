@@ -6,8 +6,8 @@
 #ifndef SRC_LIB_HMDDEVICEFACTORY_H_
 #define SRC_LIB_HMDDEVICEFACTORY_H_
 
-#include <list>
 #include <string>
+#include <vector>
 
 #include "HMDDevice.h"
 
@@ -17,7 +17,7 @@
  */
 class HMDDeviceFactory {
  public:
-    static std::list<std::string> getSupportedDevices();
+    static std::vector<std::string> getSupportedDevices();
     static HMDDevice* getInstance(const char* token);
 };
 

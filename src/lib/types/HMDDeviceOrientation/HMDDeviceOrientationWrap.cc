@@ -48,10 +48,13 @@ NAN_METHOD(HMDDeviceOrientationWrap::New) {
         w->Wrap(args.This());
         NanReturnValue(args.This());
     } else {
-        const int argc = 1;
-        Local<Value> argv[argc] = { args[0] };
-        NanReturnValue(constructor->NewInstance(argc, argv));
+        NanReturnValue(constructor->NewInstance());
     }
+}
+
+Handle<Value> HMDDeviceOrientationWrap::NewInstance() {
+    NanScope();
+    NanReturnValue(constructor->NewInstance());
 }
 
 HMDDeviceOrientation* HMDDeviceOrientationWrap::GetWrapped() {

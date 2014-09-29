@@ -6,8 +6,6 @@
 #ifndef SRC_LIB_TYPES_HMDDEVICEINFO_HMDDEVICEINFO_H_
 #define SRC_LIB_TYPES_HMDDEVICEINFO_HMDDEVICEINFO_H_
 
-#define MAX_DESCRIPTION_LENGTH 32
-
 #include <boost/any.hpp>
 #include <node.h>
 

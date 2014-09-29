@@ -22,6 +22,7 @@ class HMDDeviceQuat {
     ~HMDDeviceQuat();
 
     void setQuat(float w, float x, float y, float z);
+    void setQuat(HMDDeviceQuat deviceQuat);
 
     float getW() const;
     float getX() const;
