@@ -6,12 +6,12 @@
 #ifndef SRC_LIB_HMDDEVICE_H_
 #define SRC_LIB_HMDDEVICE_H_
 
-#include <string>
+#include <HMDDeviceInfo.h>
+#include <HMDDeviceOrientation.h>
+#include <HMDDevicePosition.h>
+#include <HMDDeviceQuat.h>
 
-#include "HMDDeviceInfo.h"
-#include "HMDDeviceOrientation.h"
-#include "HMDDevicePosition.h"
-#include "HMDDeviceQuat.h"
+#include <string>
 
 /*! \class HMDDevice
  * 

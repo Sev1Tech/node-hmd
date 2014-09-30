@@ -3,17 +3,20 @@
  * See LICENSE for the full text of the license.
  */
 
+#include <DefaultDevice.h>
+
+#include <HMDDeviceInfoElement.h>
+
 #include <string>
-
-#include "DefaultDevice.h"
-#include "InfoTypePrimitive.h"
-
 
 const std::string DefaultDevice::displayDeviceName = "node-hmd default device";
 const std::string DefaultDevice::deviceName = "Default Device";
 const std::string DefaultDevice::deviceManufacturer = "Geocent LLC";
 
 const std::string DefaultDevice::classToken = "default";
+
+void DefaultDevice::initializeModule(v8::Handle<v8::Object> exports) {
+}
 
 void DefaultDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("displayDeviceName", new InfoTypeString(displayDeviceName));

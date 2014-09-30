@@ -3,23 +3,23 @@
  * See LICENSE for the full text of the license.
  */
 
-#include <string>
+#include <TestDevice.h>
 
-#include "TestDevice.h"
-
-#include "HMDDeviceInfoElement.h"
-#include "InfoTypeArray.h"
-#include "InfoTypePrimitive.h"
-
+#include <HMDDeviceInfoElement.h>
 #include <OvrFovPort.h>
 #include <OvrSizei.h>
 #include <OvrVector2i.h>
+
+#include <string>
 
 const std::string TestDevice::displayDeviceName = "node-hmd test device";
 const std::string TestDevice::deviceName = "Test Device";
 const std::string TestDevice::deviceManufacturer = "Geocent LLC";
 
 const std::string TestDevice::classToken = "test";
+
+void TestDevice::initializeModule(v8::Handle<v8::Object> exports) {
+}
 
 void TestDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("hResolution", new InfoTypeUInt(800));

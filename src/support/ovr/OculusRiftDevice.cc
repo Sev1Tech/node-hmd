@@ -3,17 +3,14 @@
  * See LICENSE for the full text of the license.
  */
 
+#include <OculusRiftDevice.h>
+
 #include <string>
 
-#include "OculusRiftDevice.h"
-
-#include "HMDDeviceInfoElement.h"
-#include "InfoTypeArray.h"
-#include "InfoTypePrimitive.h"
-
-#include "OvrFovPort.h"
-#include "OvrSizei.h"
-#include "OvrVector2i.h"
+#include <HMDDeviceInfoElement.h>
+#include <OvrFovPort.h>
+#include <OvrSizei.h>
+#include <OvrVector2i.h>
 
 const std::string OculusRiftDevice::classToken = "oculusrift";
 
@@ -27,6 +24,12 @@ OculusRiftDevice::OculusRiftDevice() {
 OculusRiftDevice::~OculusRiftDevice() {
     ovrHmd_Destroy(this->_hmd);
     ovr_Shutdown();
+}
+
+void OculusRiftDevice::initializeModule(v8::Handle<v8::Object> exports) {
+    OvrFovPortWrap::Initialize(exports);
+    OvrSizeiWrap::Initialize(exports);
+    OvrVector2iWrap::Initialize(exports);
 }
 
 void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {

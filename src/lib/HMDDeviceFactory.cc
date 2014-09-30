@@ -3,15 +3,21 @@
  * See LICENSE for the full text of the license.
  */
 
+#include <HMDDeviceFactory.h>
+
+#include <DefaultDevice.h>
+#include <HMDDevice.h>
+#include <OculusRiftDevice.h>
+#include <TestDevice.h>
+
 #include <string>
 #include <vector>
 
-#include "HMDDevice.h"
-#include "HMDDeviceFactory.h"
-
-#include "DefaultDevice.h"
-#include "OculusRiftDevice.h"
-#include "TestDevice.h"
+void HMDDeviceFactory::initializeModule(v8::Handle<v8::Object> exports) {
+    DefaultDevice::initializeModule(exports);
+    OculusRiftDevice::initializeModule(exports);
+    TestDevice::initializeModule(exports);
+}
 
 std::vector<std::string> HMDDeviceFactory::getSupportedDevices() {
     std::vector<std::string> devices;

@@ -3,23 +3,19 @@
  * See LICENSE for the full text of the license.
  */
 
-#include <nan/nan.h>
-#include <node.h>
-#include <v8.h>
-
 #include <string>
 #include <vector>
 
-#include "HMDDeviceFactory.h"
-#include "HMDDeviceInfoWrap.h"
-#include "HMDDeviceOrientationWrap.h"
-#include "HMDDevicePositionWrap.h"
-#include "HMDDeviceQuatWrap.h"
-#include "HMDManagerWrap.h"
-
-#include <OvrFovPortWrap.h>
-#include <OvrSizeiWrap.h>
-#include <OvrVector2iWrap.h>
+#include <nan/nan.h>
+#include <node.h>
+#include <v8.h>
+ 
+#include <HMDDeviceFactory.h>
+#include <HMDDeviceInfo.h>
+#include <HMDDeviceOrientation.h>
+#include <HMDDevicePosition.h>
+#include <HMDDeviceQuat.h>
+#include <HMDManager.h>
 
 using ::v8::Array;
 using ::v8::FunctionTemplate;
@@ -27,7 +23,6 @@ using ::v8::Handle;
 using ::v8::Local;
 using ::v8::Object;
 using ::v8::String;
-using ::v8::TryCatch;
 using ::v8::Value;
 
 NAN_METHOD(CreateManager) {
@@ -57,10 +52,8 @@ void RegisterModule(Handle<Object> exports, Handle<Object> module) {
     HMDDeviceQuatWrap::Initialize(exports);
     HMDManagerWrap::Initialize(exports);
 
-    OvrFovPortWrap::Initialize(exports);
-    OvrSizeiWrap::Initialize(exports);
-    OvrVector2iWrap::Initialize(exports);
-
+    HMDDeviceFactory::initializeModule(exports);
+    
     exports->Set(NanNew<String>("createManager"), NanNew<FunctionTemplate>(CreateManager)->GetFunction());
     exports->Set(NanNew<String>("getSupportedDevices"), NanNew<FunctionTemplate>(GetSupportedDevices)->GetFunction());
 }

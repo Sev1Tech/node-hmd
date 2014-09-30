@@ -6,9 +6,11 @@
 #ifndef SRC_SUPPORT_TEST_TESTDEVICE_H_
 #define SRC_SUPPORT_TEST_TESTDEVICE_H_
 
-#include <string>
+#include <node.h>
 
-#include "HMDDevice.h"
+#include <HMDDevice.h>
+
+#include <string>
 
 class TestDevice : public HMDDevice {
  private:
@@ -18,6 +20,8 @@ class TestDevice : public HMDDevice {
 
  public:
     static const std::string classToken;
+
+    static void initializeModule(v8::Handle<v8::Object> exports);
     void getDeviceInfo(HMDDeviceInfo* deviceInfo);
     void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
     void getDevicePosition(HMDDevicePosition* devicePosition);

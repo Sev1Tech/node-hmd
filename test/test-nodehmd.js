@@ -33,8 +33,6 @@ describe('node-hmd manager tests.', function() {
 			instance.getDeviceInfo(function(err, deviceInfo) {
 				assert.ok(deviceInfo);
 
-				console.log(deviceInfo);
-
 				assert.equal(deviceInfo.hResolution, 800);
 				assert.equal(deviceInfo.vResolution, 600);
 				assert.ok(floatCompareEquality(deviceInfo.hScreenSize, 0.8));

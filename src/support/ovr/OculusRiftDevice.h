@@ -6,10 +6,12 @@
 #ifndef SRC_SUPPORT_OVR_OCULUSRIFTDEVICE_H_
 #define SRC_SUPPORT_OVR_OCULUSRIFTDEVICE_H_
 
-#include <string>
+#include <node.h>
 
-#include "HMDDevice.h"
-#include "OVR.h"
+#include <HMDDevice.h>
+#include <OVR.h>
+
+#include <string>
 
 class OculusDeviceOrientation : public HMDDeviceOrientation {
  public:
@@ -31,6 +33,7 @@ class OculusRiftDevice : public HMDDevice {
 
     OculusRiftDevice();
     ~OculusRiftDevice();
+    static void initializeModule(v8::Handle<v8::Object> exports);
     void getDeviceInfo(HMDDeviceInfo* deviceInfo);
     void getDeviceOrientation(HMDDeviceOrientation* deviceOrientation);
     void getDevicePosition(HMDDevicePosition* devicePosition);

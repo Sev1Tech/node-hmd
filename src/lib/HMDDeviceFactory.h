@@ -6,10 +6,12 @@
 #ifndef SRC_LIB_HMDDEVICEFACTORY_H_
 #define SRC_LIB_HMDDEVICEFACTORY_H_
 
+#include <node.h>
+
+#include <HMDDevice.h>
+
 #include <string>
 #include <vector>
-
-#include "HMDDevice.h"
 
 /*! \class HMDDeviceFactory
  * 
@@ -17,6 +19,8 @@
  */
 class HMDDeviceFactory {
  public:
+    static void initializeModule(v8::Handle<v8::Object> exports);
+
     static std::vector<std::string> getSupportedDevices();
     static HMDDevice* getInstance(const char* token);
 };
