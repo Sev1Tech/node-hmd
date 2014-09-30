@@ -55,22 +55,6 @@ describe('node-hmd manager tests.', function() {
 				assert.equal(deviceInfo.mixedData[0], 42);
 				assert.equal(deviceInfo.mixedData[1], "test token");
 
-				assert.equal(deviceInfo.ovrFovPort.length, 2);
-				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].UpTan, 2.1));
-				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].DownTan, 4.3));
-				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].LeftTan, 6.5));
-				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].RightTan, 8.7));
-				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].UpTan, 2.1));
-				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].DownTan, 4.3));
-				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].LeftTan, 6.5));
-				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].RightTan, 8.7));
-
-				assert.equal(deviceInfo.ovrSizei.w, 44);
-				assert.equal(deviceInfo.ovrSizei.h, 55);
-
-				assert.equal(deviceInfo.ovrVector2i.x, 787);
-				assert.equal(deviceInfo.ovrVector2i.y, 989);
-
 				done();
 			});
 		});
@@ -105,22 +89,6 @@ describe('node-hmd manager tests.', function() {
 			assert.equal(deviceInfo.version, 5);
 			assert.equal(deviceInfo.mixedData[0], 42);
 			assert.equal(deviceInfo.mixedData[1], "test token");
-
-			assert.equal(deviceInfo.ovrFovPort.length, 2);
-			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].UpTan, 2.1));
-			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].DownTan, 4.3));
-			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].LeftTan, 6.5));
-			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].RightTan, 8.7));
-			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].UpTan, 2.1));
-			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].DownTan, 4.3));
-			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].LeftTan, 6.5));
-			assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].RightTan, 8.7));
-
-			assert.equal(deviceInfo.ovrSizei.w, 44);
-			assert.equal(deviceInfo.ovrSizei.h, 55);
-			
-			assert.equal(deviceInfo.ovrVector2i.x, 787);
-			assert.equal(deviceInfo.ovrVector2i.y, 989);
 		});
 	});
 
@@ -227,6 +195,48 @@ describe('node-hmd manager tests.', function() {
 
 		it('Default getDeviceQuat #z test.', function() {
 			assert.ok(floatCompareEquality(deviceQuat.z, 0.44));
+		});
+	});
+
+	describe('Oculus Rift specific #getDeviceInfo tests', function() {
+		it('OvrFovPort type test.', function(done) {
+			instance.getDeviceInfo(function(err, deviceInfo) {
+				assert.ok(deviceInfo.ovrFovPort);
+
+				assert.equal(deviceInfo.ovrFovPort.length, 2);
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].UpTan, 2.1));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].DownTan, 4.3));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].LeftTan, 6.5));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[0].RightTan, 8.7));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].UpTan, 2.1));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].DownTan, 4.3));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].LeftTan, 6.5));
+				assert.ok(floatCompareEquality(deviceInfo.ovrFovPort[1].RightTan, 8.7));
+
+				done();
+			});
+		});
+
+		it('OvrSizei type test.', function(done) {
+			instance.getDeviceInfo(function(err, deviceInfo) {
+				assert.ok(deviceInfo.ovrSizei);
+
+				assert.equal(deviceInfo.ovrSizei.w, 44);
+				assert.equal(deviceInfo.ovrSizei.h, 55);
+
+				done();
+			});
+		});
+
+		it('OvrVector2i type test.', function(done) {
+			instance.getDeviceInfo(function(err, deviceInfo) {
+				assert.ok(deviceInfo.ovrVector2i);
+
+				assert.equal(deviceInfo.ovrVector2i.x, 787);
+				assert.equal(deviceInfo.ovrVector2i.y, 989);
+				
+				done();
+			});
 		});
 	});
 });

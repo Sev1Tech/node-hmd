@@ -84,14 +84,14 @@ hmd.getSupportedDevices(); // -> ["default", "oculusrift"]
 
 ### hmd.createManager(`token`)
 
-Returns a manager for the specified device type. If there is an error or the device is otherwise unsupported `undefined` will be returned.
+Returns a manager for the specified device type. If there is an error or the device is otherwise unsupported an `Error` will be thrown.
 
 * `token` - (String) The device type for which to create a manager. Should be one of the supported device tokens returned by getSupportedDevices().
 
 Example:
 ```javascript
 hmd.createManager("default"); // -> [object HMDManager]
-hmd.createManager("unsupported"); // -> undefined
+hmd.createManager("unsupported"); // -> "Error: Invalid device creation token."
 ```
 
 ### hmd.HMDManager.getDeviceInfo(`callback`)
@@ -139,11 +139,58 @@ Example:
 var manager = hmd.createManager("default");
 manager.getDeviceOrientationSync(); // -> [object HMDDeviceOrientation]
 ```
+### hmd.HMDManager.getDevicePosition(`callback`)
+
+Returns the most current position of the HMD associated with the HMDManager at creation time.
+
+* `callback` - (Function(error, devicePosition)) Callback to execute once the device information has been retrieved from the HMD.
+
+```javascript
+var manager = hmd.createManager("default");
+manager.getDevicePosition(function(err, devicePosition) {
+	devicePosition; // -> [object HMDDevicePosition]
+}); 
+```
+
+### hmd.HMDManager.getDevicePositionSync()
+
+Synchronous version of getDevicePosition().
+
+Example:
+```javascript
+var manager = hmd.createManager("default");
+manager.getDevicePositionSync(); // -> [object HMDDevicePosition]
+```
+
+### hmd.HMDManager.getDeviceQuat(`callback`)
+
+Returns the most current quaternion of the HMD associated with the HMDManager at creation time.
+
+* `callback` - (Function(error, deviceInfo)) Callback to execute once the device information has been retrieved from the HMD.
+
+```javascript
+var manager = hmd.createManager("default");
+manager.getDeviceQuat(function(err, deviceQuat) {
+	deviceQuat; // -> [object HMDDeviceQuat]
+}); 
+```
+
+### hmd.HMDManager.getDeviceQuatSync()
+
+Synchronous version of getDeviceQuat().
+
+Example:
+```javascript
+var manager = hmd.createManager("default");
+manager.getDeviceQuatSync(); // -> [object HMDDeviceQuat]
+```
 
 ## Release notes
 
 ### 0.2.0
 * Updated Oculus SDK to version 0.4.2 Beta
+* Addition of get getDeviceQuat/getDeviceQuatSync
+* Addition of getDevicePosition/getDevicePositionSync
 * Implemented [NAN](https://github.com/rvagg/nan) signatures for better Node.js version support.
 * cpplint source code compliance.
 
