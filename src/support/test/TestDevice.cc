@@ -47,7 +47,7 @@ void TestDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     ovrFovPort testOvrFovPort = { 2.1, 4.3, 6.5, 8.7 };
     ovrFovPortTest[0] = new OvrFovPort(testOvrFovPort);
     ovrFovPortTest[1] = new OvrFovPort(testOvrFovPort);
-    deviceInfo->insertElement("ovrFovPort", new InfoTypeArray<HMDDeviceInfoElement *>((HMDDeviceInfoElement **)ovrFovPortTest, 2));
+    deviceInfo->insertElement("ovrFovPort", new InfoTypeArray<HMDDeviceInfoElement *>(reinterpret_cast<HMDDeviceInfoElement **>(ovrFovPortTest), 2));
 
     ovrSizei testOvrSizei = { 44, 55 };
     deviceInfo->insertElement("ovrSizei", new OvrSizei(testOvrSizei));

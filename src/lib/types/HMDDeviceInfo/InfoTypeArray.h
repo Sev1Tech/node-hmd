@@ -36,7 +36,6 @@ class InfoTypeArray : public HMDDeviceInfoElement {
     }
 
     InfoTypeArray(T* elements, int length) {
-
         for (int i = 0; i < length; i++) {
             this->_value.push_back(elements[i]);
         }
@@ -84,7 +83,6 @@ class InfoTypeArray<HMDDeviceInfoElement *> : public HMDDeviceInfoElement {
     }
 
     InfoTypeArray(HMDDeviceInfoElement** elements, int length) {
-
         for (int i = 0; i < length; i++) {
             this->_value.push_back(elements[i]);
         }

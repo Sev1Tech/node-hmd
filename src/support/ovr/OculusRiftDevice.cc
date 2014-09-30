@@ -56,8 +56,8 @@ void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
         MaxEyeFov[eyeIndex] = new OvrFovPort(this->_hmd->MaxEyeFov[eyeIndex]);
         EyeRenderOrder[eyeIndex] = this->_hmd->EyeRenderOrder[eyeIndex];
     }
-    deviceInfo->insertElement("DefaultEyeFov", new InfoTypeArray<HMDDeviceInfoElement *>((HMDDeviceInfoElement **)DefaultEyeFov, ovrEye_Count));
-    deviceInfo->insertElement("MaxEyeFov", new InfoTypeArray<HMDDeviceInfoElement *>((HMDDeviceInfoElement **)MaxEyeFov, ovrEye_Count));
+    deviceInfo->insertElement("DefaultEyeFov", new InfoTypeArray<HMDDeviceInfoElement *>(reinterpret_cast<HMDDeviceInfoElement **>(DefaultEyeFov), ovrEye_Count));
+    deviceInfo->insertElement("MaxEyeFov", new InfoTypeArray<HMDDeviceInfoElement *>(reinterpret_cast<HMDDeviceInfoElement **>(MaxEyeFov), ovrEye_Count));
     deviceInfo->insertElement("EyeRenderOrder", new InfoTypeArray<int>(EyeRenderOrder, ovrEye_Count));
     deviceInfo->insertElement("DisplayDeviceName", new InfoTypeString(this->_hmd->DisplayDeviceName));
     deviceInfo->insertElement("DisplayId", new InfoTypeUInt(this->_hmd->DisplayId));
