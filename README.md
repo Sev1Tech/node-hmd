@@ -20,6 +20,7 @@ In order to support certain HMD products the following libraries will need to be
 
 - [libudev-dev](http://cgit.freedesktop.org/systemd/systemd/tree/src/libudev)
 - [libx11-dev](http://cgit.freedesktop.org/xorg/lib/libX11/)
+- [libxrandr-dev](http://cgit.freedesktop.org/xorg/lib/libXrandr/)
 - [libxinerama-dev](http://cgit.freedesktop.org/xorg/lib/libXinerama/)
 
 #### OSX
@@ -104,7 +105,7 @@ Returns relevant information about the HMD associated with the HMDManager at cre
 var manager = hmd.createManager("default");
 manager.getDeviceInfo(function(err, deviceInfo) {
 	deviceInfo; // -> [object HMDDeviceInformation]
-}); 
+});
 ```
 
 ### hmd.HMDManager.getDeviceInfoSync()
@@ -127,7 +128,7 @@ Returns the most current orientation of the HMD associated with the HMDManager a
 var manager = hmd.createManager("default");
 manager.getDeviceOrientation(function(err, deviceOrientation) {
 	deviceOrientation; // -> [object HMDDeviceOrientation]
-}); 
+});
 ```
 
 ### hmd.HMDManager.getDeviceOrientationSync()
@@ -149,7 +150,7 @@ Returns the most current position of the HMD associated with the HMDManager at c
 var manager = hmd.createManager("default");
 manager.getDevicePosition(function(err, devicePosition) {
 	devicePosition; // -> [object HMDDevicePosition]
-}); 
+});
 ```
 
 ### hmd.HMDManager.getDevicePositionSync()
@@ -172,7 +173,7 @@ Returns the most current quaternion of the HMD associated with the HMDManager at
 var manager = hmd.createManager("default");
 manager.getDeviceQuat(function(err, deviceQuat) {
 	deviceQuat; // -> [object HMDDeviceQuat]
-}); 
+});
 ```
 
 ### hmd.HMDManager.getDeviceQuatSync()

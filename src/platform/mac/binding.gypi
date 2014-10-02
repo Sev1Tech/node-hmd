@@ -16,6 +16,7 @@
           "LibOVR/Src/Tracking",
           "LibOVR/Src/Util"
         ],
+
         "sources": [
           "3rdParty/TinyXml/tinyxml2.cpp",
           "LibOVR/Src/CAPI/CAPI_DistortionRenderer.cpp",
@@ -82,7 +83,12 @@
           "GCC_ENABLE_CPP_RTTI": "YES",
           "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
           "OTHER_CPLUSPLUSFLAGS" : [ "-stdlib=libc++", "-mmacosx-version-min=10.7" ]
-        }
+        },
+
+        "defines": [
+            "OVR_0_4_2"
+        ]
+
     }]
   ]
 }

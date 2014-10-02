@@ -14,11 +14,17 @@
 
 const std::string OculusRiftDevice::classToken = "oculusrift";
 
+void OculusRiftDevice::initializeModule(v8::Handle<v8::Object> exports) {
+    OvrFovPortWrap::Initialize(exports);
+    OvrSizeiWrap::Initialize(exports);
+    OvrVector2iWrap::Initialize(exports);
+}
+
 OculusRiftDevice::OculusRiftDevice() {
     ovr_Initialize();
 
     this->_hmd = ovrHmd_Create(0);
-    ovrHmd_ConfigureTracking(this->_hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, ovrTrackingCap_Orientation);
+    OVR_CONFIGURE_DEVICE(this->_hmd, OVR_CAPABILITY_ORIENTATION | OVR_CAPABILITY_CORRECTION | OVR_CAPABILITY_POSITON, OVR_CAPABILITY_ORIENTATION);
 }
 
 OculusRiftDevice::~OculusRiftDevice() {
@@ -26,12 +32,7 @@ OculusRiftDevice::~OculusRiftDevice() {
     ovr_Shutdown();
 }
 
-void OculusRiftDevice::initializeModule(v8::Handle<v8::Object> exports) {
-    OvrFovPortWrap::Initialize(exports);
-    OvrSizeiWrap::Initialize(exports);
-    OvrVector2iWrap::Initialize(exports);
-}
-
+#ifdef OVR_0_4_2
 void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("ProductName", new InfoTypeString(this->_hmd->ProductName));
     deviceInfo->insertElement("Manufacturer", new InfoTypeString(this->_hmd->Manufacturer));
@@ -65,12 +66,44 @@ void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("DisplayDeviceName", new InfoTypeString(this->_hmd->DisplayDeviceName));
     deviceInfo->insertElement("DisplayId", new InfoTypeUInt(this->_hmd->DisplayId));
 }
+#endif
+
+#ifdef OVR_0_3_2
+void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
+    ovrHmdDesc hmdDesc;
+    ovrHmd_GetDesc(this->_hmd, &hmdDesc);
+
+    deviceInfo->insertElement("ProductName", new InfoTypeString(hmdDesc.ProductName));
+    deviceInfo->insertElement("Manufacturer", new InfoTypeString(hmdDesc.Manufacturer));
+    deviceInfo->insertElement("HmdCaps", new InfoTypeUInt(hmdDesc.HmdCaps));
+    deviceInfo->insertElement("SensorCaps", new InfoTypeUInt(hmdDesc.SensorCaps));
+    deviceInfo->insertElement("DistortionCaps", new InfoTypeUInt(hmdDesc.DistortionCaps));
+    deviceInfo->insertElement("Resolution", new OvrSizei(hmdDesc.Resolution));
+    deviceInfo->insertElement("WindowsPos", new OvrVector2i(hmdDesc.WindowsPos));
+
+    OvrFovPort* DefaultEyeFov[ovrEye_Count];
+    OvrFovPort* MaxEyeFov[ovrEye_Count];
+    int EyeRenderOrder[ovrEye_Count];
+
+    for (int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++) {
+        DefaultEyeFov[eyeIndex] = new OvrFovPort(hmdDesc.DefaultEyeFov[eyeIndex]);
+        MaxEyeFov[eyeIndex] = new OvrFovPort(hmdDesc.MaxEyeFov[eyeIndex]);
+        EyeRenderOrder[eyeIndex] = hmdDesc.EyeRenderOrder[eyeIndex];
+    }
+
+    deviceInfo->insertElement("DefaultEyeFov", new InfoTypeArray<HMDDeviceInfoElement *>(reinterpret_cast<HMDDeviceInfoElement **>(DefaultEyeFov), ovrEye_Count));
+    deviceInfo->insertElement("MaxEyeFov", new InfoTypeArray<HMDDeviceInfoElement *>(reinterpret_cast<HMDDeviceInfoElement **>(MaxEyeFov), ovrEye_Count));
+    deviceInfo->insertElement("EyeRenderOrder", new InfoTypeArray<int>(EyeRenderOrder, ovrEye_Count));
+    deviceInfo->insertElement("DisplayDeviceName", new InfoTypeString(hmdDesc.DisplayDeviceName));
+    deviceInfo->insertElement("DisplayId", new InfoTypeUInt(hmdDesc.DisplayId));
+}
+#endif
 
 void OculusRiftDevice::updateDevice() {
-    ovrTrackingState trackingState = ovrHmd_GetTrackingState(this->_hmd, ovr_GetTimeInSeconds());
+    OVR_DEVICE_STATE trackingState = OVR_GET_DEVICE_STATE(this->_hmd, ovr_GetTimeInSeconds());
 
     if (trackingState.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
-        OVR::Posef pose = trackingState.HeadPose.ThePose;
+        OVR_POSE_DECLARATION pose = trackingState.OVR_POSE_ACCESSOR;
 
         this->_deviceQuat.setQuat(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
         pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(this->_deviceOrientation.getYawReference(), this->_deviceOrientation.getPitchReference(), this->_deviceOrientation.getRollReference());

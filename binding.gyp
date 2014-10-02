@@ -2,8 +2,9 @@
   "targets": [
     {
       "target_name": "hmd",
-      
+
       "includes" : [
+        "src/platform/linux/binding.gypi",
         "src/platform/mac/binding.gypi"
       ],
 
@@ -11,7 +12,7 @@
         "src/lib",
         "src/lib/types",
         "src/3rdparty",
-        
+
         "src/support/default",
         "src/support/ovr",
         "src/support/ovr/types",
@@ -38,12 +39,10 @@
       ],
 
       "cflags!" : [
-        "-fno-rtti",
         "-fno-exceptions"
       ],
 
       "cflags_cc!" : [
-        "-fno-rtti",
         "-fno-exceptions"
       ]
     }
