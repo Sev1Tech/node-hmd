@@ -2,8 +2,8 @@
   "conditions" : [
     ['OS=="linux"', {
         "include_dirs":[
-            "LibOVR/3rdParty/EDID",
-            "LibOVR/3rdParty/TinyXml",
+            "3rdParty/EDID",
+            "3rdParty/TinyXml",
             "LibOVR/Include",
             "LibOVR/Src",
             "LibOVR/Src/CAPI",
@@ -13,6 +13,7 @@
         ],
 
         "sources": [
+            "3rdParty/EDID/edid.cpp",     
             "LibOVR/Src/OVR_CAPI.cpp",
             "LibOVR/Src/CAPI/CAPI_DistortionRenderer.cpp",
             "LibOVR/Src/CAPI/GL/CAPI_GL_DistortionRenderer.cpp",
@@ -61,7 +62,6 @@
             "LibOVR/Src/OVR_Linux_SensorDevice.cpp",
             "LibOVR/Src/OVR_Linux_DeviceManager.cpp",
             "LibOVR/Src/OVR_Linux_HMDDevice.cpp",
-            "LibOVR/3rdParty/EDID/edid.cpp"
         ],
 
         "defines": [

@@ -5,7 +5,8 @@
 
       "includes" : [
         "src/platform/linux/binding.gypi",
-        "src/platform/mac/binding.gypi"
+        "src/platform/mac/binding.gypi",
+        "src/platform/win/binding.gypi"
       ],
 
       "include_dirs": [

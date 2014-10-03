@@ -14,8 +14,8 @@
 #include <vector>
 
 /*! \class HMDDeviceInfoElement
- * 
- * 
+ *
+ *
  */
 class HMDDeviceInfoElement {
  public:
@@ -26,8 +26,8 @@ class HMDDeviceInfoElement {
 };
 
 /*! \class InfoTypePrimitive
- * 
- * 
+ *
+ *
  */
 template<typename T>
 class InfoTypePrimitive : public HMDDeviceInfoElement {
@@ -60,8 +60,8 @@ class InfoTypePrimitive : public HMDDeviceInfoElement {
 #define InfoTypeUInt(x) InfoTypePrimitive<unsigned int>(x)
 
 /*! \class InfoTypeArray
- * 
- * 
+ *
+ *
  */
 template<typename T>
 class InfoTypeArray : public HMDDeviceInfoElement {
@@ -134,13 +134,13 @@ class InfoTypeArray<HMDDeviceInfoElement *> : public HMDDeviceInfoElement {
     }
 
     explicit InfoTypeArray(std::vector<HMDDeviceInfoElement *> values) {
-        for (typename std::vector<HMDDeviceInfoElement *>::size_type i = 0; i < values.size(); i++) {
+        for (std::vector<HMDDeviceInfoElement *>::size_type i = 0; i < values.size(); i++) {
             this->_value.push_back(values[i]->clone());
         }
     }
 
     ~InfoTypeArray() {
-        for (typename std::vector<HMDDeviceInfoElement *>::size_type i = 0; i < this->_value.size(); i++) {
+        for (std::vector<HMDDeviceInfoElement *>::size_type i = 0; i < this->_value.size(); i++) {
             delete this->_value[i];
         }
     }
@@ -148,7 +148,7 @@ class InfoTypeArray<HMDDeviceInfoElement *> : public HMDDeviceInfoElement {
     v8::Handle<v8::Value> getValue() {
         v8::Local<v8::Array> array = NanNew<v8::Array>(this->_value.size());
 
-        for (typename std::vector<HMDDeviceInfoElement *>::size_type i = 0; i < this->_value.size(); i++) {
+        for (std::vector<HMDDeviceInfoElement *>::size_type i = 0; i < this->_value.size(); i++) {
             array->Set(i, NanNew(this->_value[i]->getValue()));
         }
 
