@@ -22,6 +22,7 @@ In order to support certain HMD products the following libraries will need to be
 - [libx11-dev](http://cgit.freedesktop.org/xorg/lib/libX11/)
 - [libxrandr-dev](http://cgit.freedesktop.org/xorg/lib/libXrandr/)
 - [libxinerama-dev](http://cgit.freedesktop.org/xorg/lib/libXinerama/)
+- [mesa-common-dev](http://mesa3d.sourceforge.net/)
 
 #### OSX
 

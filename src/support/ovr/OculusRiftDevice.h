@@ -16,34 +16,6 @@
     #error Unsupported OVR version detected!
 #endif
 
-#ifdef OVR_0_4_2
-
-    #define OVR_CONFIGURE_DEVICE ovrHmd_ConfigureTracking
-
-    #define OVR_CAPABILITY_ORIENTATION ovrTrackingCap_Orientation
-    #define OVR_CAPABILITY_CORRECTION ovrTrackingCap_MagYawCorrection
-    #define OVR_CAPABILITY_POSITON ovrTrackingCap_Position
-
-    #define OVR_DEVICE_STATE ovrTrackingState
-    #define OVR_GET_DEVICE_STATE ovrHmd_GetTrackingState
-    #define OVR_POSE_DECLARATION OVR::Posef
-    #define OVR_POSE_ACCESSOR HeadPose.ThePose
-#endif
-
-#ifdef OVR_0_3_2
-
-    #define OVR_CONFIGURE_DEVICE ovrHmd_StartSensor
-
-    #define OVR_CAPABILITY_ORIENTATION ovrSensorCap_Orientation
-    #define OVR_CAPABILITY_CORRECTION ovrSensorCap_YawCorrection
-    #define OVR_CAPABILITY_POSITON ovrSensorCap_Position
-
-    #define OVR_DEVICE_STATE ovrSensorState
-    #define OVR_GET_DEVICE_STATE ovrHmd_GetSensorState
-    #define OVR_POSE_DECLARATION OVR::Transformf
-    #define OVR_POSE_ACCESSOR Predicted.Pose
-#endif
-
 class OculusDeviceOrientation : public HMDDeviceOrientation {
  public:
     float* getYawReference() { return &this->_yaw; }

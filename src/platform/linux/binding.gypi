@@ -13,7 +13,7 @@
         ],
 
         "sources": [
-            "3rdParty/EDID/edid.cpp",     
+            "3rdParty/EDID/edid.cpp",
             "LibOVR/Src/OVR_CAPI.cpp",
             "LibOVR/Src/CAPI/CAPI_DistortionRenderer.cpp",
             "LibOVR/Src/CAPI/GL/CAPI_GL_DistortionRenderer.cpp",
@@ -66,7 +66,15 @@
 
         "defines": [
             "OVR_0_3_2"
-        ]
+        ],
+
+        "link_settings": {
+            "libraries": [
+                "-ludev",
+                "-lX11",
+                "-lXrandr"
+            ]
+        }
     }]
   ]
 }
