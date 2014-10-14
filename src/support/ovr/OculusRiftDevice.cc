@@ -5,8 +5,6 @@
 
 #include <OculusRiftDevice.h>
 
-#include <string>
-
 #include <HMDDeviceInfoElement.h>
 #include <OvrFovPort.h>
 #include <OvrSizei.h>
@@ -26,11 +24,25 @@ OculusRiftDevice::~OculusRiftDevice() {
 }
 
 #ifdef OVR_0_4_2
+
 OculusRiftDevice::OculusRiftDevice() {
     ovr_Initialize();
 
     this->_hmd = ovrHmd_Create(0);
     ovrHmd_ConfigureTracking(this->_hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, ovrTrackingCap_Orientation);
+}
+
+void OculusRiftDevice::updateDevice() {
+    ovrTrackingState trackingState  = ovrHmd_GetTrackingState(this->_hmd, ovr_GetTimeInSeconds());
+
+    if (trackingState.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
+        OVR::Posef pose = trackingState.HeadPose.ThePose;
+
+        this->_deviceQuat.setQuat(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
+        pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(this->_deviceOrientation.getYawReference(), this->_deviceOrientation.getPitchReference(), this->_deviceOrientation.getRollReference());
+
+        this->_devicePosition.setPosition(pose.Translation.x, pose.Translation.y, pose.Translation.z);
+    }
 }
 
 void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
@@ -67,18 +79,6 @@ void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("DisplayId", new InfoTypeUInt(this->_hmd->DisplayId));
 }
 
-void OculusRiftDevice::updateDevice() {
-    ovrTrackingState trackingState  = ovrHmd_GetTrackingState(this->_hmd, ovr_GetTimeInSeconds());
-
-    if (trackingState.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
-        OVR::Posef pose = trackingState.HeadPose.ThePose;
-
-        this->_deviceQuat.setQuat(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
-        pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(this->_deviceOrientation.getYawReference(), this->_deviceOrientation.getPitchReference(), this->_deviceOrientation.getRollReference());
-
-        this->_devicePosition.setPosition(pose.Translation.x, pose.Translation.y, pose.Translation.z);
-    }
-}
 #endif
 
 #ifdef OVR_0_3_2
@@ -88,6 +88,19 @@ OculusRiftDevice::OculusRiftDevice() {
 
     this->_hmd = ovrHmd_Create(0);
     ovrHmd_StartSensor(this->_hmd, ovrSensorCap_Orientation | ovrSensorCap_YawCorrection | ovrSensorCap_Position, ovrSensorCap_Orientation);
+}
+
+void OculusRiftDevice::updateDevice() {
+    ovrSensorState trackingState  = ovrHmd_GetSensorState(this->_hmd, ovr_GetTimeInSeconds());
+
+    if (trackingState.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
+        OVR::Transformf pose = trackingState.Predicted.Pose;
+
+        this->_deviceQuat.setQuat(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
+        pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(this->_deviceOrientation.getYawReference(), this->_deviceOrientation.getPitchReference(), this->_deviceOrientation.getRollReference());
+
+        this->_devicePosition.setPosition(pose.Translation.x, pose.Translation.y, pose.Translation.z);
+    }
 }
 
 void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
@@ -119,18 +132,6 @@ void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("DisplayId", new InfoTypeUInt(hmdDesc.DisplayId));
 }
 
-void OculusRiftDevice::updateDevice() {
-    ovrSensorState trackingState  = ovrHmd_GetSensorState(this->_hmd, ovr_GetTimeInSeconds());
-
-    if (trackingState.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
-        OVR::Transformf pose = trackingState.Predicted.Pose;
-
-        this->_deviceQuat.setQuat(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
-        pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(this->_deviceOrientation.getYawReference(), this->_deviceOrientation.getPitchReference(), this->_deviceOrientation.getRollReference());
-
-        this->_devicePosition.setPosition(pose.Translation.x, pose.Translation.y, pose.Translation.z);
-    }
-}
 #endif
 
 

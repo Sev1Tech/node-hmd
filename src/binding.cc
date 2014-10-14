@@ -3,19 +3,19 @@
  * See LICENSE for the full text of the license.
  */
 
-#include <string>
-#include <vector>
-
 #include <nan/nan.h>
 #include <node.h>
 #include <v8.h>
- 
+
 #include <HMDDeviceFactory.h>
 #include <HMDDeviceInfo.h>
 #include <HMDDeviceOrientation.h>
 #include <HMDDevicePosition.h>
 #include <HMDDeviceQuat.h>
 #include <HMDManager.h>
+
+#include <string>
+#include <vector>
 
 using ::v8::Array;
 using ::v8::FunctionTemplate;
@@ -53,7 +53,7 @@ void RegisterModule(Handle<Object> exports, Handle<Object> module) {
     HMDManagerWrap::Initialize(exports);
 
     HMDDeviceFactory::initializeModule(exports);
-    
+
     exports->Set(NanNew<String>("createManager"), NanNew<FunctionTemplate>(CreateManager)->GetFunction());
     exports->Set(NanNew<String>("getSupportedDevices"), NanNew<FunctionTemplate>(GetSupportedDevices)->GetFunction());
 }
