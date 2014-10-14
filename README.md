@@ -18,11 +18,28 @@ node-hmd statically compiles itself as a Node.js addon from C++ sources and util
 
 In order to support certain HMD products the following libraries will need to be installed to ensure proper compilation of source files:
 
-- [libudev-dev](http://cgit.freedesktop.org/systemd/systemd/tree/src/libudev)
-- [libx11-dev](http://cgit.freedesktop.org/xorg/lib/libX11/)
-- [libxrandr-dev](http://cgit.freedesktop.org/xorg/lib/libXrandr/)
-- [libxinerama-dev](http://cgit.freedesktop.org/xorg/lib/libXinerama/)
-- [mesa-common-dev](http://mesa3d.sourceforge.net/)
+- freeglut3-dev
+- mesa-common-dev
+- libudev-dev
+- libxext-dev
+- libxinerama-dev
+- libxrandr-dev
+- libxxf86vm-dev
+
+Additionally rules will need to be added to udev to enable raw HID access to the Oculus Rift device.
+
+LibOVR includes a script to automatically install these dependencies and udev rules and is included for execution at `/src/platform/linux/ConfigurePermissionsAndPackages.sh`.
+
+##### Ubuntu 13
+
+LibOVR does not currently support Ubuntu 13 out of the box and execution may result in an error such as `error while loading shared libraries: libudev.so.0`.
+
+To resolve this issue from the command line execute:
+
+```
+cd /lib/x86_64-linux-gnu/
+sudo ln -sf libudev.so.1 libudev.so.0
+```
 
 #### OSX
 
@@ -190,11 +207,14 @@ manager.getDeviceQuatSync(); // -> [object HMDDeviceQuat]
 ## Release notes
 
 ### 0.2.0
-* Updated Oculus SDK to version 0.4.2 Beta
-* Addition of get getDeviceQuat/getDeviceQuatSync
+* Expanded platform support for with Mac, Windows, and Linux systems.
+* Updated Mac and Windows platform Oculus SDK to version 0.4.2 Beta
+* Updated Linux platform Oculus SDK to version 0.3.2 Preview 2.
+* Addition of getDeviceQuat/getDeviceQuatSync
 * Addition of getDevicePosition/getDevicePositionSync
 * Implemented [NAN](https://github.com/rvagg/nan) signatures for better Node.js version support.
-* cpplint source code compliance.
+* [cpplint](http://google-styleguide.googlecode.com/svn/trunk/cpplint/cpplint.py) source code compliance.
+* Fully tested with Oculus Development Kit 1 (DK1) on Mac, Window, and Linux systems.
 
 ### 0.1.2
 * Updated Oculus SDK to version 0.2.5c
