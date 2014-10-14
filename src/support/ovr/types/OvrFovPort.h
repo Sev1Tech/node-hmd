@@ -12,6 +12,10 @@
 #include <HMDDeviceInfoElement.h>
 #include <OVR_CAPI.h>
 
+/*! \class ovrFovPort
+ *
+ * HMDDeviceInfoElement implementation for LibOVR ovrFovPort type.
+ */
 class OvrFovPort : public HMDDeviceInfoElement {
  private:
     ovrFovPort _value;
@@ -25,7 +29,7 @@ class OvrFovPort : public HMDDeviceInfoElement {
 };
 
 /*! \class OvrFovPortWrap
- * 
+ *
  * Node wrapped object class for OvrFovPort.
  */
 class OvrFovPortWrap : public node::ObjectWrap {

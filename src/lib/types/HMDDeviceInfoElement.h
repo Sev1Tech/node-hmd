@@ -15,7 +15,7 @@
 
 /*! \class HMDDeviceInfoElement
  *
- *
+ * Base class describing an element of device information with V8 conversion interface.
  */
 class HMDDeviceInfoElement {
  public:
@@ -27,7 +27,8 @@ class HMDDeviceInfoElement {
 
 /*! \class InfoTypePrimitive
  *
- *
+ * Template for implementing a HMDDeviceInfoElement class for primitive types.
+ * See: InfoTypeBoolean, InfoTypeDouble, InfoTypeFloat, InfoTypeInt, InfoTypeLong, InfoTypeShort, InfoTypeString, InfoTypeUInt
  */
 template<typename T>
 class InfoTypePrimitive : public HMDDeviceInfoElement {
@@ -61,7 +62,7 @@ class InfoTypePrimitive : public HMDDeviceInfoElement {
 
 /*! \class InfoTypeArray
  *
- *
+ * Specialized implementation of HMDDeviceInfoElement for arrays of primitives objects.
  */
 template<typename T>
 class InfoTypeArray : public HMDDeviceInfoElement {
@@ -110,6 +111,10 @@ class InfoTypeArray : public HMDDeviceInfoElement {
     }
 };
 
+/*! \class InfoTypeArray<HMDDeviceInfoElement *>
+ *
+ * Template specialization for InfoTypeArray containing a list of HMDDeviceInfoElement pointers.
+ */
 template<>
 class InfoTypeArray<HMDDeviceInfoElement *> : public HMDDeviceInfoElement {
  private:

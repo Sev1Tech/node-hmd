@@ -12,6 +12,10 @@
 #include <HMDDeviceInfoElement.h>
 #include <OVR_CAPI.h>
 
+/*! \class OvrVector2i
+ *
+ * HMDDeviceInfoElement implementation for LibOVR ovrVector2i type.
+ */
 class OvrVector2i : public HMDDeviceInfoElement {
  private:
     ovrVector2i _value;
@@ -25,7 +29,7 @@ class OvrVector2i : public HMDDeviceInfoElement {
 };
 
 /*! \class OvrVector2iWrap
- * 
+ *
  * Node wrapped object class for OvrVector2i.
  */
 class OvrVector2iWrap : public node::ObjectWrap {

@@ -12,6 +12,10 @@
 #include <HMDDeviceInfoElement.h>
 #include <OVR_CAPI.h>
 
+/*! \class ovrSizei
+ *
+ * HMDDeviceInfoElement implementation for LibOVR ovrSizei type.
+ */
 class OvrSizei : public HMDDeviceInfoElement {
  private:
     ovrSizei _value;
@@ -25,7 +29,7 @@ class OvrSizei : public HMDDeviceInfoElement {
 };
 
 /*! \class OvrFovPortWrap
- * 
+ *
  * Node wrapped object class for OvrSizei.
  */
 class OvrSizeiWrap : public node::ObjectWrap {
