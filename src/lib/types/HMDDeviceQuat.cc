@@ -86,7 +86,6 @@ void HMDDeviceQuatWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("z"), GetDeviceQuatProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
-    target->Set(NanNew("HMDDeviceQuat"), constructor);
 }
 
 NAN_METHOD(HMDDeviceQuatWrap::New) {
@@ -97,14 +96,25 @@ NAN_METHOD(HMDDeviceQuatWrap::New) {
         w->Wrap(args.This());
         NanReturnValue(args.This());
     } else {
-        NanReturnValue(constructor->NewInstance());
+        const int argc = 1;
+        Local<Value> argv[argc] = { args[0] };
+        Local<Function> cons = NanNew(constructor);
+        NanReturnValue(cons->NewInstance(argc, argv));
     }
 }
 
-Handle<Value> HMDDeviceQuatWrap::NewInstance() {
-    NanScope();
-    NanReturnValue(constructor->NewInstance());
-}
+Handle<Function> HMDDeviceQuatWrap::GetConstructor() {
+    return NanNew(constructor);
+};
+
+// NAN_METHOD(HMDDeviceQuatWrap::NewInstance) {
+//     NanScope();
+//
+//     const int argc = 1;
+//     Local<Value> argv[argc] = { args[0] };
+//     Local<Function> cons = NanNew(constructor);
+//     NanReturnValue(cons->NewInstance(argc, argv));
+// }
 
 HMDDeviceQuat* HMDDeviceQuatWrap::GetWrapped() {
     return this->_hmdDeviceQuat;

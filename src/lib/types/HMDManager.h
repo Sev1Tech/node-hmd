@@ -12,7 +12,7 @@
 #include <HMDDevice.h>
 
 /*! \class HMDManagerWrap
- * 
+ *
  * Node wrapped object class which acts as the main interface for the node-hmd module.
  */
 class HMDManagerWrap : public node::ObjectWrap {
@@ -21,7 +21,9 @@ class HMDManagerWrap : public node::ObjectWrap {
 
     explicit HMDManagerWrap(const char* classToken);
     ~HMDManagerWrap();
+
     static v8::Persistent<v8::Function> constructor;
+    static NAN_METHOD(New);
 
     static NAN_METHOD(GetDeviceInfoAsync);
     static NAN_METHOD(GetDeviceInfoSync);
@@ -32,14 +34,15 @@ class HMDManagerWrap : public node::ObjectWrap {
     static NAN_METHOD(GetDeviceQuatAsync);
     static NAN_METHOD(GetDeviceQuatSync);
 
+
  public:
     static void Initialize(v8::Handle<v8::Object> target);
-    static NAN_METHOD(New);
+    static NAN_METHOD(NewInstance);
     HMDDevice* GetDevice();
 };
 
 /*! \class GetDeviceInfoWorker
- * 
+ *
  * NanAsyncWorker class for performing asynchronous device information work.
  */
 class GetDeviceInfoWorker : public NanAsyncWorker {
@@ -57,7 +60,7 @@ class GetDeviceInfoWorker : public NanAsyncWorker {
 };
 
 /*! \class GetDeviceOrientationWorker
- * 
+ *
  * NanAsyncWorker class for performing asynchronous device orientation work.
  */
 class GetDeviceOrientationWorker : public NanAsyncWorker {
@@ -75,7 +78,7 @@ class GetDeviceOrientationWorker : public NanAsyncWorker {
 };
 
 /*! \class GetDevicePositionWorker
- * 
+ *
  * NanAsyncWorker class for performing asynchronous device orientation work.
  */
 class GetDevicePositionWorker : public NanAsyncWorker {
@@ -93,7 +96,7 @@ class GetDevicePositionWorker : public NanAsyncWorker {
 };
 
 /*! \class GetDeviceOrientationWorker
- * 
+ *
  * NanAsyncWorker class for performing asynchronous device quaternion work.
  */
 class GetDeviceQuatWorker : public NanAsyncWorker {

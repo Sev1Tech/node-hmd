@@ -30,7 +30,7 @@
         "src/lib/types/HMDManager.cc",
 
         "src/support/default/DefaultDevice.cc",
-
+        
         "src/support/ovr/OculusRiftDevice.cc",
         "src/support/ovr/types/OvrFovPort.cc",
         "src/support/ovr/types/OvrSizei.cc",

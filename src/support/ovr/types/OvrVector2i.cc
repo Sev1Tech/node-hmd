@@ -30,14 +30,14 @@ OvrVector2i::~OvrVector2i() {
 }
 
 Handle<Value> OvrVector2i::getValue() {
-    Handle<Value> ovrVector2iHandle = OvrVector2iWrap::NewInstance();
-    OvrVector2iWrap* deviceOvrVector2iWrap = node::ObjectWrap::Unwrap<OvrVector2iWrap>(ovrVector2iHandle->ToObject());
+    Handle<Object> deviceOvrVector2iHandle = OvrVector2iWrap::GetConstructor()->NewInstance();
+    OvrVector2iWrap* deviceOvrVector2iWrap =  node::ObjectWrap::Unwrap<OvrVector2iWrap>(deviceOvrVector2iHandle);;
     ovrVector2i* deviceOvrVector2i = deviceOvrVector2iWrap->GetWrapped();
 
     deviceOvrVector2i->x = this->_value.x;
     deviceOvrVector2i->y = this->_value.y;
 
-    return ovrVector2iHandle;
+    return deviceOvrVector2iHandle;
 }
 
 HMDDeviceInfoElement* OvrVector2i::clone() {
@@ -66,7 +66,7 @@ void OvrVector2iWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("y"), GetObjectProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
-    target->Set(NanNew("OvrVector2i"), constructor);
+    target->Set(NanNew("OvrVector2i"), NanNew(constructor));
 }
 
 NAN_METHOD(OvrVector2iWrap::New) {
@@ -77,13 +77,14 @@ NAN_METHOD(OvrVector2iWrap::New) {
         w->Wrap(args.This());
         NanReturnValue(args.This());
     } else {
-        NanReturnValue(constructor->NewInstance());
+        const int argc = 1;
+        Local<Value> argv[argc] = { args[0] };
+        NanReturnValue(NanNew(constructor)->NewInstance(argc, argv));
     }
 }
 
-Handle<Value> OvrVector2iWrap::NewInstance() {
-    NanScope();
-    NanReturnValue(constructor->NewInstance());
+Handle<Function> OvrVector2iWrap::GetConstructor() {
+    return NanNew(constructor);
 }
 
 ovrVector2i* OvrVector2iWrap::GetWrapped() {

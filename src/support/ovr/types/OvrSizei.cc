@@ -28,14 +28,15 @@ OvrSizei::~OvrSizei() {
 }
 
 Handle<Value> OvrSizei::getValue() {
-    Handle<Value> ovrSizeiHandle = OvrSizeiWrap::NewInstance();
-    OvrSizeiWrap* deviceOvrSizeiWrap = node::ObjectWrap::Unwrap<OvrSizeiWrap>(ovrSizeiHandle->ToObject());
+
+    Handle<Object> deviceOvrSizeiHandle = OvrSizeiWrap::GetConstructor()->NewInstance();
+    OvrSizeiWrap* deviceOvrSizeiWrap =  node::ObjectWrap::Unwrap<OvrSizeiWrap>(deviceOvrSizeiHandle);;
     ovrSizei* deviceOvrSizei = deviceOvrSizeiWrap->GetWrapped();
 
     deviceOvrSizei->w = this->_value.w;
     deviceOvrSizei->h = this->_value.h;
 
-    return ovrSizeiHandle;
+    return deviceOvrSizeiHandle;
 }
 
 HMDDeviceInfoElement* OvrSizei::clone() {
@@ -64,7 +65,7 @@ void OvrSizeiWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("h"), GetObjectProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
-    target->Set(NanNew("OvrSizei"), constructor);
+    // target->Set(NanNew("OvrSizei"), NanNew(constructor));
 }
 
 NAN_METHOD(OvrSizeiWrap::New) {
@@ -75,13 +76,14 @@ NAN_METHOD(OvrSizeiWrap::New) {
         w->Wrap(args.This());
         NanReturnValue(args.This());
     } else {
-        NanReturnValue(constructor->NewInstance());
+        const int argc = 1;
+        Local<Value> argv[argc] = { args[0] };
+        NanReturnValue(NanNew(constructor)->NewInstance(argc, argv));
     }
 }
 
-Handle<Value> OvrSizeiWrap::NewInstance() {
-    NanScope();
-    NanReturnValue(constructor->NewInstance());
+Handle<Function> OvrSizeiWrap::GetConstructor() {
+    return NanNew(constructor);
 }
 
 ovrSizei* OvrSizeiWrap::GetWrapped() {
@@ -101,6 +103,8 @@ NAN_GETTER(OvrSizeiWrap::GetObjectProperty) {
     } else if (propertyString == "h") {
         NanReturnValue(NanNew(deviceOvrSizei->h));
     } else {
-        NanReturnValue(NanUndefined());
+        NanReturnUndefined();
     }
+
+    NanReturnValue(66);
 }

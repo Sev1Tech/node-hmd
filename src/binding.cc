@@ -28,7 +28,7 @@ using ::v8::Value;
 NAN_METHOD(CreateManager) {
     NanScope();
 
-    NanReturnValue(HMDManagerWrap::New(args));
+    HMDManagerWrap::NewInstance(args);
 }
 
 NAN_METHOD(GetSupportedDevices) {
@@ -54,8 +54,8 @@ void RegisterModule(Handle<Object> exports, Handle<Object> module) {
 
     HMDDeviceFactory::initializeModule(exports);
 
-    exports->Set(NanNew<String>("createManager"), NanNew<FunctionTemplate>(CreateManager)->GetFunction());
-    exports->Set(NanNew<String>("getSupportedDevices"), NanNew<FunctionTemplate>(GetSupportedDevices)->GetFunction());
+    exports->Set(NanNew("createManager"), NanNew<FunctionTemplate>(CreateManager)->GetFunction());
+    exports->Set(NanNew("getSupportedDevices"), NanNew<FunctionTemplate>(GetSupportedDevices)->GetFunction());
 }
 
 NODE_MODULE(hmd, RegisterModule);

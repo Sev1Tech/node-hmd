@@ -36,15 +36,15 @@ class OvrSizeiWrap : public node::ObjectWrap {
  private:
     ovrSizei _ovrSizei;
 
-    OvrSizeiWrap();
-    ~OvrSizeiWrap();
     static v8::Persistent<v8::Function> constructor;
     static NAN_GETTER(GetObjectProperty);
 
  public:
+    OvrSizeiWrap();
+    ~OvrSizeiWrap();
     static void Initialize(v8::Handle<v8::Object> target);
     static NAN_METHOD(New);
-    static v8::Handle<v8::Value> NewInstance();
+    static v8::Handle<v8::Function> GetConstructor();
     ovrSizei* GetWrapped();
 };
 #endif  // SRC_SUPPORT_OVR_TYPES_OVRSIZEI_H_

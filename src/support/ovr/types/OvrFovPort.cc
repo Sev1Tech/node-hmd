@@ -30,8 +30,9 @@ OvrFovPort::~OvrFovPort() {
 }
 
 Handle<Value> OvrFovPort::getValue() {
-    Handle<Value> ovrFovPortHandle = OvrFovPortWrap::NewInstance();
-    OvrFovPortWrap* deviceOvrFovPortWrap = node::ObjectWrap::Unwrap<OvrFovPortWrap>(ovrFovPortHandle->ToObject());
+
+    Handle<Object> deviceOvrFovPortHandle = OvrFovPortWrap::GetConstructor()->NewInstance();
+    OvrFovPortWrap* deviceOvrFovPortWrap =  node::ObjectWrap::Unwrap<OvrFovPortWrap>(deviceOvrFovPortHandle);;
     ovrFovPort* deviceOvrFovPort = deviceOvrFovPortWrap->GetWrapped();
 
     deviceOvrFovPort->UpTan = this->_value.UpTan;
@@ -39,7 +40,7 @@ Handle<Value> OvrFovPort::getValue() {
     deviceOvrFovPort->LeftTan = this->_value.LeftTan;
     deviceOvrFovPort->RightTan = this->_value.RightTan;
 
-    return ovrFovPortHandle;
+    return deviceOvrFovPortHandle;
 }
 
 HMDDeviceInfoElement* OvrFovPort::clone() {
@@ -70,7 +71,7 @@ void OvrFovPortWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("RightTan"), GetObjectProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
-    target->Set(NanNew("OvrFovPort"), constructor);
+    target->Set(NanNew("OvrFovPort"), NanNew(constructor));
 }
 
 NAN_METHOD(OvrFovPortWrap::New) {
@@ -81,13 +82,14 @@ NAN_METHOD(OvrFovPortWrap::New) {
         w->Wrap(args.This());
         NanReturnValue(args.This());
     } else {
-        NanReturnValue(constructor->NewInstance());
+        const int argc = 1;
+        Local<Value> argv[argc] = { args[0] };
+        NanReturnValue(NanNew(constructor)->NewInstance(argc, argv));
     }
 }
 
-Handle<Value> OvrFovPortWrap::NewInstance() {
-    NanScope();
-    NanReturnValue(constructor->NewInstance());
+Handle<Function> OvrFovPortWrap::GetConstructor() {
+    return NanNew(constructor);
 }
 
 ovrFovPort* OvrFovPortWrap::GetWrapped() {

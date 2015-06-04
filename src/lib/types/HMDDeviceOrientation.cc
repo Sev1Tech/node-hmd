@@ -80,7 +80,6 @@ void HMDDeviceOrientationWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("roll"), GetDeviceOrientationProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
-    target->Set(NanNew("HMDDeviceOrientation"), constructor);
 }
 
 NAN_METHOD(HMDDeviceOrientationWrap::New) {
@@ -91,14 +90,25 @@ NAN_METHOD(HMDDeviceOrientationWrap::New) {
         w->Wrap(args.This());
         NanReturnValue(args.This());
     } else {
-        NanReturnValue(constructor->NewInstance());
+        const int argc = 1;
+        Local<Value> argv[argc] = { args[0] };
+        Local<Function> cons = NanNew(constructor);
+        NanReturnValue(cons->NewInstance(argc, argv));
     }
 }
 
-Handle<Value> HMDDeviceOrientationWrap::NewInstance() {
-    NanScope();
-    NanReturnValue(constructor->NewInstance());
-}
+Handle<Function> HMDDeviceOrientationWrap::GetConstructor() {
+    return NanNew(constructor);
+};
+
+// NAN_METHOD(HMDDeviceOrientationWrap::NewInstance) {
+//     NanScope();
+//
+//     const int argc = 1;
+//     Local<Value> argv[argc] = { args[0] };
+//     Local<Function> cons = NanNew(constructor);
+//     NanReturnValue(cons->NewInstance(argc, argv));
+// }
 
 HMDDeviceOrientation* HMDDeviceOrientationWrap::GetWrapped() {
     return this->_hmdDeviceOrientation;

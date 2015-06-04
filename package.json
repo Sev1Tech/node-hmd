@@ -15,6 +15,9 @@
   },
   "version"         : "0.2.0",
   "license"         : "MIT",
+  "dependencies" : {
+    "segfault-handler": "*"  
+  },
   "devDependencies" : {
     "mocha" : "1.13.0"
   }

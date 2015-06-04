@@ -10,7 +10,7 @@
 #include <node.h>
 
 /*! \class HMDDeviceOrientation
- * 
+ *
  * Basic property class containg quaternion state about the device.
  */
 class HMDDeviceQuat {
@@ -36,7 +36,7 @@ class HMDDeviceQuat {
 };
 
 /*! \class HMDDeviceQuatWrap
- * 
+ *
  * Node wrapped object class for HMDDeviceQuat.
  */
 class HMDDeviceQuatWrap : public node::ObjectWrap {
@@ -46,12 +46,13 @@ class HMDDeviceQuatWrap : public node::ObjectWrap {
     HMDDeviceQuatWrap();
     ~HMDDeviceQuatWrap();
     static v8::Persistent<v8::Function> constructor;
+    static NAN_METHOD(New);
     static NAN_GETTER(GetDeviceQuatProperty);
 
  public:
     static void Initialize(v8::Handle<v8::Object> target);
-    static NAN_METHOD(New);
-    static v8::Handle<v8::Value> NewInstance();
+    // static NAN_METHOD(NewInstance);
+    static v8::Handle<v8::Function> GetConstructor();
     HMDDeviceQuat* GetWrapped();
 };
 

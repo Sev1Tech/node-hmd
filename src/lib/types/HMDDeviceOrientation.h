@@ -10,7 +10,7 @@
 #include <node.h>
 
 /*! \class HMDDeviceOrientation
- * 
+ *
  * Basic property class containg orientation state about the device.
  */
 class HMDDeviceOrientation {
@@ -34,7 +34,7 @@ class HMDDeviceOrientation {
 };
 
 /*! \class HMDDeviceOrientationWrap
- * 
+ *
  * Node wrapped object class for HMDDeviceOrientation.
  */
 class HMDDeviceOrientationWrap : public node::ObjectWrap {
@@ -44,12 +44,13 @@ class HMDDeviceOrientationWrap : public node::ObjectWrap {
     HMDDeviceOrientationWrap();
     ~HMDDeviceOrientationWrap();
     static v8::Persistent<v8::Function> constructor;
+    static NAN_METHOD(New);
     static NAN_GETTER(GetDeviceOrientationProperty);
 
  public:
     static void Initialize(v8::Handle<v8::Object> target);
-    static NAN_METHOD(New);
-    static v8::Handle<v8::Value> NewInstance();
+    // static NAN_METHOD(NewInstance);
+    static v8::Handle<v8::Function> GetConstructor();
     HMDDeviceOrientation* GetWrapped();
 };
 

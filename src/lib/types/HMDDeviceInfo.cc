@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-/* 
+/*
  * HMDDeviceInfoWrap
  */
 
@@ -84,7 +84,8 @@ void HMDDeviceInfoWrap::Initialize(Handle<Object> target) {
     instance->SetNamedPropertyHandler(GetDeviceInfoProperty, 0, 0, 0, DeviceInfoPropertyEnumerator);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
-    target->Set(NanNew("HMDDeviceInfo"), constructor);
+
+    target->Set(NanNew("HMDDeviceInfo"), NanNew(constructor));
 }
 
 NAN_METHOD(HMDDeviceInfoWrap::New) {
@@ -95,14 +96,15 @@ NAN_METHOD(HMDDeviceInfoWrap::New) {
         w->Wrap(args.This());
         NanReturnValue(args.This());
     } else {
-        NanReturnValue(constructor->NewInstance());
+        const int argc = 1;
+        Local<Value> argv[argc] = { args[0] };
+        NanReturnValue(NanNew(constructor)->NewInstance(argc, argv));
     }
 }
 
-Handle<Value> HMDDeviceInfoWrap::NewInstance() {
-    NanScope();
-    NanReturnValue(constructor->NewInstance());
-}
+Handle<Function> HMDDeviceInfoWrap::GetConstructor() {
+    return NanNew(constructor);
+};
 
 HMDDeviceInfo* HMDDeviceInfoWrap::GetWrapped() {
     return this->_hmdDeviceInfo;
@@ -118,8 +120,9 @@ NAN_GETTER(HMDDeviceInfoWrap::GetDeviceInfoProperty) {
         NanReturnValue(element->getValue());
     }
     catch (ElementNotFoundError &ex) {
-        NanReturnValue(NanUndefined());
+        NanReturnUndefined();
     }
+    NanReturnUndefined();
 }
 
 NAN_PROPERTY_ENUMERATOR(HMDDeviceInfoWrap::DeviceInfoPropertyEnumerator) {

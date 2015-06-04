@@ -80,7 +80,6 @@ void HMDDevicePositionWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("z"), GetDevicePositionProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
-    target->Set(NanNew("HMDDevicePosition"), constructor);
 }
 
 NAN_METHOD(HMDDevicePositionWrap::New) {
@@ -91,14 +90,25 @@ NAN_METHOD(HMDDevicePositionWrap::New) {
         w->Wrap(args.This());
         NanReturnValue(args.This());
     } else {
-        NanReturnValue(constructor->NewInstance());
+        const int argc = 1;
+        Local<Value> argv[argc] = { args[0] };
+        Local<Function> cons = NanNew(constructor);
+        NanReturnValue(cons->NewInstance(argc, argv));
     }
 }
 
-Handle<Value> HMDDevicePositionWrap::NewInstance() {
-    NanScope();
-    NanReturnValue(constructor->NewInstance());
-}
+Handle<Function> HMDDevicePositionWrap::GetConstructor() {
+    return NanNew(constructor);
+};
+
+// NAN_METHOD(HMDDevicePositionWrap::NewInstance) {
+//     NanScope();
+//
+//     const int argc = 1;
+//     Local<Value> argv[argc] = { args[0] };
+//     Local<Function> cons = NanNew(constructor);
+//     NanReturnValue(cons->NewInstance(argc, argv));
+// }
 
 HMDDevicePosition* HMDDevicePositionWrap::GetWrapped() {
     return this->_hmdDevicePosition;

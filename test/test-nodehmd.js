@@ -61,6 +61,7 @@ describe('node-hmd manager tests.', function() {
 	});
 
 	describe('#getDeviceInfoSync', function() {
+
 		var deviceInfo = instance.getDeviceInfoSync();
 
 		it('getDeviceInfoSync sanity test.', function() {
@@ -96,7 +97,7 @@ describe('node-hmd manager tests.', function() {
 		it('getDeviceOrientation sanity test.', function(done) {
 			instance.getDeviceOrientation(function(err, deviceOrientation) {
 				assert.ok(deviceOrientation);
-				
+
 				assert.ok(floatCompareEquality(deviceOrientation.yaw, 0.75));
 				assert.ok(floatCompareEquality(deviceOrientation.pitch, 1.28));
 				assert.ok(floatCompareEquality(deviceOrientation.roll, 2.33));
@@ -130,7 +131,7 @@ describe('node-hmd manager tests.', function() {
 		it('getDevicePosition sanity test.', function(done) {
 			instance.getDevicePosition(function(err, devicePosition) {
 				assert.ok(devicePosition);
-				
+
 				assert.ok(floatCompareEquality(devicePosition.x, 1.2));
 				assert.ok(floatCompareEquality(devicePosition.y, 3.4));
 				assert.ok(floatCompareEquality(devicePosition.z, 5.6));
@@ -164,7 +165,7 @@ describe('node-hmd manager tests.', function() {
 		it('getDeviceQuat sanity test.', function(done) {
 			instance.getDeviceQuat(function(err, deviceQuat) {
 				assert.ok(deviceQuat);
-				
+
 				assert.ok(floatCompareEquality(deviceQuat.w, 0.11));
 				assert.ok(floatCompareEquality(deviceQuat.x, 0.22));
 				assert.ok(floatCompareEquality(deviceQuat.y, 0.33));
@@ -234,10 +235,9 @@ describe('node-hmd manager tests.', function() {
 
 				assert.equal(deviceInfo.ovrVector2i.x, 787);
 				assert.equal(deviceInfo.ovrVector2i.y, 989);
-				
+
 				done();
 			});
 		});
 	});
 });
-

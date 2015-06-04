@@ -16,7 +16,7 @@
 #include <string>
 
 /*! \class HMDDeviceInfo
- * 
+ *
  * Basic property class containg information about the device.
  */
 class HMDDeviceInfo {
@@ -34,7 +34,7 @@ class HMDDeviceInfo {
 };
 
 /*! \class HMDDeviceInfoWrap
- * 
+ *
  * Node wrapped object class for HMDDeviceInfo.
  */
 class HMDDeviceInfoWrap : public node::ObjectWrap {
@@ -44,12 +44,12 @@ class HMDDeviceInfoWrap : public node::ObjectWrap {
     HMDDeviceInfoWrap();
     ~HMDDeviceInfoWrap();
     static v8::Persistent<v8::Function> constructor;
+    static NAN_METHOD(New);
     static NAN_GETTER(GetDeviceInfoProperty);
     static NAN_PROPERTY_ENUMERATOR(DeviceInfoPropertyEnumerator);
  public:
     static void Initialize(v8::Handle<v8::Object> target);
-    static NAN_METHOD(New);
-    static v8::Handle<v8::Value> NewInstance();
+    static v8::Handle<v8::Function> GetConstructor();
     HMDDeviceInfo* GetWrapped();
 };
 

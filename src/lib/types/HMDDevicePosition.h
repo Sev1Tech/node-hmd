@@ -10,7 +10,7 @@
 #include <node.h>
 
 /*! \class HMDDevicePosition
- * 
+ *
  * Basic property class containg position state about the device.
  */
 class HMDDevicePosition {
@@ -34,7 +34,7 @@ class HMDDevicePosition {
 };
 
 /*! \class HMDDevicePositionWrap
- * 
+ *
  * Node wrapped object class for HMDDevicePosition.
  */
 class HMDDevicePositionWrap : public node::ObjectWrap {
@@ -44,12 +44,13 @@ class HMDDevicePositionWrap : public node::ObjectWrap {
     HMDDevicePositionWrap();
     ~HMDDevicePositionWrap();
     static v8::Persistent<v8::Function> constructor;
+    static NAN_METHOD(New);
     static NAN_GETTER(GetDevicePositionProperty);
 
  public:
     static void Initialize(v8::Handle<v8::Object> target);
-    static NAN_METHOD(New);
-    static v8::Handle<v8::Value> NewInstance();
+    // static NAN_METHOD(NewInstance);
+    static v8::Handle<v8::Function> GetConstructor();
     HMDDevicePosition* GetWrapped();
 };
 
