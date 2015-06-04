@@ -30,7 +30,6 @@ OvrFovPort::~OvrFovPort() {
 }
 
 Handle<Value> OvrFovPort::getValue() {
-
     Handle<Object> deviceOvrFovPortHandle = OvrFovPortWrap::GetConstructor()->NewInstance();
     OvrFovPortWrap* deviceOvrFovPortWrap =  node::ObjectWrap::Unwrap<OvrFovPortWrap>(deviceOvrFovPortHandle);;
     ovrFovPort* deviceOvrFovPort = deviceOvrFovPortWrap->GetWrapped();

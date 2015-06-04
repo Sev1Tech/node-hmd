@@ -105,16 +105,7 @@ NAN_METHOD(HMDDeviceQuatWrap::New) {
 
 Handle<Function> HMDDeviceQuatWrap::GetConstructor() {
     return NanNew(constructor);
-};
-
-// NAN_METHOD(HMDDeviceQuatWrap::NewInstance) {
-//     NanScope();
-//
-//     const int argc = 1;
-//     Local<Value> argv[argc] = { args[0] };
-//     Local<Function> cons = NanNew(constructor);
-//     NanReturnValue(cons->NewInstance(argc, argv));
-// }
+}
 
 HMDDeviceQuat* HMDDeviceQuatWrap::GetWrapped() {
     return this->_hmdDeviceQuat;

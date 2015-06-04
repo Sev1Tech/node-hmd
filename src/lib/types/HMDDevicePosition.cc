@@ -99,16 +99,7 @@ NAN_METHOD(HMDDevicePositionWrap::New) {
 
 Handle<Function> HMDDevicePositionWrap::GetConstructor() {
     return NanNew(constructor);
-};
-
-// NAN_METHOD(HMDDevicePositionWrap::NewInstance) {
-//     NanScope();
-//
-//     const int argc = 1;
-//     Local<Value> argv[argc] = { args[0] };
-//     Local<Function> cons = NanNew(constructor);
-//     NanReturnValue(cons->NewInstance(argc, argv));
-// }
+}
 
 HMDDevicePosition* HMDDevicePositionWrap::GetWrapped() {
     return this->_hmdDevicePosition;

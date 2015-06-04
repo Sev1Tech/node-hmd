@@ -206,12 +206,17 @@ manager.getDeviceQuatSync(); // -> [object HMDDeviceQuat]
 
 ## Release notes
 
+### 0.2.1
+* Fully tested with Oculus Development Kit 1 and 2 (DK1, DK2) on Mac, Window, and Linux systems.
+* Added support for NodeJS versions 0.11 and 0.12.
+* Dropped support for NodeJS 0.10.
+
 ### 0.2.0
 * Expanded platform support for with Mac, Windows, and Linux systems.
-* Updated Mac and Windows platform Oculus SDK to version 0.4.2 Beta
+* Updated Mac and Windows platform Oculus SDK to version 0.4.2 Beta.
 * Updated Linux platform Oculus SDK to version 0.3.2 Preview 2.
-* Addition of getDeviceQuat/getDeviceQuatSync
-* Addition of getDevicePosition/getDevicePositionSync
+* Addition of getDeviceQuat/getDeviceQuatSync.
+* Addition of getDevicePosition/getDevicePositionSync.
 * Implemented [NAN](https://github.com/rvagg/nan) signatures for better Node.js version support.
 * [cpplint](http://google-styleguide.googlecode.com/svn/trunk/cpplint/cpplint.py) source code compliance.
 * Fully tested with Oculus Development Kit 1 (DK1) on Mac, Window, and Linux systems.
@@ -233,7 +238,7 @@ manager.getDeviceQuatSync(); // -> [object HMDDeviceQuat]
 
 (The MIT License)
 
-Copyright (c) 2013-2014 Geocent
+Copyright (c) 2013-2015 Geocent
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

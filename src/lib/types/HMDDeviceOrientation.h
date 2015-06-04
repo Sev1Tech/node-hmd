@@ -49,7 +49,6 @@ class HMDDeviceOrientationWrap : public node::ObjectWrap {
 
  public:
     static void Initialize(v8::Handle<v8::Object> target);
-    // static NAN_METHOD(NewInstance);
     static v8::Handle<v8::Function> GetConstructor();
     HMDDeviceOrientation* GetWrapped();
 };

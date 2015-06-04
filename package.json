@@ -13,11 +13,8 @@
     "type" : "git",
     "url"  : "https://github.com/Geocent/node-hmd"
   },
-  "version"         : "0.2.0",
+  "version"         : "0.2.1",
   "license"         : "MIT",
-  "dependencies" : {
-    "segfault-handler": "*"  
-  },
   "devDependencies" : {
     "mocha" : "1.13.0"
   }

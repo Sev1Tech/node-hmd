@@ -28,7 +28,6 @@ OvrSizei::~OvrSizei() {
 }
 
 Handle<Value> OvrSizei::getValue() {
-
     Handle<Object> deviceOvrSizeiHandle = OvrSizeiWrap::GetConstructor()->NewInstance();
     OvrSizeiWrap* deviceOvrSizeiWrap =  node::ObjectWrap::Unwrap<OvrSizeiWrap>(deviceOvrSizeiHandle);;
     ovrSizei* deviceOvrSizei = deviceOvrSizeiWrap->GetWrapped();
