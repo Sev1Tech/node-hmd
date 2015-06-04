@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Geocent - Published under the MIT License.
+ * Copyright (c) 2013-2015 Geocent - Published under the MIT License.
  * See LICENSE for the full text of the license.
  */
 

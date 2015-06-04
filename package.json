@@ -1,8 +1,8 @@
 {
   "name"            : "node-hmd",
-  "description"     : "NodeJS interface for head mounted displays positional data. Currently supports the Oculus Rift development kit.",
+  "description"     : "NodeJS interface for head mounted displays positional data. Currently supports the Oculus Rift development kits.",
   "url"             : "https://github.com/Geocent/node-hmd",
-  "keywords"        : ["hmd", "oculus", "rift", "libovr", "native"],
+  "keywords"        : ["hmd", "oculus", "rift", "libovr", "dk1", "dk2", "native"],
   "author"          : "GeoJosh <joshua.penton@geocent.com>",
   "scripts"         : {
     "test" : "mocha -R spec test/test-*.js"

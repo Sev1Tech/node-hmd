@@ -8,6 +8,8 @@ The current list of supported HMDs are as follows:
 * Unresponsive default device
 * Unresponsive testing mock device
 
+[![npm version](https://badge.fury.io/js/node-hmd.svg)](http://badge.fury.io/js/node-hmd)
+
 ## Getting Started
 
 ### Prerequisites
