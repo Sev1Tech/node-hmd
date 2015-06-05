@@ -56,7 +56,7 @@ OvrVector2iWrap::OvrVector2iWrap() {
 OvrVector2iWrap::~OvrVector2iWrap() {
 }
 
-void OvrVector2iWrap::Initialize(Handle<Object> target) {
+void OvrVector2iWrap::Initialize(Handle<Object> exports) {
     Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
     tpl->SetClassName(NanNew("OvrVector2i"));
 
@@ -66,7 +66,7 @@ void OvrVector2iWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("y"), GetObjectProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
-    target->Set(NanNew("OvrVector2i"), NanNew(constructor));
+    exports->Set(NanNew("OvrVector2i"), NanNew(constructor));
 }
 
 NAN_METHOD(OvrVector2iWrap::New) {

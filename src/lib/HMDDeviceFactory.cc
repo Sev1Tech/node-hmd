@@ -23,7 +23,7 @@ std::vector<std::string> HMDDeviceFactory::getSupportedDevices() {
     std::vector<std::string> devices;
 
     devices.push_back(DefaultDevice::classToken);
-    // devices.push_back(OculusRiftDevice::classToken);
+    devices.push_back(OculusRiftDevice::classToken);
 
     return devices;
 }

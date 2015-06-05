@@ -54,7 +54,7 @@ OvrSizeiWrap::OvrSizeiWrap() {
 OvrSizeiWrap::~OvrSizeiWrap() {
 }
 
-void OvrSizeiWrap::Initialize(Handle<Object> target) {
+void OvrSizeiWrap::Initialize(Handle<Object> exports) {
     Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
     tpl->SetClassName(NanNew("OvrSizei"));
 
@@ -64,7 +64,7 @@ void OvrSizeiWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("h"), GetObjectProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
-    // target->Set(NanNew("OvrSizei"), NanNew(constructor));
+    exports->Set(NanNew("OvrSizei"), NanNew(constructor));
 }
 
 NAN_METHOD(OvrSizeiWrap::New) {

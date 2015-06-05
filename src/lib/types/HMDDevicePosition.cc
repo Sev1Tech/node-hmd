@@ -69,7 +69,7 @@ HMDDevicePositionWrap::~HMDDevicePositionWrap() {
     delete this->_hmdDevicePosition;
 }
 
-void HMDDevicePositionWrap::Initialize(Handle<Object> target) {
+void HMDDevicePositionWrap::Initialize(Handle<Object> exports) {
     Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
     tpl->SetClassName(NanNew("HMDDevicePosition"));
 
@@ -80,6 +80,7 @@ void HMDDevicePositionWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("z"), GetDevicePositionProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
+    exports->Set(NanNew("HMDDevicePosition"), NanNew(constructor));
 }
 
 NAN_METHOD(HMDDevicePositionWrap::New) {

@@ -36,7 +36,7 @@ class HMDManagerWrap : public node::ObjectWrap {
 
 
  public:
-    static void Initialize(v8::Handle<v8::Object> target);
+    static void Initialize(v8::Handle<v8::Object> exports);
     static NAN_METHOD(NewInstance);
     HMDDevice* GetDevice();
 };

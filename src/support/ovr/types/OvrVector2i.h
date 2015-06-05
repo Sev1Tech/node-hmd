@@ -43,7 +43,7 @@ class OvrVector2iWrap : public node::ObjectWrap {
  public:
      OvrVector2iWrap();
      ~OvrVector2iWrap();
-    static void Initialize(v8::Handle<v8::Object> target);
+    static void Initialize(v8::Handle<v8::Object> exports);
     static v8::Handle<v8::Object> CreateInstance();
     ovrVector2i* GetWrapped();
 };

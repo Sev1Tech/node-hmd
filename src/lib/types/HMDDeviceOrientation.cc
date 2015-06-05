@@ -69,7 +69,7 @@ HMDDeviceOrientationWrap::~HMDDeviceOrientationWrap() {
     delete this->_hmdDeviceOrientation;
 }
 
-void HMDDeviceOrientationWrap::Initialize(Handle<Object> target) {
+void HMDDeviceOrientationWrap::Initialize(Handle<Object> exports) {
     Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
     tpl->SetClassName(NanNew("HMDDeviceOrientation"));
 
@@ -80,6 +80,7 @@ void HMDDeviceOrientationWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("roll"), GetDeviceOrientationProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
+    exports->Set(NanNew("HMDDeviceOrientation"), NanNew(constructor));
 }
 
 NAN_METHOD(HMDDeviceOrientationWrap::New) {

@@ -74,7 +74,7 @@ HMDDeviceQuatWrap::~HMDDeviceQuatWrap() {
     delete this->_hmdDeviceQuat;
 }
 
-void HMDDeviceQuatWrap::Initialize(Handle<Object> target) {
+void HMDDeviceQuatWrap::Initialize(Handle<Object> exports) {
     Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
     tpl->SetClassName(NanNew("HMDDeviceQuat"));
 
@@ -86,6 +86,7 @@ void HMDDeviceQuatWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("z"), GetDeviceQuatProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
+    exports->Set(NanNew("HMDDeviceQuat"), NanNew(constructor));
 }
 
 NAN_METHOD(HMDDeviceQuatWrap::New) {

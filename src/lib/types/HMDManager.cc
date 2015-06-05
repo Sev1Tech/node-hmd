@@ -32,7 +32,7 @@ HMDManagerWrap::~HMDManagerWrap() {
     }
 }
 
-void HMDManagerWrap::Initialize(Handle<Object> target) {
+void HMDManagerWrap::Initialize(Handle<Object> exports) {
     Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
     tpl->SetClassName(NanNew("HMDManager"));
     tpl->InstanceTemplate()->SetInternalFieldCount(1);

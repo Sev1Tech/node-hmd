@@ -43,7 +43,7 @@ class OvrFovPortWrap : public node::ObjectWrap {
  public:
      OvrFovPortWrap();
      ~OvrFovPortWrap();
-    static void Initialize(v8::Handle<v8::Object> target);
+    static void Initialize(v8::Handle<v8::Object> exports);
     static v8::Handle<v8::Object> CreateInstance();
     ovrFovPort* GetWrapped();
 };

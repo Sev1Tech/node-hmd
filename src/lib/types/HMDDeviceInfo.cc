@@ -75,7 +75,7 @@ HMDDeviceInfoWrap::~HMDDeviceInfoWrap() {
     delete this->_hmdDeviceInfo;
 }
 
-void HMDDeviceInfoWrap::Initialize(Handle<Object> target) {
+void HMDDeviceInfoWrap::Initialize(Handle<Object> exports) {
     Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
     tpl->SetClassName(NanNew("HMDDeviceInfo"));
 
@@ -84,8 +84,7 @@ void HMDDeviceInfoWrap::Initialize(Handle<Object> target) {
     instance->SetNamedPropertyHandler(GetDeviceInfoProperty, 0, 0, 0, DeviceInfoPropertyEnumerator);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
-
-    target->Set(NanNew("HMDDeviceInfo"), NanNew(constructor));
+    exports->Set(NanNew("HMDDeviceInfo"), NanNew(constructor));
 }
 
 NAN_METHOD(HMDDeviceInfoWrap::New) {

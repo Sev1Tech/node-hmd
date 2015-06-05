@@ -50,7 +50,7 @@ class HMDDeviceQuatWrap : public node::ObjectWrap {
     static NAN_GETTER(GetDeviceQuatProperty);
 
  public:
-    static void Initialize(v8::Handle<v8::Object> target);
+    static void Initialize(v8::Handle<v8::Object> exports);
     static v8::Handle<v8::Object> CreateInstance();
     HMDDeviceQuat* GetWrapped();
 };

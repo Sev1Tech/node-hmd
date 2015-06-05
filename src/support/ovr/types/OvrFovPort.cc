@@ -58,7 +58,7 @@ OvrFovPortWrap::OvrFovPortWrap() {
 OvrFovPortWrap::~OvrFovPortWrap() {
 }
 
-void OvrFovPortWrap::Initialize(Handle<Object> target) {
+void OvrFovPortWrap::Initialize(Handle<Object> exports) {
     Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
     tpl->SetClassName(NanNew("OvrFovPort"));
 
@@ -70,7 +70,7 @@ void OvrFovPortWrap::Initialize(Handle<Object> target) {
     instance->SetAccessor(NanNew("RightTan"), GetObjectProperty);
 
     NanAssignPersistent<Function>(constructor, tpl->GetFunction());
-    target->Set(NanNew("OvrFovPort"), NanNew(constructor));
+    exports->Set(NanNew("OvrFovPort"), NanNew(constructor));
 }
 
 NAN_METHOD(OvrFovPortWrap::New) {
