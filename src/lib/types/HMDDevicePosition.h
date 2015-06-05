@@ -49,7 +49,7 @@ class HMDDevicePositionWrap : public node::ObjectWrap {
 
  public:
     static void Initialize(v8::Handle<v8::Object> target);
-    static v8::Handle<v8::Function> GetConstructor();
+    static v8::Handle<v8::Object> CreateInstance();
     HMDDevicePosition* GetWrapped();
 };
 

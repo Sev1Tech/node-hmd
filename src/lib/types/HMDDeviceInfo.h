@@ -49,7 +49,7 @@ class HMDDeviceInfoWrap : public node::ObjectWrap {
     static NAN_PROPERTY_ENUMERATOR(DeviceInfoPropertyEnumerator);
  public:
     static void Initialize(v8::Handle<v8::Object> target);
-    static v8::Handle<v8::Function> GetConstructor();
+    static v8::Handle<v8::Object> CreateInstance();
     HMDDeviceInfo* GetWrapped();
 };
 

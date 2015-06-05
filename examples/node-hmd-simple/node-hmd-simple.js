@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict';
+
 var hmd = require("../.."),
 	express = require("express"),
 	http = require("http");
@@ -41,6 +43,12 @@ app.get("/info", function (req, res) {
 app.get("/orientation", function (req, res) {
 	manager.getDeviceOrientation(function(err, deviceOrientation) {
 		res.json(deviceOrientation);
+	});
+});
+
+app.get("/position", function (req, res) {
+	manager.getDevicePosition(function(err, devicePosition) {
+		res.json(devicePosition);
 	});
 });
 

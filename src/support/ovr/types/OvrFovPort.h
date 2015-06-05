@@ -37,14 +37,14 @@ class OvrFovPortWrap : public node::ObjectWrap {
     ovrFovPort _ovrFovPort;
 
     static v8::Persistent<v8::Function> constructor;
+    static NAN_METHOD(New);
     static NAN_GETTER(GetObjectProperty);
 
  public:
      OvrFovPortWrap();
      ~OvrFovPortWrap();
     static void Initialize(v8::Handle<v8::Object> target);
-    static NAN_METHOD(New);
-    static v8::Handle<v8::Function> GetConstructor();
+    static v8::Handle<v8::Object> CreateInstance();
     ovrFovPort* GetWrapped();
 };
 

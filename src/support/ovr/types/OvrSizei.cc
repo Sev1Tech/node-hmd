@@ -28,7 +28,7 @@ OvrSizei::~OvrSizei() {
 }
 
 Handle<Value> OvrSizei::getValue() {
-    Handle<Object> deviceOvrSizeiHandle = OvrSizeiWrap::GetConstructor()->NewInstance();
+    Handle<Object> deviceOvrSizeiHandle = OvrSizeiWrap::CreateInstance();
     OvrSizeiWrap* deviceOvrSizeiWrap =  node::ObjectWrap::Unwrap<OvrSizeiWrap>(deviceOvrSizeiHandle);;
     ovrSizei* deviceOvrSizei = deviceOvrSizeiWrap->GetWrapped();
 
@@ -81,8 +81,8 @@ NAN_METHOD(OvrSizeiWrap::New) {
     }
 }
 
-Handle<Function> OvrSizeiWrap::GetConstructor() {
-    return NanNew(constructor);
+Handle<Object> OvrSizeiWrap::CreateInstance() {
+    return NanNew(constructor)->NewInstance();
 }
 
 ovrSizei* OvrSizeiWrap::GetWrapped() {

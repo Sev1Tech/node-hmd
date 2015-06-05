@@ -98,7 +98,7 @@ NAN_METHOD(HMDManagerWrap::GetDeviceInfoSync) {
 
     HMDManagerWrap* hmdManagerWrap = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
 
-    Handle<Value> hmdDeviceInfoHandle = HMDDeviceInfoWrap::GetConstructor()->NewInstance();
+    Handle<Value> hmdDeviceInfoHandle = HMDDeviceInfoWrap::CreateInstance();
     hmdManagerWrap->GetDevice()->getDeviceInfo(ObjectWrap::Unwrap<HMDDeviceInfoWrap>(hmdDeviceInfoHandle->ToObject())->GetWrapped());
 
     NanReturnValue(hmdDeviceInfoHandle);
@@ -119,7 +119,7 @@ NAN_METHOD(HMDManagerWrap::GetDeviceOrientationSync) {
 
     HMDManagerWrap* hmdManager = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
 
-    Handle<Value> hmdDeviceOrientation = HMDDeviceOrientationWrap::GetConstructor()->NewInstance();
+    Handle<Value> hmdDeviceOrientation = HMDDeviceOrientationWrap::CreateInstance();
     hmdManager->GetDevice()->getDeviceOrientation(ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(hmdDeviceOrientation->ToObject())->GetWrapped());
 
     NanReturnValue(hmdDeviceOrientation);
@@ -140,7 +140,7 @@ NAN_METHOD(HMDManagerWrap::GetDevicePositionSync) {
 
     HMDManagerWrap* hmdManager = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
 
-    Handle<Value> hmdDevicePosition = HMDDevicePositionWrap::GetConstructor()->NewInstance();
+    Handle<Value> hmdDevicePosition = HMDDevicePositionWrap::CreateInstance();
     hmdManager->GetDevice()->getDevicePosition(ObjectWrap::Unwrap<HMDDevicePositionWrap>(hmdDevicePosition->ToObject())->GetWrapped());
 
     NanReturnValue(hmdDevicePosition);
@@ -161,7 +161,7 @@ NAN_METHOD(HMDManagerWrap::GetDeviceQuatSync) {
 
     HMDManagerWrap* hmdManager = ObjectWrap::Unwrap<HMDManagerWrap>(args.This());
 
-    Handle<Value> hmdDeviceQuat = HMDDeviceQuatWrap::GetConstructor()->NewInstance();
+    Handle<Value> hmdDeviceQuat = HMDDeviceQuatWrap::CreateInstance();
     hmdManager->GetDevice()->getDeviceQuat(ObjectWrap::Unwrap<HMDDeviceQuatWrap>(hmdDeviceQuat->ToObject())->GetWrapped());
 
     NanReturnValue(hmdDeviceQuat);
@@ -174,7 +174,7 @@ void GetDeviceInfoWorker::Execute() {
 void GetDeviceInfoWorker::HandleOKCallback() {
     NanScope();
 
-    Handle<Value> hmdDeviceInfoHandle = HMDDeviceInfoWrap::GetConstructor()->NewInstance();
+    Handle<Value> hmdDeviceInfoHandle = HMDDeviceInfoWrap::CreateInstance();
     HMDDeviceInfoWrap* hmdDeviceInfo = node::ObjectWrap::Unwrap<HMDDeviceInfoWrap>(hmdDeviceInfoHandle->ToObject());
     *hmdDeviceInfo->GetWrapped() = this->hmdDeviceInfo;
 
@@ -190,7 +190,7 @@ void GetDeviceOrientationWorker::Execute() {
 void GetDeviceOrientationWorker::HandleOKCallback() {
     NanScope();
 
-    Handle<Value> hmdDeviceOrientationHandle = HMDDeviceOrientationWrap::GetConstructor()->NewInstance();
+    Handle<Value> hmdDeviceOrientationHandle = HMDDeviceOrientationWrap::CreateInstance();
     HMDDeviceOrientationWrap* hmdDeviceOrientation = node::ObjectWrap::Unwrap<HMDDeviceOrientationWrap>(hmdDeviceOrientationHandle->ToObject());
     *hmdDeviceOrientation->GetWrapped() = this->hmdDeviceOrientation;
 
@@ -206,7 +206,7 @@ void GetDevicePositionWorker::Execute() {
 void GetDevicePositionWorker::HandleOKCallback() {
     NanScope();
 
-    Handle<Value> hmdDevicePositionHandle = HMDDevicePositionWrap::GetConstructor()->NewInstance();
+    Handle<Value> hmdDevicePositionHandle = HMDDevicePositionWrap::CreateInstance();
     HMDDevicePositionWrap* hmdDevicePosition = node::ObjectWrap::Unwrap<HMDDevicePositionWrap>(hmdDevicePositionHandle->ToObject());
     *hmdDevicePosition->GetWrapped() = this->hmdDevicePosition;
 
@@ -222,7 +222,7 @@ void GetDeviceQuatWorker::Execute() {
 void GetDeviceQuatWorker::HandleOKCallback() {
     NanScope();
 
-    Handle<Value> hmdDeviceQuatHandle = HMDDeviceQuatWrap::GetConstructor()->NewInstance();
+    Handle<Value> hmdDeviceQuatHandle = HMDDeviceQuatWrap::CreateInstance();
     HMDDeviceQuatWrap* hmdDeviceQuat = node::ObjectWrap::Unwrap<HMDDeviceQuatWrap>(hmdDeviceQuatHandle->ToObject());
     *hmdDeviceQuat->GetWrapped() = this->hmdDeviceQuat;
 

@@ -37,14 +37,14 @@ class OvrVector2iWrap : public node::ObjectWrap {
     ovrVector2i _ovrVector2i;
 
     static v8::Persistent<v8::Function> constructor;
+    static NAN_METHOD(New);
     static NAN_GETTER(GetObjectProperty);
 
  public:
      OvrVector2iWrap();
      ~OvrVector2iWrap();
     static void Initialize(v8::Handle<v8::Object> target);
-    static NAN_METHOD(New);
-    static v8::Handle<v8::Function> GetConstructor();
+    static v8::Handle<v8::Object> CreateInstance();
     ovrVector2i* GetWrapped();
 };
 

@@ -12,12 +12,15 @@
 		}
 
 		var socket = io.connect("http://localhost:3000");
-		socket.on("orientation", function (data) {
+		socket.on("update", function (data) {
 			var tr = document.createElement("tr");
 			appendToParent(tr, new Date().getTime());
-			appendToParent(tr, data.pitch);
-			appendToParent(tr, data.roll);
-			appendToParent(tr, data.yaw);
+			appendToParent(tr, data.orientation.pitch);
+			appendToParent(tr, data.orientation.roll);
+			appendToParent(tr, data.orientation.yaw);
+			appendToParent(tr, data.position.x);
+			appendToParent(tr, data.position.y);
+			appendToParent(tr, data.position.z);
 
 			var parent = document.getElementById("data");
 
@@ -65,6 +68,9 @@
 			<th>Pitch</th>
 			<th>Roll</th>
 			<th>Yaw</th>
+			<th>X</th>
+			<th>Y</th>
+			<th>Z</th>
 		</thead>
 		<tbody id="data">
 		</tbody>

@@ -103,8 +103,8 @@ NAN_METHOD(HMDDeviceQuatWrap::New) {
     }
 }
 
-Handle<Function> HMDDeviceQuatWrap::GetConstructor() {
-    return NanNew(constructor);
+Handle<Object> HMDDeviceQuatWrap::CreateInstance() {
+    return NanNew(constructor)->NewInstance();
 }
 
 HMDDeviceQuat* HMDDeviceQuatWrap::GetWrapped() {

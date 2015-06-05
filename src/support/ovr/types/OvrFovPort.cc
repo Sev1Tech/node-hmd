@@ -30,7 +30,7 @@ OvrFovPort::~OvrFovPort() {
 }
 
 Handle<Value> OvrFovPort::getValue() {
-    Handle<Object> deviceOvrFovPortHandle = OvrFovPortWrap::GetConstructor()->NewInstance();
+    Handle<Object> deviceOvrFovPortHandle = OvrFovPortWrap::CreateInstance();
     OvrFovPortWrap* deviceOvrFovPortWrap =  node::ObjectWrap::Unwrap<OvrFovPortWrap>(deviceOvrFovPortHandle);;
     ovrFovPort* deviceOvrFovPort = deviceOvrFovPortWrap->GetWrapped();
 
@@ -87,8 +87,8 @@ NAN_METHOD(OvrFovPortWrap::New) {
     }
 }
 
-Handle<Function> OvrFovPortWrap::GetConstructor() {
-    return NanNew(constructor);
+Handle<Object> OvrFovPortWrap::CreateInstance() {
+    return NanNew(constructor)->NewInstance();
 }
 
 ovrFovPort* OvrFovPortWrap::GetWrapped() {

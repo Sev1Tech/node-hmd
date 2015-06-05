@@ -97,8 +97,8 @@ NAN_METHOD(HMDDeviceOrientationWrap::New) {
     }
 }
 
-Handle<Function> HMDDeviceOrientationWrap::GetConstructor() {
-    return NanNew(constructor);
+Handle<Object> HMDDeviceOrientationWrap::CreateInstance() {
+    return NanNew(constructor)->NewInstance();
 }
 
 HMDDeviceOrientation* HMDDeviceOrientationWrap::GetWrapped() {

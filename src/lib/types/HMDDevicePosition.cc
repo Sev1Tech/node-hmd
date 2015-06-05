@@ -97,8 +97,8 @@ NAN_METHOD(HMDDevicePositionWrap::New) {
     }
 }
 
-Handle<Function> HMDDevicePositionWrap::GetConstructor() {
-    return NanNew(constructor);
+Handle<Object> HMDDevicePositionWrap::CreateInstance() {
+    return NanNew(constructor)->NewInstance();
 }
 
 HMDDevicePosition* HMDDevicePositionWrap::GetWrapped() {

@@ -30,7 +30,7 @@ OvrVector2i::~OvrVector2i() {
 }
 
 Handle<Value> OvrVector2i::getValue() {
-    Handle<Object> deviceOvrVector2iHandle = OvrVector2iWrap::GetConstructor()->NewInstance();
+    Handle<Object> deviceOvrVector2iHandle = OvrVector2iWrap::CreateInstance();
     OvrVector2iWrap* deviceOvrVector2iWrap =  node::ObjectWrap::Unwrap<OvrVector2iWrap>(deviceOvrVector2iHandle);;
     ovrVector2i* deviceOvrVector2i = deviceOvrVector2iWrap->GetWrapped();
 
@@ -83,8 +83,8 @@ NAN_METHOD(OvrVector2iWrap::New) {
     }
 }
 
-Handle<Function> OvrVector2iWrap::GetConstructor() {
-    return NanNew(constructor);
+Handle<Object> OvrVector2iWrap::CreateInstance() {
+    return NanNew(constructor)->NewInstance();
 }
 
 ovrVector2i* OvrVector2iWrap::GetWrapped() {

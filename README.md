@@ -4,7 +4,7 @@ This module serves to act as a common interface for communicating with a variety
 
 The current list of supported HMDs are as follows:
 
-* [Oculus Rift](http://www.oculusvr.com/)
+* [Oculus Rift](http://www.oculusvr.com/) DK1 and DK2
 * Unresponsive default device
 * Unresponsive testing mock device
 

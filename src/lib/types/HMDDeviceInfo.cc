@@ -102,8 +102,8 @@ NAN_METHOD(HMDDeviceInfoWrap::New) {
     }
 }
 
-Handle<Function> HMDDeviceInfoWrap::GetConstructor() {
-    return NanNew(constructor);
+Handle<Object> HMDDeviceInfoWrap::CreateInstance() {
+    return NanNew(constructor)->NewInstance();
 }
 
 HMDDeviceInfo* HMDDeviceInfoWrap::GetWrapped() {
