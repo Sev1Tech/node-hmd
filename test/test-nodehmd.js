@@ -17,12 +17,12 @@ describe('node-hmd tests.', function() {
 });
 
 describe('node-hmd manager tests.', function() {
-	var instance = hmd.createManager("test");
+	var instance = hmd.createManager('test');
 
 	describe('#createManager', function() {
 		it('node-hmd createManager failure test.', function() {
 			assert.throws(function() { hmd.createManager(); });
-			assert.throws(function() { hmd.createManager("doesnotexist"); });
+			assert.throws(function() { hmd.createManager('doesnotexist'); });
 		});
 	});
 
@@ -51,13 +51,13 @@ describe('node-hmd manager tests.', function() {
 				assert.ok(floatCompareEquality(deviceInfo.distortionK[3], 4.4));
 				assert.equal(deviceInfo.desktopX, 1920);
 				assert.equal(deviceInfo.desktopY, 1080);
-				assert.equal(deviceInfo.displayDeviceName, "node-hmd test device");
+				assert.equal(deviceInfo.displayDeviceName, 'node-hmd test device');
 				assert.equal(deviceInfo.displayId, 1234567890);
-				assert.equal(deviceInfo.productName, "Test Device");
-				assert.equal(deviceInfo.manufacturer, "Geocent LLC");
+				assert.equal(deviceInfo.productName, 'Test Device');
+				assert.equal(deviceInfo.manufacturer, 'Geocent LLC');
 				assert.equal(deviceInfo.version, 5);
 				assert.equal(deviceInfo.mixedData[0], 42);
-				assert.equal(deviceInfo.mixedData[1], "test token");
+				assert.equal(deviceInfo.mixedData[1], 'test token');
 
 				done();
 			});
@@ -87,13 +87,13 @@ describe('node-hmd manager tests.', function() {
 			assert.ok(floatCompareEquality(deviceInfo.distortionK[3], 4.4));
 			assert.equal(deviceInfo.desktopX, 1920);
 			assert.equal(deviceInfo.desktopY, 1080);
-			assert.equal(deviceInfo.displayDeviceName, "node-hmd test device");
+			assert.equal(deviceInfo.displayDeviceName, 'node-hmd test device');
 			assert.equal(deviceInfo.displayId, 1234567890);
-			assert.equal(deviceInfo.productName, "Test Device");
-			assert.equal(deviceInfo.manufacturer, "Geocent LLC");
+			assert.equal(deviceInfo.productName, 'Test Device');
+			assert.equal(deviceInfo.manufacturer, 'Geocent LLC');
 			assert.equal(deviceInfo.version, 5);
 			assert.equal(deviceInfo.mixedData[0], 42);
-			assert.equal(deviceInfo.mixedData[1], "test token");
+			assert.equal(deviceInfo.mixedData[1], 'test token');
 		});
 	});
 

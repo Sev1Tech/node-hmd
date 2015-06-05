@@ -5,15 +5,17 @@
 
 	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript">
+		'use strict';
+
 		function appendToParent (parent, text) {
-			var td = document.createElement("td");
+			var td = document.createElement('td');
 			td.appendChild(document.createTextNode(text));
 			parent.appendChild(td);
 		}
 
-		var socket = io.connect("http://localhost:3000");
-		socket.on("update", function (data) {
-			var tr = document.createElement("tr");
+		var socket = io.connect('http://localhost:3000');
+		socket.on('update', function (data) {
+			var tr = document.createElement('tr');
 			appendToParent(tr, new Date().getTime());
 			appendToParent(tr, data.orientation.pitch);
 			appendToParent(tr, data.orientation.roll);
@@ -22,7 +24,7 @@
 			appendToParent(tr, data.position.y);
 			appendToParent(tr, data.position.z);
 
-			var parent = document.getElementById("data");
+			var parent = document.getElementById('data');
 
 			parent.insertBefore(tr, parent.firstChild);
 
@@ -32,7 +34,7 @@
 		});
 
 		function adjustDelay(control) {
-			document.getElementById("delayLabel").firstChild.nodeValue = control.value +" ms";
+			document.getElementById('delayLabel').firstChild.nodeValue = control.value +' ms';
 			socket.emit('adjust', control.value);
 		}
 	</script>
