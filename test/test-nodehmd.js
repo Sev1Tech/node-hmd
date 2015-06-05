@@ -11,6 +11,8 @@ describe('node-hmd tests.', function() {
 	it('#getSupported', function() {
 		var supportedDevices = hmd.getSupportedDevices();
 		assert.ok(supportedDevices.length > 0);
+		assert.ok(supportedDevices.indexOf('default') > -1);
+		assert.ok(supportedDevices.indexOf('oculusrift') > -1);
 	});
 });
 
