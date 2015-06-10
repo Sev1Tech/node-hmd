@@ -4,9 +4,7 @@
       "target_name": "hmd",
 
       "includes" : [
-        "src/platform/linux/binding.gypi",
-        "src/platform/mac/binding.gypi",
-        "src/platform/win/binding.gypi"
+        "src/support/ovr/binding.gypi"
       ],
 
       "include_dirs": [
@@ -15,8 +13,6 @@
         "src/3rdparty",
 
         "src/support/default",
-        "src/support/ovr",
-        "src/support/ovr/types",
         "src/support/test",
       ],
 
@@ -30,11 +26,6 @@
         "src/lib/types/HMDManager.cc",
 
         "src/support/default/DefaultDevice.cc",
-        
-        "src/support/ovr/OculusRiftDevice.cc",
-        "src/support/ovr/types/OvrFovPort.cc",
-        "src/support/ovr/types/OvrSizei.cc",
-        "src/support/ovr/types/OvrVector2i.cc",
 
         "src/support/test/TestDevice.cc"
       ],

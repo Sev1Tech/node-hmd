@@ -23,8 +23,6 @@ OculusRiftDevice::~OculusRiftDevice() {
     ovr_Shutdown();
 }
 
-#ifdef OVR_0_4_2
-
 OculusRiftDevice::OculusRiftDevice() {
     ovr_Initialize();
 
@@ -36,12 +34,13 @@ void OculusRiftDevice::updateDevice() {
     ovrTrackingState trackingState  = ovrHmd_GetTrackingState(this->_hmd, ovr_GetTimeInSeconds());
 
     if (trackingState.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
-        OVR::Posef pose = trackingState.HeadPose.ThePose;
+        ovrPosef pose = trackingState.HeadPose.ThePose;
 
-        this->_deviceQuat.setQuat(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
-        pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(this->_deviceOrientation.getYawReference(), this->_deviceOrientation.getPitchReference(), this->_deviceOrientation.getRollReference());
+        this->_deviceQuat.setQuat(pose.Orientation.w, pose.Orientation.x, pose.Orientation.y, pose.Orientation.z);
+        OVR::Quat<float> quatf = pose.Orientation;
+        quatf.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(this->_deviceOrientation.getYawReference(), this->_deviceOrientation.getPitchReference(), this->_deviceOrientation.getRollReference());
 
-        this->_devicePosition.setPosition(pose.Translation.x, pose.Translation.y, pose.Translation.z);
+        this->_devicePosition.setPosition(pose.Position.x, pose.Position.y, pose.Position.z);
     }
 }
 
@@ -78,62 +77,6 @@ void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
     deviceInfo->insertElement("DisplayDeviceName", new InfoTypeString(this->_hmd->DisplayDeviceName));
     deviceInfo->insertElement("DisplayId", new InfoTypeUInt(this->_hmd->DisplayId));
 }
-
-#endif
-
-#ifdef OVR_0_3_2
-
-OculusRiftDevice::OculusRiftDevice() {
-    ovr_Initialize();
-
-    this->_hmd = ovrHmd_Create(0);
-    ovrHmd_StartSensor(this->_hmd, ovrSensorCap_Orientation | ovrSensorCap_YawCorrection | ovrSensorCap_Position, ovrSensorCap_Orientation);
-}
-
-void OculusRiftDevice::updateDevice() {
-    ovrSensorState trackingState  = ovrHmd_GetSensorState(this->_hmd, ovr_GetTimeInSeconds());
-
-    if (trackingState.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
-        OVR::Transformf pose = trackingState.Predicted.Pose;
-
-        this->_deviceQuat.setQuat(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
-        pose.Rotation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(this->_deviceOrientation.getYawReference(), this->_deviceOrientation.getPitchReference(), this->_deviceOrientation.getRollReference());
-
-        this->_devicePosition.setPosition(pose.Translation.x, pose.Translation.y, pose.Translation.z);
-    }
-}
-
-void OculusRiftDevice::getDeviceInfo(HMDDeviceInfo* deviceInfo) {
-    ovrHmdDesc hmdDesc;
-    ovrHmd_GetDesc(this->_hmd, &hmdDesc);
-
-    deviceInfo->insertElement("ProductName", new InfoTypeString(hmdDesc.ProductName));
-    deviceInfo->insertElement("Manufacturer", new InfoTypeString(hmdDesc.Manufacturer));
-    deviceInfo->insertElement("HmdCaps", new InfoTypeUInt(hmdDesc.HmdCaps));
-    deviceInfo->insertElement("SensorCaps", new InfoTypeUInt(hmdDesc.SensorCaps));
-    deviceInfo->insertElement("DistortionCaps", new InfoTypeUInt(hmdDesc.DistortionCaps));
-    deviceInfo->insertElement("Resolution", new OvrSizei(hmdDesc.Resolution));
-    deviceInfo->insertElement("WindowsPos", new OvrVector2i(hmdDesc.WindowsPos));
-
-    OvrFovPort* DefaultEyeFov[ovrEye_Count];
-    OvrFovPort* MaxEyeFov[ovrEye_Count];
-    int EyeRenderOrder[ovrEye_Count];
-
-    for (int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++) {
-        DefaultEyeFov[eyeIndex] = new OvrFovPort(hmdDesc.DefaultEyeFov[eyeIndex]);
-        MaxEyeFov[eyeIndex] = new OvrFovPort(hmdDesc.MaxEyeFov[eyeIndex]);
-        EyeRenderOrder[eyeIndex] = hmdDesc.EyeRenderOrder[eyeIndex];
-    }
-
-    deviceInfo->insertElement("DefaultEyeFov", new InfoTypeArray<HMDDeviceInfoElement *>(reinterpret_cast<HMDDeviceInfoElement **>(DefaultEyeFov), ovrEye_Count));
-    deviceInfo->insertElement("MaxEyeFov", new InfoTypeArray<HMDDeviceInfoElement *>(reinterpret_cast<HMDDeviceInfoElement **>(MaxEyeFov), ovrEye_Count));
-    deviceInfo->insertElement("EyeRenderOrder", new InfoTypeArray<int>(EyeRenderOrder, ovrEye_Count));
-    deviceInfo->insertElement("DisplayDeviceName", new InfoTypeString(hmdDesc.DisplayDeviceName));
-    deviceInfo->insertElement("DisplayId", new InfoTypeUInt(hmdDesc.DisplayId));
-}
-
-#endif
-
 
 void OculusRiftDevice::getDeviceOrientation(HMDDeviceOrientation* deviceOrientation) {
     this->updateDevice();

@@ -9,12 +9,9 @@
 #include <node.h>
 
 #include <HMDDevice.h>
-#include <OVR.h>
+#include <OVR_CAPI.h>
+#include <OVR_Math.h>
 #include <string>
-
-#if !defined(OVR_0_4_2) && !defined(OVR_0_3_2)
-    #error Unsupported OVR version detected!
-#endif
 
 class OculusDeviceOrientation : public HMDDeviceOrientation {
  public:
