@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/node-hmd.svg)](http://badge.fury.io/js/node-hmd)
 [![build status](https://travis-ci.org/Geocent/node-hmd.png?branch=master)](https://travis-ci.org/Geocent/node-hmd)
 
-This module serves to act as a common interface for communicating with a variety of head mounted displays (HMDs). While most applications should expect to access the HMD data as often as possible in a consistent manner both synchronous and asynchronous interfaces are provided in order to conform with Node.js community standards. It is the responsiblity of the end user to properly access the HMD positional data in the manner most appropriate for the application.
+This module serves to act as a common interface for communicating with a variety of head mounted displays (HMDs). While most applications should expect to access the HMD data as often as possible in a consistent manner both synchronous and asynchronous interfaces are provided in order to conform with Node.js community standards. It is the responsibility of the end user to properly access the HMD positional data in the manner most appropriate for the application.
 
 The current list of supported HMDs are as follows:
 
@@ -213,7 +213,7 @@ manager.getDeviceQuatSync(); // -> [object HMDDeviceQuat]
 * Fully tested with Oculus Development Kit 1 and 2 (DK1, DK2) on Mac, Window, and Linux systems.
 * Added support for [io.js](https://iojs.org/en/index.html) and NodeJS versions 0.11 and 0.12.
 * Dropped support for NodeJS 0.10.
-* Integrated project with Travis CI build support (Take 2)
+* Integrated project with Travis CI build support.
 
 ### 0.2.0
 * Expanded platform support for with Mac, Windows, and Linux systems.
