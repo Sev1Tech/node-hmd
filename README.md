@@ -212,6 +212,7 @@ manager.getDeviceQuatSync(); // -> [object HMDDeviceQuat]
 * Fully tested with Oculus Development Kit 1 and 2 (DK1, DK2) on Mac, Window, and Linux systems.
 * Added support for [io.js](https://iojs.org/en/index.html) and NodeJS versions 0.11 and 0.12.
 * Dropped support for NodeJS 0.10.
+* Integrated project with Travis CI build support (Take 2)
 
 ### 0.2.0
 * Expanded platform support for with Mac, Windows, and Linux systems.
