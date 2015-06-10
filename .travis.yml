@@ -6,6 +6,8 @@ node_js:
   - "iojs"
 
 before_install:
+  - sudo rm /etc/apt/sources.list.d/*.list
+  - sudo apt-get update -q
   - sudo apt-get install -y freeglut3-dev mesa-common-dev libudev-dev libxext-dev libxinerama-dev libxrandr-dev libxxf86vm-dev
   - cd /lib/x86_64-linux-gnu/
   - sudo ln -sf libudev.so.1 libudev.so.0
