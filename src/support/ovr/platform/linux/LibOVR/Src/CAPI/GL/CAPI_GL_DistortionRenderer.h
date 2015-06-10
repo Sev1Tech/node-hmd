@@ -5,11 +5,22 @@ Content     :   Distortion renderer header for GL
 Created     :   November 11, 2013
 Authors     :   David Borel, Lee Cooper
 
-Copyright   :   Copyright 2013 Oculus VR, Inc. All Rights reserved.
+Copyright   :   Copyright 2014 Oculus VR, LLC All Rights reserved.
 
-Use of this software is subject to the terms of the Oculus Inc license
-agreement provided at the time of installation or download, or which
+Licensed under the Oculus VR Rift SDK License Version 3.2 (the "License");
+you may not use the Oculus VR Rift SDK except in compliance with the License,
+which is provided at the time of installation or download, or which
 otherwise accompanies this software in either electronic or hard copy form.
+
+You may obtain a copy of the License at
+
+http://www.oculusvr.com/licenses/LICENSE-3.2
+
+Unless required by applicable law or agreed to in writing, the Oculus VR SDK
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 ************************************************************************************/
 
@@ -18,10 +29,11 @@ otherwise accompanies this software in either electronic or hard copy form.
 
 #include "../CAPI_DistortionRenderer.h"
 
-#include "../../Kernel/OVR_Log.h"
+#include "Kernel/OVR_Log.h"
 #include "CAPI_GL_Util.h"
 
 namespace OVR { namespace CAPI { namespace GL {
+
 
 // ***** GL::DistortionRenderer
 
@@ -30,26 +42,20 @@ namespace OVR { namespace CAPI { namespace GL {
 class DistortionRenderer : public CAPI::DistortionRenderer
 {
 public:    
-    DistortionRenderer(ovrHmd hmd,
-                       FrameTimeManager& timeManager,
-                       const HMDRenderState& renderState);
-    ~DistortionRenderer();
+    DistortionRenderer();
+    virtual ~DistortionRenderer();
 
     
     // Creation function for the device.    
-    static CAPI::DistortionRenderer* Create(ovrHmd hmd,
-                                            FrameTimeManager& timeManager,
-                                            const HMDRenderState& renderState);
+    static CAPI::DistortionRenderer* Create();
 
 
     // ***** Public DistortionRenderer interface
-	
-    virtual bool Initialize(const ovrRenderAPIConfig* apiConfig,
-                            unsigned distortionCaps);
 
-    virtual void SubmitEye(int eyeId, ovrTexture* eyeTexture);
+    virtual void SubmitEye(int eyeId, const ovrTexture* eyeTexture) OVR_OVERRIDE;
+    virtual void SubmitEyeWithDepth(int eyeId, const ovrTexture* eyeColorTexture, const ovrTexture* eyeDepthTexture) OVR_OVERRIDE;
 
-    virtual void EndFrame(bool swapBuffers, unsigned char* latencyTesterDrawColor, unsigned char* latencyTester2DrawColor);
+    virtual void EndFrame(uint32_t frameIndex, bool swapBuffers);
 
     void         WaitUntilGpuIdle();
 
@@ -58,57 +64,10 @@ public:
 	double       FlushGpuAndWaitTillTime(double absTime);
 
 protected:
-    
-    
-    class GraphicsState : public CAPI::DistortionRenderer::GraphicsState
-    {
-    public:
-        GraphicsState();
-        virtual void Save();
-        virtual void Restore();
-        
-    protected:
-        void ApplyBool(GLenum Name, GLint Value);
-        
-    public:
-        GLint GlMajorVersion;
-        GLint GlMinorVersion;
-        bool SupportsVao;
-        
-        GLint Viewport[4];
-        GLfloat ClearColor[4];
-        GLint DepthTest;
-        GLint CullFace;
-        GLint Program;
-        GLint ActiveTexture;
-        GLint TextureBinding;
-        GLint VertexArray;
-        GLint FrameBufferBinding;
-        
-        GLint Blend;
-        GLint ColorWritemask[4];
-        GLint Dither;
-        GLint Fog;
-        GLint Lighting;
-        GLint RasterizerDiscard;
-        GLint RenderMode;
-        GLint SampleMask;
-        GLint ScissorTest;
-        GLfloat ZoomX;
-        GLfloat ZoomY;
-    };
-
-    // TBD: Should we be using oe from RState instead?
-    unsigned            DistortionCaps;
-
 	struct FOR_EACH_EYE
 	{
-        FOR_EACH_EYE() : TextureSize(0), RenderViewport(Sizei(0)) { }
+        FOR_EACH_EYE() : numVerts(0), numIndices(0), texture(0), /*UVScaleOffset[],*/ TextureSize(0, 0), RenderViewport(0, 0, 0, 0) { }
 
-#if 0
-		IDirect3DVertexBuffer9  * dxVerts;
-		IDirect3DIndexBuffer9   * dxIndices;
-#endif
 		int                       numVerts;
 		int                       numIndices;
 
@@ -119,11 +78,18 @@ protected:
         Recti                     RenderViewport;
 	} eachEye[2];
 
+    Ptr<Texture>    pOverdriveTextures[NumOverdriveTextures];
+    Ptr<Texture>    OverdriveBackBufferTexture;
+
     // GL context and utility variables.
-    RenderParams        RParams;    
+    RenderParams        RParams;
+    Context             distortionContext;  // We are currently using this private OpenGL context instead of using the CAPI SaveGraphicsState/RestoreGraphicsState mechanism. To consider: Move this Context into SaveGraphicsState/RestoreGraphicState so there's consistency between DirectX and OpenGL.
+
+    virtual bool initializeRenderer(const ovrRenderAPIConfig* apiConfig) OVR_OVERRIDE;
 
 	// Helpers
-    void initBuffersAndShaders();
+    void initOverdrive();
+    bool initBuffersAndShaders();
     void initShaders();
     void initFullscreenQuad();
     void destroy();
@@ -140,6 +106,8 @@ protected:
     void renderLatencyQuad(unsigned char* latencyTesterDrawColor);
     void renderLatencyPixel(unsigned char* latencyTesterPixelColor);
 	
+    void renderEndFrame();
+
     Ptr<Texture>        pEyeTextures[2];
 
 	Ptr<Buffer>         DistortionMeshVBs[2];    // one per-eye
@@ -157,10 +125,9 @@ protected:
 	GLuint              LatencyVAO;
     Ptr<Buffer>         LatencyTesterQuadVB;
     Ptr<ShaderSet>      SimpleQuadShader;
+    Ptr<ShaderSet>      SimpleQuadGammaShader;
 
-    Ptr<Texture>             CurRenderTarget;
-    Array<Ptr<Texture> >     DepthBuffers;
-    GLuint                   CurrentFbo;
+    GLuint              OverdriveFbo;
 
 	GLint SavedViewport[4];
 	GLfloat SavedClearColor[4];
@@ -172,6 +139,7 @@ protected:
 	GLint SavedVertexArray;
     GLint SavedBoundFrameBuffer;
 };
+
 
 }}} // OVR::CAPI::GL
 

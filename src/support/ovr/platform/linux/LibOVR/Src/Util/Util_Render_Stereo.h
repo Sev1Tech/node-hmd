@@ -1,21 +1,20 @@
 /************************************************************************************
 
-PublicHeader:   OVR.h
 Filename    :   Util_Render_Stereo.h
 Content     :   Sample stereo rendering configuration classes.
 Created     :   October 22, 2012
 Authors     :   Michael Antonov, Tom Forsyth
 
-Copyright   :   Copyright 2014 Oculus VR, Inc. All Rights reserved.
+Copyright   :   Copyright 2014 Oculus VR, LLC All Rights reserved.
 
-Licensed under the Oculus VR Rift SDK License Version 3.1 (the "License"); 
+Licensed under the Oculus VR Rift SDK License Version 3.2 (the "License"); 
 you may not use the Oculus VR Rift SDK except in compliance with the License, 
 which is provided at the time of installation or download, or which 
 otherwise accompanies this software in either electronic or hard copy form.
 
 You may obtain a copy of the License at
 
-http://www.oculusvr.com/licenses/LICENSE-3.1 
+http://www.oculusvr.com/licenses/LICENSE-3.2 
 
 Unless required by applicable law or agreed to in writing, the Oculus VR SDK 
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,14 +27,11 @@ limitations under the License.
 #ifndef OVR_Util_Render_Stereo_h
 #define OVR_Util_Render_Stereo_h
 
-#include "../OVR_Stereo.h"
+#include "OVR_Stereo.h"
+#include "Extras/OVR_Math.h"
+#include "Vision/SensorFusion/Vision_SensorStateReader.h"
 
-
-namespace OVR {
-
-class SensorFusion;
-
-namespace Util { namespace Render {
+namespace OVR { namespace Util { namespace Render {
 
 
 
@@ -223,7 +219,7 @@ public:
 
     // Allows the app to specify near and far clip planes and the right/left-handedness of the projection matrix.
     void        SetZClipPlanesAndHandedness ( float zNear = 0.01f, float zFar = 10000.0f,
-                                              bool rightHandedProjection = true );
+                                              bool rightHandedProjection = true, bool isOpenGL = false );
 
     // Allows the app to specify how much extra eye rotation to allow when determining the visible FOV.
     void        SetExtraEyeRotation ( float extraEyeRotationInRadians = 0.0f );
@@ -296,6 +292,7 @@ private:
     float              ExtraEyeRotationInRadians;
     bool               IsRendertargetSharedByBothEyes;
     bool               RightHandedProjection;
+    bool               UsingOpenGL; // for projection clip depth calculation
 
     bool               DirtyFlag;   // Set when any if the modifiable state changed. Does NOT get set by SetRender*()
 
@@ -333,20 +330,25 @@ struct DistortionMeshVertexData
     Vector2f    TanEyeAnglesB;    
 };
 
+// If you just want a single point on the screen transformed.
+DistortionMeshVertexData DistortionMeshMakeVertex ( Vector2f screenNDC,
+                                                    bool rightEye,
+                                                    const HmdRenderInfo &hmdRenderInfo, 
+                                                    const DistortionRenderDesc &distortion, const ScaleAndOffset2D &eyeToSourceNDC );
 
-void DistortionMeshCreate ( DistortionMeshVertexData **ppVertices, UInt16 **ppTriangleListIndices,
+void DistortionMeshCreate ( DistortionMeshVertexData **ppVertices, uint16_t **ppTriangleListIndices,
                             int *pNumVertices, int *pNumTriangles,
                             const StereoEyeParams &stereoParams, const HmdRenderInfo &hmdRenderInfo );
 
-// Generate distortion mesh for a eye. This version requires less data then stereoParms, supporting
-// dynamic change in render target viewport.
-void DistortionMeshCreate( DistortionMeshVertexData **ppVertices, UInt16 **ppTriangleListIndices,
+// Generate distortion mesh for a eye.
+// This version requires less data then stereoParms, supporting dynamic change in render target viewport.
+void DistortionMeshCreate( DistortionMeshVertexData **ppVertices, uint16_t **ppTriangleListIndices,
                            int *pNumVertices, int *pNumTriangles,
                            bool rightEye,
                            const HmdRenderInfo &hmdRenderInfo, 
                            const DistortionRenderDesc &distortion, const ScaleAndOffset2D &eyeToSourceNDC );
 
-void DistortionMeshDestroy ( DistortionMeshVertexData *pVertices, UInt16 *pTriangleMeshIndices );
+void DistortionMeshDestroy ( DistortionMeshVertexData *pVertices, uint16_t *pTriangleMeshIndices );
 
 
 //-----------------------------------------------------------------------------------
@@ -368,17 +370,17 @@ struct HeightmapMeshVertexData
 };
 
 
-void HeightmapMeshCreate ( HeightmapMeshVertexData **ppVertices, UInt16 **ppTriangleListIndices,
+void HeightmapMeshCreate ( HeightmapMeshVertexData **ppVertices, uint16_t **ppTriangleListIndices,
     int *pNumVertices, int *pNumTriangles,
     const StereoEyeParams &stereoParams, const HmdRenderInfo &hmdRenderInfo );
 
 // Generate heightmap mesh for a eye. This version requires less data then stereoParms, supporting
 // dynamic change in render target viewport.
-void HeightmapMeshCreate( HeightmapMeshVertexData **ppVertices, UInt16 **ppTriangleListIndices,
+void HeightmapMeshCreate( HeightmapMeshVertexData **ppVertices, uint16_t **ppTriangleListIndices,
     int *pNumVertices, int *pNumTriangles, bool rightEye,
     const HmdRenderInfo &hmdRenderInfo, const ScaleAndOffset2D &eyeToSourceNDC );
 
-void HeightmapMeshDestroy ( HeightmapMeshVertexData *pVertices, UInt16 *pTriangleMeshIndices );
+void HeightmapMeshDestroy ( HeightmapMeshVertexData *pVertices, uint16_t *pTriangleMeshIndices );
 
 
 
@@ -411,10 +413,12 @@ PredictionValues PredictionGetDeviceValues ( const HmdRenderInfo &hmdRenderInfo,
 // (which may have been computed later on, and thus is more accurate), and this
 // will return the matrix to pass to the timewarp distortion shader.
 // TODO: deal with different handedness?
-Matrix4f TimewarpComputePoseDelta ( Matrix4f const &renderedViewFromWorld, Matrix4f const &predictedViewFromWorld, Matrix4f const&eyeViewAdjust );
-Matrix4f TimewarpComputePoseDeltaPosition ( Matrix4f const &renderedViewFromWorld, Matrix4f const &predictedViewFromWorld, Matrix4f const&eyeViewAdjust );
+Matrix4f TimewarpComputePoseDelta ( Matrix4f const &renderedViewFromWorld, Matrix4f const &predictedViewFromWorld, Matrix4f const&hmdToEyeViewOffset );
+Matrix4f TimewarpComputePoseDeltaPosition ( Matrix4f const &renderedViewFromWorld, Matrix4f const &predictedViewFromWorld, Matrix4f const&hmdToEyeViewOffset );
 
 
+#if defined(OVR_ENABLE_TIMEWARP_MACHINE)
+// This is deprecated by DistortionTiming code. -cat
 
 // TimewarpMachine helps keep track of rendered frame timing and
 // handles predictions for time-warp rendering.
@@ -429,12 +433,16 @@ public:
     // The only reliable time in most engines is directly after the frame-present and GPU flush-and-wait.
     // This call should be done right after that to give this system the timing info it needs.
     void        AfterPresentAndFlush(double timeNow);
+    // But some engines queue up the frame-present and only later find out when it actually happened.
+    // They should call these two at those times.
+    void        AfterPresentWithoutFlush();
+    void        AfterPresentFinishes(double timeNow);
 
     // The "average" time the rendered frame will show up,
     // and the predicted pose of the HMD at that time.
     // You usually only need to call one of these functions.
     double      GetViewRenderPredictionTime();
-    Transformf  GetViewRenderPredictionPose(SensorFusion &sfusion);
+    bool        GetViewRenderPredictionPose(Vision::TrackingStateReader* reader, Posef& transform);
 
 
     // Timewarp prediction functions. You usually only need to call one of these three sets of functions.
@@ -443,14 +451,13 @@ public:
     double      GetVisiblePixelTimeStart();
     double      GetVisiblePixelTimeEnd();
     // Predicted poses of the HMD at those first and last pixels.
-    Transformf  GetPredictedVisiblePixelPoseStart(SensorFusion &sfusion);
-    Transformf  GetPredictedVisiblePixelPoseEnd  (SensorFusion &sfusion);
+	bool        GetPredictedVisiblePixelPoseStart(Vision::TrackingStateReader* reader, Posef& transform);
+	bool        GetPredictedVisiblePixelPoseEnd(Vision::TrackingStateReader* reader, Posef& transform);
     // The delta matrices to feed to the timewarp distortion code,
     // given the pose that was used for rendering.
     // (usually the one returned by GetViewRenderPredictionPose() earlier)
-    Matrix4f    GetTimewarpDeltaStart(SensorFusion &sfusion, Transformf const &renderedPose);
-    Matrix4f    GetTimewarpDeltaEnd  (SensorFusion &sfusion, Transformf const &renderedPose);
-
+	bool        GetTimewarpDeltaStart(Vision::TrackingStateReader* reader, Posef const &renderedPose, Matrix4f& transform);
+	bool        GetTimewarpDeltaEnd(Vision::TrackingStateReader* reader, Posef const &renderedPose, Matrix4f& transform);
 
     // Just-In-Time distortion aims to delay the second sensor reading & distortion
     // until the very last moment to improve prediction. However, it is a little scary,
@@ -465,31 +472,32 @@ public:
     bool        JustInTime_NeedDistortionTimeMeasurement() const;
     void        JustInTime_BeforeDistortionTimeMeasurement(double timeNow);
     void        JustInTime_AfterDistortionTimeMeasurement(double timeNow);
-
+    double      JustInTime_AverageDistortionTime();     // Just for profiling - use JustInTime_GetDistortionWaitUntilTime() for functionality.
 
 private:
-
     bool                VsyncEnabled;
     HmdRenderInfo       RenderInfo;
     PredictionValues    CurrentPredictionValues;
 
-    enum { NumDistortionTimes = 10 };
+    enum { NumDistortionTimes = 100 };
     int                 DistortionTimeCount;
     double              DistortionTimeCurrentStart;
     float               DistortionTimes[NumDistortionTimes];
     float               DistortionTimeAverage;
 
     // Pose at which last time the eye was rendered.
-    Transformf               EyeRenderPoses[2];
+    Posef               EyeRenderPoses[2];
 
     // Absolute time of the last present+flush
     double              LastFramePresentFlushTime;
-    // Seconds between presentflushes
+    // Seconds between present+flushes
     float               PresentFlushToPresentFlushSeconds;
     // Predicted absolute time of the next present+flush
     double              NextFramePresentFlushTime;
 
 };
+
+#endif // OVR_ENABLE_TIMEWARP_MACHINE
 
 
 

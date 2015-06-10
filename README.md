@@ -209,6 +209,9 @@ manager.getDeviceQuatSync(); // -> [object HMDDeviceQuat]
 
 ## Release notes
 
+### 0.2.2
+* Updated Oculus Runtime supports and requirements to v0.5.0.1-beta.
+
 ### 0.2.1
 * Fully tested with Oculus Development Kit 1 and 2 (DK1, DK2) on Mac, Window, and Linux systems.
 * Added support for [io.js](https://iojs.org/en/index.html) and NodeJS versions 0.11 and 0.12.

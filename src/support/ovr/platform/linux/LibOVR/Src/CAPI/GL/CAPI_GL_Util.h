@@ -5,15 +5,18 @@ Content     :   Utility header for OpenGL
 Created     :   March 27, 2014
 Authors     :   Andrew Reisse, David Borel
 
-Copyright   :   Copyright 2012 Oculus VR, Inc. All Rights reserved.
+Copyright   :   Copyright 2014 Oculus VR, LLC All Rights reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
+Licensed under the Oculus VR Rift SDK License Version 3.2 (the "License");
+you may not use the Oculus VR Rift SDK except in compliance with the License,
+which is provided at the time of installation or download, or which
+otherwise accompanies this software in either electronic or hard copy form.
+
 You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+http://www.oculusvr.com/licenses/LICENSE-3.2
 
-Unless required by applicable law or agreed to in writing, software
+Unless required by applicable law or agreed to in writing, the Oculus VR SDK
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
@@ -21,136 +24,42 @@ limitations under the License.
 
 ************************************************************************************/
 
-#ifndef INC_OVR_CAPI_GL_Util_h
-#define INC_OVR_CAPI_GL_Util_h
+#ifndef OVR_CAPI_GL_Util_h
+#define OVR_CAPI_GL_Util_h
 
-#include "../../OVR_CAPI.h"  
-#include "../../Kernel/OVR_Array.h"
-#include "../../Kernel/OVR_Math.h"
-#include "../../Kernel/OVR_RefCount.h"
-#include "../../Kernel/OVR_String.h"
-#include "../../Kernel/OVR_Types.h"
-#include "../../Kernel/OVR_Log.h"
-
+#include "OVR_CAPI.h"  
+#include "Kernel/OVR_Array.h"
+#include "Kernel/OVR_RefCount.h"
+#include "Kernel/OVR_String.h"
+#include "Kernel/OVR_Types.h"
+#include "Kernel/OVR_Log.h"
 #if defined(OVR_OS_WIN32)
-#include <Windows.h>
+    #include "Kernel/OVR_Win32_IncludeWindows.h"
+#endif // OVR_OS_WIN32
+#include "Extras/OVR_Math.h"
+
+#if !defined(OVR_DISABLE_GLE)   // By default we use the GLE module in order to link to OpenGL functions. However, if an external user 
+#include "GL/CAPI_GLE.h"           // wants to use an alternative mechanism to connect to OpenGL functions, they can #define OVR_DISABLE_GLE.
 #endif
+
 
 #if defined(OVR_OS_MAC)
-#include <OpenGL/gl3.h>
-#include <OpenGL/gl3ext.h>
-#else
-#ifndef GL_GLEXT_PROTOTYPES
-#define GL_GLEXT_PROTOTYPES
+    #include <memory>
+    #include <CoreGraphics/CGDirectDisplay.h>
+    #include <OpenGL/CGLTypes.h>
+    class MacContextImpl;
 #endif
-#include <GL/gl.h>
-#include <GL/glext.h>
-#if defined(OVR_OS_WIN32)
-#include <GL/wglext.h>
-#elif defined(OVR_OS_LINUX)
-#include <GL/glx.h>
-#endif
-#endif
+
+
+namespace OVR
+{
+    // Get the shared LibOVR GLEContext instance.
+    class GLEContext;
+    GLEContext* GetGLEContext();
+}
 
 namespace OVR { namespace CAPI { namespace GL {
-
-// GL extension Hooks for Non-Mac.
-#if !defined(OVR_OS_MAC)
-
-// Let Windows apps build without linking GL.
-#if defined(OVR_OS_WIN32)
-
-typedef void (__stdcall *PFNGLENABLEPROC) (GLenum);
-typedef void (__stdcall *PFNGLDISABLEPROC) (GLenum);
-typedef void (__stdcall *PFNGLGETFLOATVPROC) (GLenum, GLfloat*);
-typedef const GLubyte * (__stdcall *PFNGLGETSTRINGPROC) (GLenum);
-typedef void (__stdcall *PFNGLGETINTEGERVPROC) (GLenum, GLint*);
-typedef PROC (__stdcall *PFNWGLGETPROCADDRESS) (LPCSTR);
-typedef void (__stdcall *PFNGLFLUSHPROC) ();
-typedef void (__stdcall *PFNGLFINISHPROC) ();
-typedef void (__stdcall *PFNGLDRAWARRAYSPROC) (GLenum mode, GLint first, GLsizei count);
-typedef void (__stdcall *PFNGLCLEARPROC) (GLbitfield);
-typedef void (__stdcall *PFNGLCOLORMASKPROC) (GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
-typedef void (__stdcall *PFNGLDRAWELEMENTSPROC) (GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
-typedef void (__stdcall *PFNGLGENTEXTURESPROC) (GLsizei n, GLuint *textures);
-typedef void (__stdcall *PFNGLDELETETEXTURESPROC) (GLsizei n, GLuint *textures);
-typedef void (__stdcall *PFNGLBINDTEXTUREPROC) (GLenum target, GLuint texture);
-typedef void (__stdcall *PFNGLCLEARCOLORPROC) (GLfloat r, GLfloat g, GLfloat b, GLfloat a);
-typedef void (__stdcall *PFNGLCLEARDEPTHPROC) (GLclampd depth);
-typedef void (__stdcall *PFNGLTEXPARAMETERIPROC) (GLenum target, GLenum pname, GLint param);
-typedef void (__stdcall *PFNGLVIEWPORTPROC) (GLint x, GLint y, GLsizei width, GLsizei height);
-
-extern PFNWGLGETPROCADDRESS                     wglGetProcAddress;
-extern PFNWGLGETSWAPINTERVALEXTPROC             wglGetSwapIntervalEXT;
-extern PFNWGLSWAPINTERVALEXTPROC                wglSwapIntervalEXT;
-
-extern PFNGLENABLEPROC                          glEnable;
-extern PFNGLDISABLEPROC                         glDisable;
-extern PFNGLCOLORMASKPROC                       glColorMask;
-extern PFNGLGETFLOATVPROC                       glGetFloatv;
-extern PFNGLGETSTRINGPROC                       glGetString;
-extern PFNGLGETINTEGERVPROC                     glGetIntegerv;
-extern PFNGLCLEARPROC                           glClear;
-extern PFNGLCLEARCOLORPROC                      glClearColor;
-extern PFNGLCLEARDEPTHPROC                      glClearDepth;
-extern PFNGLVIEWPORTPROC                        glViewport;
-extern PFNGLDRAWARRAYSPROC                      glDrawArrays;
-extern PFNGLDRAWELEMENTSPROC                    glDrawElements;
-extern PFNGLGENTEXTURESPROC                     glGenTextures;
-extern PFNGLDELETETEXTURESPROC                  glDeleteTextures;
-extern PFNGLBINDTEXTUREPROC                     glBindTexture;
-extern PFNGLTEXPARAMETERIPROC                   glTexParameteri;
-extern PFNGLFLUSHPROC                           glFlush;
-extern PFNGLFINISHPROC                          glFinish;
-
-#elif defined(OVR_OS_LINUX)
-
-extern PFNGLXSWAPINTERVALEXTPROC                glXSwapIntervalEXT;
-
-#endif // defined(OVR_OS_WIN32)
-
-extern PFNGLDELETESHADERPROC                    glDeleteShader;
-extern PFNGLBINDFRAMEBUFFERPROC                 glBindFramebuffer;
-extern PFNGLACTIVETEXTUREPROC                   glActiveTexture;
-extern PFNGLDISABLEVERTEXATTRIBARRAYPROC        glDisableVertexAttribArray;
-extern PFNGLVERTEXATTRIBPOINTERPROC             glVertexAttribPointer;
-extern PFNGLENABLEVERTEXATTRIBARRAYPROC         glEnableVertexAttribArray;
-extern PFNGLBINDBUFFERPROC                      glBindBuffer;
-extern PFNGLUNIFORMMATRIX4FVPROC                glUniformMatrix4fv;
-extern PFNGLDELETEBUFFERSPROC                   glDeleteBuffers;
-extern PFNGLBUFFERDATAPROC                      glBufferData;
-extern PFNGLGENBUFFERSPROC                      glGenBuffers;
-extern PFNGLMAPBUFFERPROC                       glMapBuffer;
-extern PFNGLUNMAPBUFFERPROC                     glUnmapBuffer;
-extern PFNGLGETSHADERINFOLOGPROC                glGetShaderInfoLog;
-extern PFNGLGETSHADERIVPROC                     glGetShaderiv;
-extern PFNGLCOMPILESHADERPROC                   glCompileShader;
-extern PFNGLSHADERSOURCEPROC                    glShaderSource;
-extern PFNGLCREATESHADERPROC                    glCreateShader;
-extern PFNGLCREATEPROGRAMPROC                   glCreateProgram;
-extern PFNGLATTACHSHADERPROC                    glAttachShader;
-extern PFNGLDETACHSHADERPROC                    glDetachShader;
-extern PFNGLDELETEPROGRAMPROC                   glDeleteProgram;
-extern PFNGLUNIFORM1IPROC                       glUniform1i;
-extern PFNGLGETUNIFORMLOCATIONPROC              glGetUniformLocation;
-extern PFNGLGETACTIVEUNIFORMPROC                glGetActiveUniform;
-extern PFNGLUSEPROGRAMPROC                      glUseProgram;
-extern PFNGLGETPROGRAMINFOLOGPROC               glGetProgramInfoLog;
-extern PFNGLGETPROGRAMIVPROC                    glGetProgramiv;
-extern PFNGLLINKPROGRAMPROC                     glLinkProgram;
-extern PFNGLBINDATTRIBLOCATIONPROC              glBindAttribLocation;
-extern PFNGLGETATTRIBLOCATIONPROC               glGetAttribLocation;
-extern PFNGLUNIFORM4FVPROC                      glUniform4fv;
-extern PFNGLUNIFORM3FVPROC                      glUniform3fv;
-extern PFNGLUNIFORM2FVPROC                      glUniform2fv;
-extern PFNGLUNIFORM1FVPROC                      glUniform1fv;
-extern PFNGLGENVERTEXARRAYSPROC                 glGenVertexArrays;
-extern PFNGLDELETEVERTEXARRAYSPROC              glDeleteVertexArrays;
-extern PFNGLBINDVERTEXARRAYPROC                 glBindVertexArray;
-
-extern void InitGLExtensions();
-
-#endif // !defined(OVR_OS_MAC)
+void InitGLExtensions();
 
 
 // Rendering primitive type used to render Model.
@@ -223,12 +132,12 @@ struct RenderParams
 {
 #if defined(OVR_OS_WIN32)
     HWND   Window;
+    HDC    DC;
 #elif defined(OVR_OS_LINUX)
-    Display* Disp;
-    Window   Win;
+    struct _XDisplay* Disp;
 #endif
 
-    ovrSizei  RTSize;
+    ovrSizei    BackBufferSize;
     int    Multisample;
 };
 
@@ -314,6 +223,8 @@ protected:
         String Name;
         int    Location, Size;
         int    Type; // currently number of floats in vector
+
+        Uniform() : Name(), Location(0), Size(0), Type(0){}
     };
     Array<Uniform> UniformInfo;
 	
@@ -376,6 +287,14 @@ public:
         Matrix4f mt = m.Transposed();
         return SetUniform(name, 16, &mt.M[0][0]);
     }
+
+    virtual bool SetUniform3x3f(const char* name, const Matrix4f& m)
+    {
+        Matrix4f mt = m.Transposed();
+        // float3x3 is actually stored the same way as float4x3, with the last items ignored by the code.
+        return SetUniform(name, 12, &mt.M[0][0]);
+    }
+
 
 protected:
 	GLint GetGLShader(Shader* s);
@@ -456,17 +375,33 @@ public:
 	struct Uniform
 	{
 		const char* Name;
-		VarType Type;
-		int     Offset, Size;
+		VarType     Type;
+        int         Offset;
+        int         Size;
 	};
-    const Uniform* UniformRefl;
-    size_t UniformReflSize;
 
-	ShaderBase(RenderParams* rp, ShaderStage stage) : Shader(stage), pParams(rp), UniformData(0), UniformsSize(0) {}
+    const Uniform*  UniformRefl;
+    size_t          UniformReflSize;
+
+	ShaderBase(RenderParams* rp, ShaderStage stage) :
+        Shader(stage),
+        pParams(rp),
+        UniformData(NULL),
+        UniformsSize(0),
+        UniformRefl(NULL),
+        UniformReflSize(0)
+    {
+    }
 	~ShaderBase()
 	{
-		if (UniformData)    
-			OVR_FREE(UniformData);
+        if (UniformData)
+        {
+            OVR_FREE(UniformData);
+            UniformData = NULL;
+        }
+
+        // Do not need to free UniformRefl
+        UniformRefl = NULL;
 	}
 
     void InitUniforms(const Uniform* refl, size_t reflSize);
@@ -489,6 +424,7 @@ public:
         OVR_UNUSED(size);
         success = Compile((const char*) s);
         OVR_ASSERT(success);
+        OVR_UNUSED(success);
 		InitUniforms(refl, reflSize);
     }
     ~ShaderImpl()
@@ -532,6 +468,87 @@ private:
 typedef ShaderImpl<Shader_Vertex,  GL_VERTEX_SHADER> VertexShader;
 typedef ShaderImpl<Shader_Fragment, GL_FRAGMENT_SHADER> FragmentShader;
 
-}}}
 
-#endif // INC_OVR_CAPI_GL_Util_h
+
+// Allows us to have independent OpenGL contexts for our systems.
+class Context
+{
+    bool                initialized;
+    bool                ownsContext;
+    int                 incarnation;
+#if defined(OVR_OS_WIN32)
+    HDC                 hdc;
+    HGLRC               systemContext;
+#elif defined(OVR_OS_LINUX)
+    Display            *x11Display;
+    GLXDrawable         x11Drawable;
+    GLXContext          systemContext;
+    XVisualInfo         x11Visual;
+#elif defined(OVR_OS_MAC)
+    std::unique_ptr<MacContextImpl>    systemContext;
+#endif
+
+public:
+
+    Context();
+    ~Context();
+    void InitFromCurrent();
+    void CreateShared( Context & ctx );
+#if defined(OVR_OS_MAC)
+    void SetSurface( Context & ctx );
+#endif
+    void Destroy();
+    void Bind();
+    void Unbind();
+    int  GetIncarnation() const { return incarnation; }
+
+};
+
+
+// AutoContext
+//
+// Implements a common sequence of function calls with the Context class.
+// See the AutoContext constructor below for what it does. 
+//
+// Example usage:
+//     void SomeClass::Draw()
+//     {
+//         AutoContext autoContext(someClassContext);
+//
+//         <draw calls>
+//     }
+
+struct AutoContext
+{
+    Context  savedCurrentContext;
+    Context& ourContext;
+
+    AutoContext(Context& context) :
+        savedCurrentContext(), ourContext(context)
+    {
+        // We use a member savedCurrentContext which is initialized here, as opposed to having the user pass in a 
+        // pre-existing Context (which the user could declare as a global or C++ member variable). We have to do this
+        // because if we were to use some pre-existing Context the app might delete its underlying GL context behind our back
+        // or associate it with another thread, which would cause our bind of it in our dtor to be a bad operation.
+        savedCurrentContext.InitFromCurrent();
+        if(ourContext.GetIncarnation() == 0) // If not yet initialized...
+            ourContext.CreateShared(savedCurrentContext);
+        ourContext.Bind();
+        #if defined(OVR_OS_MAC) // To consider: merge the following into the Bind function.
+            ourContext.SetSurface(savedCurrentContext);
+        #endif
+    }
+
+   ~AutoContext()
+    {
+        savedCurrentContext.Bind();
+    }
+
+    OVR_NON_COPYABLE(AutoContext)
+};
+
+
+}}} // namespace OVR::CAPI::GL
+
+
+#endif // OVR_CAPI_GL_Util_h

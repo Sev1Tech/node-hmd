@@ -5,16 +5,16 @@ Content     :   State associated with a single HMD
 Created     :   January 24, 2014
 Authors     :   Michael Antonov
 
-Copyright   :   Copyright 2014 Oculus VR, Inc. All Rights reserved.
+Copyright   :   Copyright 2014 Oculus VR, LLC All Rights reserved.
 
-Licensed under the Oculus VR Rift SDK License Version 3.1 (the "License"); 
+Licensed under the Oculus VR Rift SDK License Version 3.2 (the "License"); 
 you may not use the Oculus VR Rift SDK except in compliance with the License, 
 which is provided at the time of installation or download, or which 
 otherwise accompanies this software in either electronic or hard copy form.
 
 You may obtain a copy of the License at
 
-http://www.oculusvr.com/licenses/LICENSE-3.1 
+http://www.oculusvr.com/licenses/LICENSE-3.2 
 
 Unless required by applicable law or agreed to in writing, the Oculus VR SDK 
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,32 +27,31 @@ limitations under the License.
 #ifndef OVR_CAPI_HMDState_h
 #define OVR_CAPI_HMDState_h
 
-#include "../Kernel/OVR_Math.h"
-#include "../Kernel/OVR_List.h"
-#include "../Kernel/OVR_Log.h"
-#include "../OVR_CAPI.h"
-#include "../OVR_SensorFusion.h"
-#include "../Util/Util_LatencyTest.h"
-#include "../Util/Util_LatencyTest2.h"
+#include "Extras/OVR_Math.h"
+#include "Kernel/OVR_List.h"
+#include "Kernel/OVR_Log.h"
+#include "OVR_CAPI.h"
 
-#include "CAPI_FrameTimeManager.h"
+#include "CAPI_FrameTimeManager3.h"
+#include "CAPI_FrameLatencyTracker.h"
+
 #include "CAPI_HMDRenderState.h"
 #include "CAPI_DistortionRenderer.h"
+#include "CAPI_HSWDisplay.h"
 
-// Define OVR_CAPI_VISIONSUPPORT to compile in vision support 
-#ifdef OVR_CAPI_VISIONSUPPORT
-    #define OVR_CAPI_VISION_CODE(c) c
-    #include "../Vision/Vision_PoseTracker.h"
-#else
-    #define OVR_CAPI_VISION_CODE(c)
-#endif
+#include "Service/Service_NetClient.h"
+#include "Net/OVR_NetworkTypes.h"
+#include "Util/Util_LatencyTest2Reader.h"
 
 
 struct ovrHmdStruct { };
 
 namespace OVR { namespace CAPI {
 
+
 using namespace OVR::Util::Render;
+using namespace OVR::Service;
+using namespace OVR::Net;
 
 
 //-------------------------------------------------------------------------------------
@@ -104,7 +103,7 @@ public:
         FirstThread   = 0;
     }
 
-    // Add thread-re-entrancy check for function scope.
+    // Add thread-reentrancy check for function scope.
     struct Scope
     {
         Scope(ThreadChecker* threadChecker, const char *functionName) : pChecker(threadChecker)
@@ -131,61 +130,54 @@ private:
 class HMDState : public ListNode<HMDState>,
                  public ovrHmdStruct, public NewOverrideBase 
 {
-public:   
+    void operator=(const HMDState&) { } // Quiet warning.
 
-    HMDState(HMDDevice* device);
-    HMDState(ovrHmdType hmdType);
+protected:   
+    HMDState(HMDInfo const & hmdInfo,
+             Profile* profile,
+             Service::HMDNetworkInfo const * netInfo = nullptr,
+             Service::NetClient* client = nullptr);
+
+public:   
     virtual ~HMDState();
 
+    static HMDState* CreateHMDState(Service::NetClient* client, const HMDNetworkInfo& netInfo);
+    static HMDState* CreateDebugHMDState(ovrHmdType hmdType); // Used for debug mode
+
+    // Call the optional provided callback for each open HMD, stopping when the callback returns false.
+    // Return a count of the enumerated HMDStates. Note that this may deadlock if ovrHmd_Create/Destroy
+    // are called from the callback.
+    static unsigned EnumerateHMDStateList(bool (*callback)(const HMDState *state));
+
+    bool InitializeSharedState();
 
     // *** Sensor Setup
 
-    bool            StartSensor(unsigned supportedCaps, unsigned requiredCaps);
-    void            StopSensor();
-    void            ResetSensor();
-    ovrSensorState  PredictedSensorState(double absTime);
-    bool            GetSensorDesc(ovrSensorDesc* descOut);
+    bool            ConfigureTracking(unsigned supportedCaps, unsigned requiredCaps);    
+    void            ResetTracking(bool visionReset);
+    void            RecenterPose();
+    ovrTrackingState PredictedTrackingState(double absTime, void* unused = nullptr);
 
     // Changes HMD Caps.
     // Capability bits that are not directly or logically tied to one system (such as sensor)
     // are grouped here. ovrHmdCap_VSync, for example, affects rendering and timing.
     void            SetEnabledHmdCaps(unsigned caps);
-
+    unsigned        SetEnabledHmdCaps();
 
     bool            ProcessLatencyTest(unsigned char rgbColorOut[3]);
-    void            ProcessLatencyTest2(unsigned char rgbColorOut[3], double startTime);
-    
 
     // *** Rendering Setup
-
-    bool       ConfigureRendering(ovrEyeRenderDesc eyeRenderDescOut[2],
-                                  const ovrFovPort eyeFovIn[2],
-                                  const ovrRenderAPIConfig* apiConfig,                                  
-                                  unsigned distortionCaps);  
+    bool        ConfigureRendering(ovrEyeRenderDesc eyeRenderDescOut[2],
+                                   const ovrFovPort eyeFovIn[2],
+                                   const ovrRenderAPIConfig* apiConfig,                                  
+                                   unsigned distortionCaps);  
     
-    ovrPosef    BeginEyeRender(ovrEyeType eye);
-    void        EndEyeRender(ovrEyeType eye, ovrPosef renderPose, ovrTexture* eyeTexture);
+    void        UpdateRenderProfile(Profile* profile);
 
 
-    const char* GetLastError()
-    {
-        const char* p = pLastError;
-        pLastError = 0;
-        return p;
-    }    
-
-    void NotifyAddDevice(DeviceType deviceType)
-    {
-        if (deviceType == Device_Sensor)
-            AddSensorCount++;
-        else if (deviceType == Device_LatencyTester)
-        {
-            AddLatencyTestCount++;
-            AddLatencyTestDisplayCount++;
-        }
-    }
-
-    bool checkCreateSensor();
+    void        SubmitEyeTextures(const ovrPosef renderPose[2],
+                                  const ovrTexture eyeTexture[2],
+                                  const ovrTexture eyeDepthTexture[2]);
 
     void applyProfileToSensorFusion();
 
@@ -197,7 +189,7 @@ public:
         OVR_UNUSED1(functionName); // for Release build.
         OVR_ASSERT_LOG(BeginFrameCalled == true,
                        ("%s called outside ovrHmd_BeginFrame.", functionName));
-        OVR_ASSERT_LOG(BeginFrameThreadId == OVR::GetCurrentThreadId(),
+        OVR_DEBUG_LOG_COND(BeginFrameThreadId != OVR::GetCurrentThreadId(),
                        ("%s called on a different thread then ovrHmd_BeginFrame.", functionName));
     }
 
@@ -215,133 +207,112 @@ public:
                        ("%s called outside ovrHmd_BeginFrameTiming.", functionName));
     }
 
-
-    HMDState* getThis() { return this; }
-
-    void updateLowPersistenceMode(bool lowPersistence) const;
-	void updateLatencyTestForHmd(bool latencyTesting);
-
-    void updateDK2FeaturesTiedToSensor(bool sensorCreatedJustNow);
-    
-	// Get properties by name.
-	float    getFloatValue(const char* propertyName, float defaultVal);
+    // Get properties by name.
+    bool     getBoolValue(const char* propertyName, bool defaultVal);
+    bool     setBoolValue(const char* propertyName, bool value);
+    int      getIntValue(const char* propertyName, int defaultVal);
+    bool     setIntValue(const char* propertyName, int value);
+    float    getFloatValue(const char* propertyName, float defaultVal);
     bool     setFloatValue(const char* propertyName, float value);
-	unsigned getFloatArray(const char* propertyName, float values[], unsigned arraySize);
+    unsigned getFloatArray(const char* propertyName, float values[], unsigned arraySize);
     bool     setFloatArray(const char* propertyName, float values[], unsigned arraySize);
-	const char* getString(const char* propertyName, const char* defaultVal);
+    const char* getString(const char* propertyName, const char* defaultVal);
+    bool        setString(const char* propertyName, const char* value);
+
+    VirtualHmdId GetNetId() { return NetId; }
+
 public:
-    
-    // Wrapper to support 'const'
-    struct HMDInfoWrapper
-    {
-        HMDInfoWrapper(ovrHmdType hmdType)
-        {
-            HmdTypeEnum t = HmdType_None;
-            if (hmdType == ovrHmd_DK1)
-                t = HmdType_DK1;
-            else if (hmdType == ovrHmd_CrystalCoveProto)
-                t = HmdType_CrystalCoveProto;
-            else if (hmdType == ovrHmd_DK2)
-                t = HmdType_DK2;
-            h = CreateDebugHMDInfo(t);
-        }
-        HMDInfoWrapper(HMDDevice* device) { if (device) device->GetDeviceInfo(&h); }
-        OVR::HMDInfo h;
-    };
+    // Distortion mesh creation
+    bool    CreateDistortionMesh(ovrEyeType eyeType, ovrFovPort fov,
+                                 unsigned int distortionCaps,
+                                 ovrDistortionMesh *meshData,
+                                 float overrideEyeReliefIfNonZero);
 
-    // Note: pHMD can be null if we are representing a virtualized debug HMD.
-    Ptr<HMDDevice>          pHMD;
+    AppTiming        GetAppTiming(uint32_t frameIndex);
+    ovrFrameTiming   GetFrameTiming(uint32_t frameIndex);
+    ovrTrackingState GetMidpointPredictionTracking(uint32_t frameIndex);
+    Posef            GetEyePredictionPose(ovrEyeType eye);
 
-    // HMDInfo shouldn't change, as its string pointers are passed out.
-    const HMDInfoWrapper    HMDInfoW;
-    const OVR::HMDInfo&     HMDInfo;
+    void    GetTimewarpMatricesEx(ovrEyeType eye, ovrPosef renderPose,
+                                  bool usePosition, const ovrVector3f hmdToEyeViewOffset[2], ovrMatrix4f twmOut[2], 
+                                  double debugTimingOffsetInSeconds = 0.0);
+    void    GetTimewarpMatrices(ovrEyeType eyeId, ovrPosef renderPose,
+                                ovrMatrix4f twmOut[2]);
+
+    // Render timing
+    void getTimewarpStartEnd(ovrEyeType eyeId, double timewarpStartEnd[2]);
+    void endFrameRenderTiming();
+
+    DistortionTimer         TimewarpTimer;         // Timing for timewarp rendering
+    AppRenderTimer          RenderTimer;           // Timing for eye rendering
+    AppTimingHistory        TimingHistory;         // History of predicted scanout times
+    double                  RenderIMUTimeSeconds;  // IMU Read timings
+
+public:
+    Ptr<Profile>            pProfile;
+    // Descriptor that gets allocated and returned to the user as ovrHmd.
+    ovrHmdDesc*             pHmdDesc;
+    // Window handle passed in AttachWindow.
+    void*                   pWindow;
+
+    // Network
+    Service::NetClient*     pClient;
+    VirtualHmdId            NetId;
+    HMDNetworkInfo          NetInfo;
+
+    // HMDInfo shouldn't change, as its string pointers are passed out.    
+    HMDInfo                 OurHMDInfo;
 
     const char*             pLastError;
 
     // Caps enabled for the HMD.
     unsigned                EnabledHmdCaps;
+    
+    // Caps actually sent to the Sensor Service
+    unsigned                EnabledServiceHmdCaps;
+    
     // These are the flags actually applied to the Sensor device,
     // used to track whether SetDisplayReport calls are necessary.
-    unsigned                HmdCapsAppliedToSensor;
-
+    //unsigned                HmdCapsAppliedToSensor;
     
     // *** Sensor
+    SharedObjectReader<Vision::CombinedHmdUpdater> CombinedHmdReader;
+    SharedObjectReader<Vision::CameraStateUpdater> CameraReader;
 
-    // Lock used to support thread-safe lifetime access to sensor.
-    Lock                    DevicesLock;
 
-    // Atomic integer used as a flag that we should check the sensor device.
-    AtomicInt<int>          AddSensorCount;    
-
-    // All of Sensor variables may be modified/used with DevicesLock, with exception that
-    // the {SensorStarted, SensorCreated} can be read outside the lock to see
-    // if device creation check is necessary.
-    // Whether we called StartSensor() and requested sensor caps.    
-    volatile bool           SensorStarted;
-    volatile bool           SensorCreated;
-    // pSensor may still be null or non-running after start if it wasn't yet available
-    Ptr<SensorDevice>       pSensor;	// Head
-    unsigned                SensorCaps;    
-
-    // SensorFusion state may be accessible without a lock.
-    SensorFusion            SFusion;
-
-    
-    // Vision pose tracker is currently new-allocated
-    OVR_CAPI_VISION_CODE(
-    Vision::PoseTracker*    pPoseTracker;
-    )
-    
-    // Latency tester
-    Ptr<LatencyTestDevice>  pLatencyTester;
-    Util::LatencyTest	    LatencyUtil;
-    AtomicInt<int>          AddLatencyTestCount;
+    Vision::TrackingStateReader       TheTrackingStateReader;
+    Util::RecordStateReader           TheLatencyTestStateReader;
 
     bool                    LatencyTestActive;
     unsigned char           LatencyTestDrawColor[3];
 
-    // Using latency tester as debug display
-    Ptr<LatencyTestDevice>  pLatencyTesterDisplay;
-    AtomicInt<int>          AddLatencyTestDisplayCount;
-    Util::LatencyTest2	    LatencyUtil2;
-
     bool                    LatencyTest2Active;
     unsigned char           LatencyTest2DrawColor[3];
-    //bool                    ReadbackColor;
 
     // Rendering part
-    FrameTimeManager        TimeManager;
+    FrameLatencyTracker     ScreenLatencyTracker;
     HMDRenderState          RenderState;
     Ptr<DistortionRenderer> pRenderer;
-       
-    // Last timing value reported by BeginFrame.
-    double                  LastFrameTimeSeconds;    
-    // Last timing value reported by GetFrameTime. These are separate since the intended
-    // use is from different threads. TBD: Move to FrameTimeManager? Make atomic?
-    double                  LastGetFrameTimeSeconds;
+
+    // Health and Safety Warning display.
+    Ptr<HSWDisplay>         pHSWDisplay;
 
     // Last cached value returned by ovrHmd_GetString/ovrHmd_GetStringArray.
     char                    LastGetStringValue[256];
    
-
     // Debug flag set after ovrHmd_ConfigureRendering succeeds.
     bool                    RenderingConfigured;
     // Set after BeginFrame succeeds, and its corresponding thread id for debug checks.
     bool                    BeginFrameCalled;
-    ThreadId                BeginFrameThreadId;    
+    ThreadId                BeginFrameThreadId;
+    uint32_t                BeginFrameIndex;
     // Graphics functions are not re-entrant from other threads.
     ThreadChecker           RenderAPIThreadChecker;
-    // 
+    // Has BeginFrameTiming() or BeginFrame() been called?
     bool                    BeginFrameTimingCalled;
-    
-    // Flags set when we've called BeginEyeRender on a given eye.
-    bool                    EyeRenderActive[2];
 };
 
 
 }} // namespace OVR::CAPI
 
-
 #endif // OVR_CAPI_HMDState_h
-
-

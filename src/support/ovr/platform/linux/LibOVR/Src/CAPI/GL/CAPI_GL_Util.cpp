@@ -1,19 +1,22 @@
 /************************************************************************************
 
-Filename    :   Render_GL_Device.cpp
+Filename    :   CAPI_GL_Util.cpp
 Content     :   RenderDevice implementation for OpenGL
 Created     :   September 10, 2012
 Authors     :   David Borel, Andrew Reisse
 
-Copyright   :   Copyright 2012 Oculus VR, Inc. All Rights reserved.
+Copyright   :   Copyright 2014 Oculus VR, LLC All Rights reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
+Licensed under the Oculus VR Rift SDK License Version 3.2 (the "License");
+you may not use the Oculus VR Rift SDK except in compliance with the License,
+which is provided at the time of installation or download, or which
+otherwise accompanies this software in either electronic or hard copy form.
+
 You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+http://www.oculusvr.com/licenses/LICENSE-3.2
 
-Unless required by applicable law or agreed to in writing, software
+Unless required by applicable law or agreed to in writing, the Oculus VR SDK
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
@@ -22,185 +25,82 @@ limitations under the License.
 ************************************************************************************/
 
 #include "CAPI_GL_Util.h"
-#include "../../Kernel/OVR_Log.h"
+#include "Kernel/OVR_Log.h"
 #include <string.h>
 
-namespace OVR { namespace CAPI { namespace GL {
-
-
-
-// GL Hooks for non-Mac.
-#if !defined(OVR_OS_MAC)
-
-#if defined(OVR_OS_WIN32)
-
-PFNWGLGETPROCADDRESS                     wglGetProcAddress;
-
-PFNGLENABLEPROC                          glEnable;
-PFNGLDISABLEPROC                         glDisable;
-PFNGLGETFLOATVPROC                       glGetFloatv;
-PFNGLGETINTEGERVPROC                     glGetIntegerv;
-PFNGLGETSTRINGPROC                       glGetString;
-PFNGLCOLORMASKPROC                       glColorMask;
-PFNGLCLEARPROC                           glClear;
-PFNGLCLEARCOLORPROC                      glClearColor;
-PFNGLCLEARDEPTHPROC                      glClearDepth;
-PFNGLVIEWPORTPROC                        glViewport;
-PFNGLDRAWELEMENTSPROC                    glDrawElements;
-PFNGLTEXPARAMETERIPROC                   glTexParameteri;
-PFNGLFLUSHPROC                           glFlush;
-PFNGLFINISHPROC                          glFinish;
-PFNGLDRAWARRAYSPROC                      glDrawArrays;
-PFNGLGENTEXTURESPROC                     glGenTextures;
-PFNGLDELETETEXTURESPROC                  glDeleteTextures;
-PFNGLBINDTEXTUREPROC                     glBindTexture;
-
-PFNWGLGETSWAPINTERVALEXTPROC             wglGetSwapIntervalEXT;
-PFNWGLSWAPINTERVALEXTPROC                wglSwapIntervalEXT;
-
-#elif defined(OVR_OS_LINUX)
-
-PFNGLXSWAPINTERVALEXTPROC                glXSwapIntervalEXT;
-
+#if defined(OVR_OS_LINUX)
+ #include "Displays/OVR_Linux_SDKWindow.h"
 #endif
 
-PFNGLDELETESHADERPROC                    glDeleteShader;
-PFNGLBINDFRAMEBUFFERPROC                 glBindFramebuffer;
-PFNGLACTIVETEXTUREPROC                   glActiveTexture;
-PFNGLDISABLEVERTEXATTRIBARRAYPROC        glDisableVertexAttribArray;
-PFNGLVERTEXATTRIBPOINTERPROC             glVertexAttribPointer;
-PFNGLENABLEVERTEXATTRIBARRAYPROC         glEnableVertexAttribArray;
-PFNGLBINDBUFFERPROC                      glBindBuffer;
-PFNGLUNIFORMMATRIX3FVPROC                glUniformMatrix3fv;
-PFNGLUNIFORMMATRIX4FVPROC                glUniformMatrix4fv;
-PFNGLDELETEBUFFERSPROC                   glDeleteBuffers;
-PFNGLBUFFERDATAPROC                      glBufferData;
-PFNGLGENBUFFERSPROC                      glGenBuffers;
-PFNGLMAPBUFFERPROC                       glMapBuffer;
-PFNGLUNMAPBUFFERPROC                     glUnmapBuffer;
-PFNGLGETSHADERINFOLOGPROC                glGetShaderInfoLog;
-PFNGLGETSHADERIVPROC                     glGetShaderiv;
-PFNGLCOMPILESHADERPROC                   glCompileShader;
-PFNGLSHADERSOURCEPROC                    glShaderSource;
-PFNGLCREATESHADERPROC                    glCreateShader;
-PFNGLCREATEPROGRAMPROC                   glCreateProgram;
-PFNGLATTACHSHADERPROC                    glAttachShader;
-PFNGLDETACHSHADERPROC                    glDetachShader;
-PFNGLDELETEPROGRAMPROC                   glDeleteProgram;
-PFNGLUNIFORM1IPROC                       glUniform1i;
-PFNGLGETUNIFORMLOCATIONPROC              glGetUniformLocation;
-PFNGLGETACTIVEUNIFORMPROC                glGetActiveUniform;
-PFNGLUSEPROGRAMPROC                      glUseProgram;
-PFNGLGETPROGRAMINFOLOGPROC               glGetProgramInfoLog;
-PFNGLGETPROGRAMIVPROC                    glGetProgramiv;
-PFNGLLINKPROGRAMPROC                     glLinkProgram;
-PFNGLBINDATTRIBLOCATIONPROC              glBindAttribLocation;
-PFNGLGETATTRIBLOCATIONPROC               glGetAttribLocation;
-PFNGLUNIFORM4FVPROC                      glUniform4fv;
-PFNGLUNIFORM3FVPROC                      glUniform3fv;
-PFNGLUNIFORM2FVPROC                      glUniform2fv;
-PFNGLUNIFORM1FVPROC                      glUniform1fv;
-PFNGLGENVERTEXARRAYSPROC                 glGenVertexArrays;
-PFNGLDELETEVERTEXARRAYSPROC              glDeleteVertexArrays;
-PFNGLBINDVERTEXARRAYPROC                 glBindVertexArray;
+#if defined(OVR_OS_MAC)
+    #include <CoreGraphics/CGDirectDisplay.h>
+    #include <OpenGL/OpenGL.h>
+    #import <Cocoa/Cocoa.h>
 
+    // Hides Objective C NSOpenGLContext.
+    class MacContextImpl
+    {
+    public:
+        MacContextImpl(NSOpenGLContext* ctxIn, NSOpenGLPixelFormat* fmt) :
+            ctx(ctxIn),
+            pixelFormat(fmt)
+        { }
+        MacContextImpl(NSOpenGLContext* ctxIn) :
+          MacContextImpl(ctxIn, nil)
+        { }
 
-#if defined(OVR_OS_WIN32)
-
-void* GetFunction(const char* functionName)
-{
-    return wglGetProcAddress(functionName);
-}
-
-#else
-
-void (*GetFunction(const char *functionName))( void )
-{
-    return glXGetProcAddress((GLubyte*)functionName);
-}
-
+        ~MacContextImpl()
+        {
+#if !__has_feature(objc_arc)
+            if (pixelFormat != nil)
+            {
+                [pixelFormat release];
+                pixelFormat = nil;
+            }
+            [ctx release];
+            ctx = nil;
 #endif
+        }
+        // ARC will properly clean up NSOpenGLContext and NSOpenGLPixelFormat.
+        NSOpenGLPixelFormat* pixelFormat;
+        NSOpenGLContext*     ctx;
+    };
+
+typedef void *CGSConnectionID;
+typedef int32_t CGSWindowID;
+typedef int32_t CGSSurfaceID;
+
+extern "C" CGLError CGLGetSurface(CGLContextObj ctx, CGSConnectionID *cid, CGSWindowID *wid, CGSSurfaceID *sid);
+extern "C" CGLError CGLSetSurface(CGLContextObj ctx, CGSConnectionID cid, CGSWindowID wid, CGSSurfaceID sid);
+#endif
+
+
+
+
+namespace OVR {
+
+
+OVR::GLEContext gleContext;
+
+
+OVR::GLEContext* GetGLEContext()
+{
+    return &gleContext;
+}
+
+
+namespace CAPI { namespace GL {
+
 
 void InitGLExtensions()
 {
-    if (glGenVertexArrays)
-        return;
-
-#if defined(OVR_OS_WIN32)
-	HINSTANCE hInst = LoadLibrary(L"Opengl32.dll");
-	if (!hInst)
-		return;
-
-	glGetFloatv =                       (PFNGLGETFLOATVPROC)                       GetProcAddress(hInst, "glGetFloatv");
-	glGetIntegerv =                     (PFNGLGETINTEGERVPROC)                     GetProcAddress(hInst, "glGetIntegerv");
-	glGetString =                       (PFNGLGETSTRINGPROC)                       GetProcAddress(hInst, "glGetString");
-	glEnable =                          (PFNGLENABLEPROC)                          GetProcAddress(hInst, "glEnable");
-	glDisable =                         (PFNGLDISABLEPROC)                         GetProcAddress(hInst, "glDisable");
-	glColorMask =                       (PFNGLCOLORMASKPROC)                       GetProcAddress(hInst, "glColorMask");
-	glClear =                           (PFNGLCLEARPROC)                           GetProcAddress(hInst, "glClear" );
-	glClearColor =                      (PFNGLCLEARCOLORPROC)                      GetProcAddress(hInst, "glClearColor");
-	glClearDepth =                      (PFNGLCLEARDEPTHPROC)                      GetProcAddress(hInst, "glClearDepth");
-	glViewport =                        (PFNGLVIEWPORTPROC)                        GetProcAddress(hInst, "glViewport");
-	glFlush =                           (PFNGLFLUSHPROC)                           GetProcAddress(hInst, "glFlush");
-	glFinish =                          (PFNGLFINISHPROC)                          GetProcAddress(hInst, "glFinish");
-    glDrawArrays =                      (PFNGLDRAWARRAYSPROC)                      GetProcAddress(hInst, "glDrawArrays");
-	glDrawElements =                    (PFNGLDRAWELEMENTSPROC)                    GetProcAddress(hInst, "glDrawElements");
-    glGenTextures =                     (PFNGLGENTEXTURESPROC)                     GetProcAddress(hInst,"glGenTextures");
-    glDeleteTextures =                  (PFNGLDELETETEXTURESPROC)                  GetProcAddress(hInst,"glDeleteTextures");
-    glBindTexture =                     (PFNGLBINDTEXTUREPROC)                     GetProcAddress(hInst,"glBindTexture");
-	glTexParameteri =                   (PFNGLTEXPARAMETERIPROC)                   GetProcAddress(hInst, "glTexParameteri");
-
-    wglGetProcAddress =                 (PFNWGLGETPROCADDRESS)                     GetProcAddress(hInst, "wglGetProcAddress");
-
-    wglGetSwapIntervalEXT =             (PFNWGLGETSWAPINTERVALEXTPROC)             GetFunction("wglGetSwapIntervalEXT");
-    wglSwapIntervalEXT =                (PFNWGLSWAPINTERVALEXTPROC)                GetFunction("wglSwapIntervalEXT");
-#elif defined(OVR_OS_LINUX)
-    glXSwapIntervalEXT =                (PFNGLXSWAPINTERVALEXTPROC)                GetFunction("glXSwapIntervalEXT");
-#endif
-
-    glBindFramebuffer =                 (PFNGLBINDFRAMEBUFFERPROC)                 GetFunction("glBindFramebufferEXT");
-    glGenVertexArrays =                 (PFNGLGENVERTEXARRAYSPROC)                 GetFunction("glGenVertexArrays");
-    glDeleteVertexArrays =              (PFNGLDELETEVERTEXARRAYSPROC)              GetFunction("glDeleteVertexArrays");
-    glBindVertexArray =                 (PFNGLBINDVERTEXARRAYPROC)                 GetFunction("glBindVertexArray");
-    glGenBuffers =                      (PFNGLGENBUFFERSPROC)                      GetFunction("glGenBuffers");
-    glDeleteBuffers =                   (PFNGLDELETEBUFFERSPROC)                   GetFunction("glDeleteBuffers");
-    glBindBuffer =                      (PFNGLBINDBUFFERPROC)                      GetFunction("glBindBuffer");	
-    glBufferData =                      (PFNGLBUFFERDATAPROC)                      GetFunction("glBufferData");
-    glMapBuffer =                       (PFNGLMAPBUFFERPROC)                       GetFunction("glMapBuffer");
-    glUnmapBuffer =                     (PFNGLUNMAPBUFFERPROC)                     GetFunction("glUnmapBuffer");
-    glDisableVertexAttribArray =        (PFNGLDISABLEVERTEXATTRIBARRAYPROC)        GetFunction("glDisableVertexAttribArray");
-    glVertexAttribPointer =             (PFNGLVERTEXATTRIBPOINTERPROC)             GetFunction("glVertexAttribPointer");
-    glEnableVertexAttribArray =         (PFNGLENABLEVERTEXATTRIBARRAYPROC)         GetFunction("glEnableVertexAttribArray");
-    glActiveTexture =                   (PFNGLACTIVETEXTUREPROC)                   GetFunction("glActiveTexture");
-    glUniformMatrix3fv =                (PFNGLUNIFORMMATRIX3FVPROC)                GetFunction("glUniformMatrix3fv");
-    glUniformMatrix4fv =                (PFNGLUNIFORMMATRIX4FVPROC)                GetFunction("glUniformMatrix4fv");
-    glUniform1i =                       (PFNGLUNIFORM1IPROC)                       GetFunction("glUniform1i");
-    glUniform1fv =                      (PFNGLUNIFORM1FVPROC)                      GetFunction("glUniform1fv");
-    glUniform2fv =                      (PFNGLUNIFORM2FVPROC)                      GetFunction("glUniform2fv");
-    glUniform3fv =                      (PFNGLUNIFORM3FVPROC)                      GetFunction("glUniform3fv");
-    glUniform2fv =                      (PFNGLUNIFORM2FVPROC)                      GetFunction("glUniform2fv");
-    glUniform4fv =                      (PFNGLUNIFORM4FVPROC)                      GetFunction("glUniform4fv");
-    glGetUniformLocation =              (PFNGLGETUNIFORMLOCATIONPROC)              GetFunction("glGetUniformLocation");
-    glGetActiveUniform =                (PFNGLGETACTIVEUNIFORMPROC)                GetFunction("glGetActiveUniform");
-    glGetShaderInfoLog =                (PFNGLGETSHADERINFOLOGPROC)                GetFunction("glGetShaderInfoLog");
-    glGetShaderiv =                     (PFNGLGETSHADERIVPROC)                     GetFunction("glGetShaderiv");
-    glCompileShader =                   (PFNGLCOMPILESHADERPROC)                   GetFunction("glCompileShader");
-    glShaderSource =                    (PFNGLSHADERSOURCEPROC)                    GetFunction("glShaderSource");
-    glCreateShader =                    (PFNGLCREATESHADERPROC)                    GetFunction("glCreateShader");
-    glDeleteShader =                    (PFNGLDELETESHADERPROC)                    GetFunction("glDeleteShader");
-    glCreateProgram =                   (PFNGLCREATEPROGRAMPROC)                   GetFunction("glCreateProgram");
-    glDeleteProgram =                   (PFNGLDELETEPROGRAMPROC)                   GetFunction("glDeleteProgram");
-    glUseProgram =                      (PFNGLUSEPROGRAMPROC)                      GetFunction("glUseProgram");
-    glGetProgramInfoLog =               (PFNGLGETPROGRAMINFOLOGPROC)               GetFunction("glGetProgramInfoLog");
-    glGetProgramiv =                    (PFNGLGETPROGRAMIVPROC)                    GetFunction("glGetProgramiv");
-    glLinkProgram =                     (PFNGLLINKPROGRAMPROC)                     GetFunction("glLinkProgram");
-    glAttachShader =                    (PFNGLATTACHSHADERPROC)                    GetFunction("glAttachShader");
-    glDetachShader =                    (PFNGLDETACHSHADERPROC)                    GetFunction("glDetachShader");
-    glBindAttribLocation =              (PFNGLBINDATTRIBLOCATIONPROC)              GetFunction("glBindAttribLocation");
-    glGetAttribLocation =               (PFNGLGETATTRIBLOCATIONPROC)               GetFunction("glGetAttribLocation");
+    if(!gleContext.IsInitialized())
+    {
+        gleContext.SetCurrentContext(&gleContext);
+        gleContext.Init();
+    }
 }
     
-#endif
     
 Buffer::Buffer(RenderParams* rp) : pParams(rp), Size(0), Use(0), GLBuffer(0)
 {
@@ -214,7 +114,7 @@ Buffer::~Buffer()
 
 bool Buffer::Data(int use, const void* buffer, size_t size)
 {
-	Size = size;
+    Size = size;
 
     switch (use & Buffer_TypeMask)
     {
@@ -252,8 +152,17 @@ bool Buffer::Unmap(void*)
     return r != 0;
 }
 
-ShaderSet::ShaderSet()
+ShaderSet::ShaderSet() : 
+  //Shaders[],
+    UniformInfo(),
+  //Prog(0)
+    ProjLoc(0),
+    ViewLoc(0),
+  //TexLoc[],
+    UsesLighting(false),
+    LightingVer(0)
 {
+    memset(TexLoc, 0, sizeof(TexLoc));
     Prog = glCreateProgram();
 }
 ShaderSet::~ShaderSet()
@@ -263,26 +172,26 @@ ShaderSet::~ShaderSet()
 
 GLint ShaderSet::GetGLShader(Shader* s)
 {
-	switch (s->Stage)
-	{
-	case Shader_Vertex: {
-		ShaderImpl<Shader_Vertex, GL_VERTEX_SHADER>* gls = (ShaderImpl<Shader_Vertex, GL_VERTEX_SHADER>*)s;
-		return gls->GLShader;
-	} break;
-	case Shader_Fragment: {
-		ShaderImpl<Shader_Fragment, GL_FRAGMENT_SHADER>* gls = (ShaderImpl<Shader_Fragment, GL_FRAGMENT_SHADER>*)s;
-		return gls->GLShader;
-	} break;
+    switch (s->Stage)
+    {
+    case Shader_Vertex: {
+        ShaderImpl<Shader_Vertex, GL_VERTEX_SHADER>* gls = (ShaderImpl<Shader_Vertex, GL_VERTEX_SHADER>*)s;
+        return gls->GLShader;
+    } break;
+    case Shader_Fragment: {
+        ShaderImpl<Shader_Fragment, GL_FRAGMENT_SHADER>* gls = (ShaderImpl<Shader_Fragment, GL_FRAGMENT_SHADER>*)s;
+        return gls->GLShader;
+    } break;
     default: break;
-	}
+    }
 
-	return -1;
+    return -1;
 }
 
 void ShaderSet::SetShader(Shader *s)
 {
     Shaders[s->Stage] = s;
-	GLint GLShader = GetGLShader(s);
+    GLint GLShader = GetGLShader(s);
     glAttachShader(Prog, GLShader);
     if (Shaders[Shader_Vertex] && Shaders[Shader_Fragment])
         Link();
@@ -291,9 +200,9 @@ void ShaderSet::SetShader(Shader *s)
 void ShaderSet::UnsetShader(int stage)
 {
     if (Shaders[stage] == NULL)
-		return;
+        return;
 
-	GLint GLShader = GetGLShader(Shaders[stage]);
+    GLint GLShader = GetGLShader(Shaders[stage]);
     glDetachShader(Prog, GLShader);
 
     Shaders[stage] = NULL;
@@ -342,9 +251,9 @@ bool ShaderSet::Link()
     LightingVer = 0;
     UsesLighting = 0;
 
-	GLint uniformCount = 0;
-	glGetProgramiv(Prog, GL_ACTIVE_UNIFORMS, &uniformCount);
-	OVR_ASSERT(uniformCount >= 0);
+    GLint uniformCount = 0;
+    glGetProgramiv(Prog, GL_ACTIVE_UNIFORMS, &uniformCount);
+    OVR_ASSERT(uniformCount >= 0);
 
     for(GLuint i = 0; i < (GLuint)uniformCount; i++)
     {
@@ -433,17 +342,17 @@ bool ShaderBase::SetUniformBool(const char* name, int n, const bool* v)
 
 void ShaderBase::InitUniforms(const Uniform* refl, size_t reflSize)
 {
-    if(!refl)
+    UniformsSize = 0;
+    if (UniformData)
+    {
+        OVR_FREE(UniformData);
+        UniformData = 0;
+    }
+
+    if (!refl)
     {
         UniformRefl = NULL;
         UniformReflSize = 0;
-
-        UniformsSize = 0;
-        if (UniformData)
-        {
-            OVR_FREE(UniformData);
-            UniformData = 0;
-        }
         return; // no reflection data
     }
 
@@ -454,10 +363,10 @@ void ShaderBase::InitUniforms(const Uniform* refl, size_t reflSize)
     UniformData = (unsigned char*)OVR_ALLOC(UniformsSize);
 }
 
-Texture::Texture(RenderParams* rp, int w, int h) : IsUserAllocated(true), pParams(rp), TexId(0), Width(w), Height(h)
+Texture::Texture(RenderParams* rp, int w, int h) : IsUserAllocated(false), pParams(rp), TexId(0), Width(w), Height(h)
 {
-	if (w && h)
-		glGenTextures(1, &TexId);
+    if (w && h)
+        glGenTextures(1, &TexId);
 }
 
 Texture::~Texture()
@@ -468,8 +377,8 @@ Texture::~Texture()
 
 void Texture::Set(int slot, ShaderStage) const
 {
-	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, TexId);
+    glActiveTexture(GL_TEXTURE0 + slot);
+    glBindTexture(GL_TEXTURE_2D, TexId);
 }
 
 void Texture::SetSampleMode(int sm)
@@ -480,18 +389,21 @@ void Texture::SetSampleMode(int sm)
     case Sample_Linear:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        if(GLE_EXT_texture_filter_anisotropic)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1);
         break;
 
     case Sample_Anisotropic:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        if(GLE_EXT_texture_filter_anisotropic)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8);
         break;
 
     case Sample_Nearest:
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        if(GLE_EXT_texture_filter_anisotropic)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1);
         break;
     }
@@ -517,14 +429,187 @@ void Texture::SetSampleMode(int sm)
 
 void Texture::UpdatePlaceholderTexture(GLuint texId, const Sizei& textureSize)
 {
-	if (!IsUserAllocated && TexId && texId != TexId)
-		glDeleteTextures(1, &TexId);
+    if (!IsUserAllocated && TexId && texId != TexId)
+        glDeleteTextures(1, &TexId);
 
     TexId = texId;
-	Width = textureSize.w;
-	Height = textureSize.h;
+    Width = textureSize.w;
+    Height = textureSize.h;
 
-	IsUserAllocated = true;
+    IsUserAllocated = true;
 }
 
-}}}
+
+
+
+
+Context::Context() : initialized(false), ownsContext(true), incarnation(0)
+{
+#if defined(OVR_OS_MAC)
+    systemContext = 0;
+#elif defined(OVR_OS_WIN32)
+    hdc = 0;
+    systemContext = 0;
+#elif defined(OVR_OS_LINUX)
+    x11Display = NULL;
+    x11Drawable = 0;
+    systemContext = 0;
+    memset(&x11Visual, 0, sizeof(x11Visual));
+#endif
+
+}
+
+// This destructor is mandatory for unique_ptr destruction on forward
+// declared MacContextImpl.
+Context::~Context() { }
+
+void Context::InitFromCurrent()
+{
+    Destroy();
+
+    initialized = true;
+    ownsContext = false;
+    incarnation++;
+
+#if defined(OVR_OS_MAC)
+    NSOpenGLContext* glctx = [NSOpenGLContext currentContext];
+#if !__has_feature(objc_arc)
+    // MacContextImpl *will* release all given resources. Retain reference.
+    [glctx retain];
+#endif
+    systemContext.reset(new MacContextImpl(glctx));
+#elif defined(OVR_OS_WIN32)
+    hdc = wglGetCurrentDC();
+    systemContext = wglGetCurrentContext();
+#elif defined(OVR_OS_LINUX)
+    x11Display = glXGetCurrentDisplay();
+    x11Drawable = glXGetCurrentDrawable();
+    systemContext = glXGetCurrentContext();
+    if (!SDKWindow::getVisualFromDrawable(x11Drawable, &x11Visual))
+    {
+        OVR::LogError("[Context] Unable to obtain x11 visual from context");
+        memset(&x11Visual, 0, sizeof(x11Visual));
+    }
+#endif
+}
+
+void Context::CreateShared( Context & ctx )
+{
+    OVR_ASSERT( ctx.initialized == true );
+    if( ctx.initialized == false )
+    {
+        return;
+    }
+
+    Destroy();
+
+    initialized = true;
+    ownsContext = true;
+    incarnation++;
+
+#if defined(OVR_OS_MAC)
+    CGLContextObj shareCGL = (CGLContextObj)[ctx.systemContext->ctx CGLContextObj];
+    CGLPixelFormatObj sharePixelFormat = CGLGetPixelFormat(shareCGL);
+
+    NSOpenGLPixelFormat* nsOGLPixelFormat =
+        [[NSOpenGLPixelFormat alloc] initWithCGLPixelFormatObj:sharePixelFormat];
+    systemContext.reset(new MacContextImpl(
+        [[NSOpenGLContext alloc] initWithFormat:nsOGLPixelFormat shareContext:ctx.systemContext->ctx],
+        nsOGLPixelFormat));
+
+    SetSurface(ctx);
+#elif defined(OVR_OS_WIN32)
+    hdc = ctx.hdc;
+    systemContext = wglCreateContext( ctx.hdc );
+    BOOL success = wglShareLists(ctx.systemContext, systemContext );
+    OVR_ASSERT( success == TRUE );
+    OVR_UNUSED(success);
+#elif defined(OVR_OS_LINUX)
+    x11Display = ctx.x11Display;
+    x11Drawable = ctx.x11Drawable;
+    x11Visual = ctx.x11Visual;
+    systemContext = glXCreateContext( ctx.x11Display, &x11Visual, ctx.systemContext, True );
+    OVR_ASSERT( systemContext != NULL );
+#endif
+}
+
+#if defined(OVR_OS_MAC)
+void Context::SetSurface( Context & ctx )
+{
+    CGLContextObj cgl       = (CGLContextObj)[systemContext->ctx CGLContextObj];
+    CGLContextObj cglShared = (CGLContextObj)[ctx.systemContext->ctx CGLContextObj];
+
+    CGLError e = kCGLNoError;
+    CGSConnectionID cid, cid2;
+    CGSWindowID wid, wid2;
+    CGSSurfaceID sid, sid2;
+
+    e = CGLGetSurface(cglShared, &cid, &wid, &sid);
+    OVR_ASSERT(e == kCGLNoError); OVR_UNUSED(e);
+    e = CGLGetSurface(cgl, &cid2, &wid2, &sid2);
+    OVR_ASSERT(e == kCGLNoError); OVR_UNUSED(e);
+    if( sid && sid != sid2 )
+    {
+        e = CGLSetSurface(cgl, cid, wid, sid);
+        OVR_ASSERT(e == kCGLNoError); OVR_UNUSED(e);
+    }
+}
+#endif
+
+void Context::Destroy()
+{
+    if( initialized == false )
+    {
+        return;
+    }
+  
+    if (systemContext)
+    {
+#if defined(OVR_OS_MAC)
+        systemContext.reset();
+#elif defined(OVR_OS_WIN32)
+        BOOL success = wglDeleteContext( systemContext );
+        OVR_ASSERT( success == TRUE );
+        OVR_UNUSED( success );
+#elif defined(OVR_OS_LINUX)
+        glXDestroyContext( x11Display, systemContext );
+#endif
+
+        systemContext = NULL;
+    }
+  
+    initialized = false;
+    ownsContext = true;
+}
+
+void Context::Bind()
+{
+    if(systemContext)
+    {
+#if defined(OVR_OS_MAC)
+        glFlush(); //Apple doesn't automatically flush within CGLSetCurrentContext, unlike other platforms.
+        CGLContextObj cgl = (CGLContextObj)[systemContext->ctx CGLContextObj];
+        CGLSetCurrentContext(cgl);
+        // Consider the following instead of using CGLSetCurrentContext:
+        // [systemContext->ctx makeCurrentContext];
+#elif defined(OVR_OS_WIN32)
+        wglMakeCurrent( hdc, systemContext );
+#elif defined(OVR_OS_LINUX)
+        glXMakeCurrent( x11Display, x11Drawable, systemContext );
+#endif
+    }
+}
+
+void Context::Unbind()
+{
+#if defined(OVR_OS_MAC)
+    glFlush(); //Apple doesn't automatically flush within CGLSetCurrentContext, unlike other platforms.
+    CGLSetCurrentContext( NULL );
+#elif defined(OVR_OS_WIN32)
+    wglMakeCurrent( hdc, NULL );
+#elif defined(OVR_OS_LINUX)
+    glXMakeCurrent( x11Display, None, NULL );
+#endif
+}
+
+}}} // namespace OVR::CAPI::GL

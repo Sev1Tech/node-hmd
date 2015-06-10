@@ -2,7 +2,7 @@
   "includes" : [
     # "linux.gypi",
     "platform/mac/binding.gypi",
-    # "win.gypi",
+    "win.gypi",
   ],
 
   "include_dirs": [
