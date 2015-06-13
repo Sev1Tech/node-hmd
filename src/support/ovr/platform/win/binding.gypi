@@ -41,7 +41,8 @@
                 "AdditionalDependencies": [
                     "Setupapi.lib",
                     "Winmm.lib",
-                    "Ws2_32.lib"
+                    "Ws2_32.lib",
+                    "..\src\support\ovr\platform\win\LibOVR\Lib\Windows\\x64\Release\VS2013\LibOVR.lib"
                 ]
             }
 		}
