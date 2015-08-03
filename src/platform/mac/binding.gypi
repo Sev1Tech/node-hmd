@@ -82,7 +82,7 @@
         "xcode_settings": {
           "GCC_ENABLE_CPP_RTTI": "YES",
           "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
-          "OTHER_CPLUSPLUSFLAGS" : [ "-stdlib=libc++", "-mmacosx-version-min=10.7" ]
+          "OTHER_CPLUSPLUSFLAGS" : [ "-stdlib=libstdc++", "-mmacosx-version-min=10.7" ]
         },
 
         "defines": [
